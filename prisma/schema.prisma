@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  INVITED
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  DEPRECATED
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  DISCONNECTED
+  ERROR
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  passwordHash  String
+  role          UserRole   @default(USER)
+  status        UserStatus @default(ACTIVE)
+  emailVerified Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  lastLoginAt   DateTime?
+
+  createdThemes Theme[] @relation("ThemeCreator")
+  createdBlocks BlockDefinition[] @relation("BlockCreator")
+  invitesSent   AdminInvite[] @relation("InviteSender")
+  auditEntries  AuditLog[] @relation("AuditActor")
+  chatSessions  ChatSession[]
+}
+
+model AdminInvite {
+  id          String       @id @default(cuid())
+  email       String
+  tokenHash   String       @unique
+  status      InviteStatus @default(PENDING)
+  invitedById String
+  invitedBy   User         @relation("InviteSender", fields: [invitedById], references: [id])
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime     @default(now())
+}
+
+model Theme {
+  id          String        @id @default(cuid())
+  key         String        @unique
+  name        String
+  description String?
+  schema      Json
+  status      PublishStatus @default(DRAFT)
+  version     Int           @default(1)
+  createdById String
+  createdBy   User          @relation("ThemeCreator", fields: [createdById], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model BlockDefinition {
+  id          String        @id @default(cuid())
+  key         String        @unique
+  name        String
+  description String?
+  schema      Json
+  defaults    Json?
+  status      PublishStatus @default(DRAFT)
+  version     Int           @default(1)
+  createdById String
+  createdBy   User          @relation("BlockCreator", fields: [createdById], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Integration {
+  id              String            @id @default(cuid())
+  provider        String            @unique
+  name            String
+  status          IntegrationStatus @default(DISCONNECTED)
+  config          Json?
+  secretEncrypted String?
+  lastCheckedAt   DateTime?
+  lastError       String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation("AuditActor", fields: [actorId], references: [id])
+  action     String
+  entityType String
+  entityId   String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+}
+
+model ChatSession {
+  id        String        @id @default(cuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  mode      String        @default("ADMIN_ASSISTANT")
+  title     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  messages  ChatMessage[]
+}
+
+model ChatMessage {
+  id        String      @id @default(cuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String
+  content   String
+  metadata  Json?
+  createdAt DateTime    @default(now())
+}

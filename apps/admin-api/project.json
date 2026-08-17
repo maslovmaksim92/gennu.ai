@@ -1,0 +1,31 @@
+{
+  "name": "admin-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/admin-api/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/admin-api",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/admin-api/src/main.ts",
+        "tsConfig": "apps/admin-api/tsconfig.app.json",
+        "assets": []
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {"buildTarget": "admin-api:build", "runBuildTargetDependencies": false},
+      "configurations": {
+        "development": {"buildTarget": "admin-api:build"},
+        "production": {"buildTarget": "admin-api:build"}
+      }
+    }
+  }
+}

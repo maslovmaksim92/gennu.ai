@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.nx/
+.env
+.env.*
+!.env.example
+coverage/
+.prisma/
+.DS_Store
