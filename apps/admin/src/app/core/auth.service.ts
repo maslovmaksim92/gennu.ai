@@ -1,1 +1,39 @@
-import { HttpClient } from '@angular/common/http'; import { Injectable, computed, inject, signal } from '@angular/core'; import { firstValueFrom } from 'rxjs'; import type { AuthUser } from '@proto/contracts'; @Injectable({providedIn:'root'}) export class AuthService {private http=inject(HttpClient); user=signal<AuthUser|null>(null); loaded=signal(false); authenticated=computed(()=>!!this.user()); async load(){if(this.loaded())return this.user();try{this.user.set(await firstValueFrom(this.http.get<AuthUser>('/api/auth/me')))}catch{this.user.set(null)}finally{this.loaded.set(true)}return this.user()} async login(email:string,password:string){const user=await firstValueFrom(this.http.post<AuthUser>('/api/auth/login',{email,password}));this.user.set(user);this.loaded.set(true);return user} async logout(){await firstValueFrom(this.http.post('/api/auth/logout',{}));this.user.set(null)} }
+import { HttpClient } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import type { AuthUser } from '@proto/contracts';
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  private http = inject(HttpClient);
+  user = signal<AuthUser | null>(null);
+  loaded = signal(false);
+  authenticated = computed(() => !!this.user());
+  async load() {
+    if (this.loaded())
+      return this.user();
+    try {
+      this.user.set(await firstValueFrom(this.http.get<AuthUser>('/api/auth/me')));
+    }
+    catch {
+      this.user.set(null);
+    }
+    finally {
+      this.loaded.set(true);
+    }
+    return this.user();
+  }
+  async login(email: string, password: string) {
+    const user = await firstValueFrom(this.http.post<AuthUser>('/api/auth/login', {
+      email, password
+    }));
+    this.user.set(user);
+    this.loaded.set(true);
+    return user;
+  }
+  async logout() {
+    await firstValueFrom(this.http.post('/api/auth/logout', {}));
+    this.user.set(null);
+  }
+}

@@ -11,6 +11,8 @@
     "lint": "nx run-many -t lint --all",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
+    "check:templates": "node scripts/check-inline-templates.mjs",
+    "check": "pnpm format:check && pnpm check:templates",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",

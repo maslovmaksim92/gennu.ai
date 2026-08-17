@@ -1,1 +1,27 @@
-import { HttpClient } from '@angular/common/http'; import { Component, inject, signal } from '@angular/core'; import { FormsModule } from '@angular/forms'; @Component({standalone:true,imports:[FormsModule],template:`<section class="page"><header class="page-head"><div><span class="eyebrow">EXTERNAL SERVICES</span><h1>Integrations</h1><p>Provider credentials and service settings are stored server-side.</p></div></header><div class="integration-grid"><article class="panel"><div class="service-head"><div><h2>OpenAI</h2><p>Admin AI Chat via Responses API.</p></div><span class="status">{{openaiConnected()?'Connected':'Not configured'}}</span></div><label>API key<input type="password" [(ngModel)]="openaiKey" placeholder="sk-…"></label><label>Model<input [(ngModel)]="openaiModel"></label><button class="primary" (click)="saveOpenAI()">Save OpenAI</button></article><article class="panel disabled"><div class="service-head"><div><h2>Timeweb</h2><p>Billing, S3, CDN and domains will be enabled in a later milestone.</p></div><span class="status">Planned</span></div></article></div></section>`}) export class IntegrationsComponent {http=inject(HttpClient);openaiKey='';openaiModel='gpt-5.6-terra';openaiConnected=signal(false);constructor(){this.http.get<any[]>('/api/integrations').subscribe(x=>this.openaiConnected.set(x.some(i=>i.provider==='OPENAI'&&i.hasSecret)))}saveOpenAI(){this.http.put('/api/integrations/OPENAI',{name:'OpenAI',status:'CONNECTED',secret:this.openaiKey,config:{model:this.openaiModel}}).subscribe(()=>{this.openaiKey='';this.openaiConnected.set(true)})}}
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+@Component({
+  standalone: true, imports: [
+    FormsModule
+  ], templateUrl: './integrations.component.html'
+})
+export class IntegrationsComponent {
+  http = inject(HttpClient);
+  openaiKey = '';
+  openaiModel = 'gpt-5.6-terra';
+  openaiConnected = signal(false);
+  constructor() {
+    this.http.get<any[]>('/api/integrations').subscribe(x => this.openaiConnected.set(x.some(i => i.provider === 'OPENAI' && i.hasSecret)));
+  }
+  saveOpenAI() {
+    this.http.put('/api/integrations/OPENAI', {
+      name: 'OpenAI', status: 'CONNECTED', secret: this.openaiKey, config: {
+        model: this.openaiModel
+      }
+    }).subscribe(() => {
+      this.openaiKey = '';
+      this.openaiConnected.set(true);
+    });
+  }
+}

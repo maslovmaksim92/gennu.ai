@@ -1,0 +1,25 @@
+<div class="shell">
+  <aside>
+    <div class="brand">
+      <span class="brand-mark">P</span>
+      <div>
+        <strong>Proto.ai</strong>
+        <small>Admin</small>
+      </div>
+    </div>
+    <nav>
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/admins" routerLinkActive="active">Admins</a>
+      <a routerLink="/users" routerLinkActive="active">Users</a>
+      <a routerLink="/themes" routerLinkActive="active">Themes</a>
+      <a routerLink="/blocks" routerLinkActive="active">Blocks</a>
+      <a routerLink="/integrations" routerLinkActive="active">Integrations</a>
+      <a routerLink="/ai" routerLinkActive="active">AI Chat</a>
+    </nav>
+    <div class="account">
+      <small>{{auth.user()?.email}}</small>
+      <button (click)="logout()">Sign out</button>
+    </div>
+  </aside>
+  <main> <router-outlet /></main>
+</div>

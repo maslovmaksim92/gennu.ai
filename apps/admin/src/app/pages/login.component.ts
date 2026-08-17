@@ -1,1 +1,31 @@
-import { Component, inject, signal } from '@angular/core'; import { FormsModule } from '@angular/forms'; import { Router } from '@angular/router'; import { AuthService } from '../core/auth.service'; @Component({standalone:true,imports:[FormsModule],template:`<div class="login-page"><form class="login-card" (ngSubmit)="submit()"><div class="brand login-brand"><span class="brand-mark">P</span><div><strong>Proto.ai</strong><small>Administration</small></div></div><h1>Welcome back</h1><p>Sign in to manage the platform.</p><label>Email<input type="email" name="email" [(ngModel)]="email" required></label><label>Password<input type="password" name="password" [(ngModel)]="password" required></label>@if(error()){<div class="error">{{error()}}</div>}<button class="primary" [disabled]="loading()">{{loading()?'Signing in…':'Sign in'}}</button></form></div>`}) export class LoginComponent {auth=inject(AuthService);router=inject(Router);email='';password='';loading=signal(false);error=signal('');async submit(){this.loading.set(true);this.error.set('');try{await this.auth.login(this.email,this.password);await this.router.navigateByUrl('/dashboard')}catch{this.error.set('Invalid email or password')}finally{this.loading.set(false)}}}
+import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../core/auth.service';
+@Component({
+  standalone: true, imports: [
+    FormsModule
+  ], templateUrl: './login.component.html'
+})
+export class LoginComponent {
+  auth = inject(AuthService);
+  router = inject(Router);
+  email = '';
+  password = '';
+  loading = signal(false);
+  error = signal('');
+  async submit() {
+    this.loading.set(true);
+    this.error.set('');
+    try {
+      await this.auth.login(this.email, this.password);
+      await this.router.navigateByUrl('/dashboard');
+    }
+    catch {
+      this.error.set('Invalid email or password');
+    }
+    finally {
+      this.loading.set(false);
+    }
+  }
+}

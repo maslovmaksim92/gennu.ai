@@ -1,1 +1,53 @@
-import { HttpClient } from '@angular/common/http'; import { Component, inject, signal } from '@angular/core'; import { FormsModule } from '@angular/forms'; @Component({standalone:true,imports:[FormsModule],template:`<section class="page ai-page"><header class="page-head"><div><span class="eyebrow">AI ASSISTANT</span><h1>Chat</h1><p>Ask about platform architecture, themes, blocks and administration.</p></div></header><div class="chat panel"><div class="messages">@for(item of messages();track $index){<div class="message" [class.me]="item.role==='user'"><small>{{item.role==='user'?'You':'Proto AI'}}</small><p>{{item.content}}</p></div>}</div><form class="composer" (ngSubmit)="send()"><textarea name="message" [(ngModel)]="message" placeholder="Ask Proto AI…" rows="3"></textarea><button class="primary" [disabled]="loading()">{{loading()?'Thinking…':'Send'}}</button></form></div></section>`}) export class AiComponent {http=inject(HttpClient);message='';sessionId?:string;loading=signal(false);messages=signal<{role:string,content:string}[]>([]);send(){const text=this.message.trim();if(!text)return;this.messages.update(x=>[...x,{role:'user',content:text}]);this.message='';this.loading.set(true);this.http.post<any>('/api/ai/chat',{message:text,sessionId:this.sessionId}).subscribe({next:x=>{this.sessionId=x.sessionId;this.messages.update(m=>[...m,{role:'assistant',content:x.message}]);this.loading.set(false)},error:()=>{this.messages.update(m=>[...m,{role:'assistant',content:'AI integration is not configured or the request failed.'}]);this.loading.set(false)}})}}
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+@Component({
+  standalone: true, imports: [
+    FormsModule
+  ], templateUrl: './ai.component.html'
+})
+export class AiComponent {
+  http = inject(HttpClient);
+  message = '';
+  sessionId?: string;
+  loading = signal(false);
+  messages = signal<{
+    role: string;
+    content: string;
+  }[]>([]);
+  send() {
+    const text = this.message.trim();
+    if (!text)
+      return;
+    this.messages.update(x => [
+      ...x,
+      {
+        role: 'user', content: text
+      }
+    ]);
+    this.message = '';
+    this.loading.set(true);
+    this.http.post<any>('/api/ai/chat', {
+      message: text, sessionId: this.sessionId
+    }).subscribe({
+      next: x => {
+        this.sessionId = x.sessionId;
+        this.messages.update(m => [
+          ...m,
+          {
+            role: 'assistant', content: x.message
+          }
+        ]);
+        this.loading.set(false);
+      }, error: () => {
+        this.messages.update(m => [
+          ...m,
+          {
+            role: 'assistant', content: 'AI integration is not configured or the request failed.'
+          }
+        ]);
+        this.loading.set(false);
+      }
+    });
+  }
+}
