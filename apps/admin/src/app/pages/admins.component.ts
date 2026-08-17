@@ -1,1 +1,40 @@
-import { HttpClient } from '@angular/common/http'; import { Component, inject, signal } from '@angular/core'; import { FormsModule } from '@angular/forms'; import { AgGridAngular } from 'ag-grid-angular'; import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community'; ModuleRegistry.registerModules([AllCommunityModule]); @Component({standalone:true,imports:[FormsModule,AgGridAngular],template:`<section class="page"><header class="page-head"><div><span class="eyebrow">ACCESS</span><h1>Administrators</h1><p>Manage active administrators and invitations.</p></div><button class="primary" (click)="showInvite.set(!showInvite())">Add admin</button></header>@if(showInvite()){<div class="panel form-row"><input placeholder="admin@example.com" [(ngModel)]="inviteEmail"><button class="primary" (click)="invite()">Create invite</button>@if(inviteToken()){<code class="token">{{inviteToken()}}</code>}</div>}<div class="panel grid-panel"><ag-grid-angular style="width:100%;height:420px" [rowData]="rows()" [columnDefs]="cols" [pagination]="true" [paginationPageSize]="20" /></div></section>`}) export class AdminsComponent {http=inject(HttpClient);rows=signal<any[]>([]);showInvite=signal(false);inviteEmail='';inviteToken=signal('');cols:ColDef[]=[{field:'email',flex:1},{field:'status',width:130},{field:'lastLoginAt',headerName:'Last login',flex:1},{field:'createdAt',headerName:'Created',flex:1}];constructor(){this.load()}load(){this.http.get<any[]>('/api/admins').subscribe(x=>this.rows.set(x))}invite(){this.http.post<any>('/api/admins/invite',{email:this.inviteEmail}).subscribe(x=>{this.inviteToken.set(x.inviteToken);this.inviteEmail='';this.load()})}}
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { AgGridAngular } from 'ag-grid-angular';
+import { ColDef } from 'ag-grid-community';
+
+@Component({
+  standalone: true,
+  imports: [FormsModule, AgGridAngular],
+  template: `<section class="page"><header class="page-head"><div><span class="eyebrow">ACCESS</span><h1>Administrators</h1><p>Manage active administrators and invitations.</p></div><button class="primary" (click)="showInvite.set(!showInvite())">Add admin</button></header>@if(showInvite()){<div class="panel form-row"><input placeholder="admin@example.com" [(ngModel)]="inviteEmail"><button class="primary" (click)="invite()">Create invite</button>@if(inviteToken()){<code class="token">{{inviteToken()}}</code>}</div>}<div class="panel grid-panel"><ag-grid-angular style="width:100%;height:420px" [rowData]="rows()" [columnDefs]="cols" [pagination]="true" [paginationPageSize]="20" /></div></section>`,
+})
+export class AdminsComponent {
+  http = inject(HttpClient);
+  rows = signal<any[]>([]);
+  showInvite = signal(false);
+  inviteEmail = '';
+  inviteToken = signal('');
+  cols: ColDef[] = [
+    { field: 'email', flex: 1 },
+    { field: 'status', width: 130 },
+    { field: 'lastLoginAt', headerName: 'Last login', flex: 1 },
+    { field: 'createdAt', headerName: 'Created', flex: 1 },
+  ];
+
+  constructor() {
+    this.load();
+  }
+
+  load(): void {
+    this.http.get<any[]>('/api/admins').subscribe((x) => this.rows.set(x));
+  }
+
+  invite(): void {
+    this.http.post<any>('/api/admins/invite', { email: this.inviteEmail }).subscribe((x) => {
+      this.inviteToken.set(x.inviteToken);
+      this.inviteEmail = '';
+      this.load();
+    });
+  }
+}
