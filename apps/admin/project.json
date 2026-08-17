@@ -10,13 +10,21 @@
         "browser": "apps/admin/src/main.ts",
         "index": "apps/admin/src/index.html",
         "tsConfig": "apps/admin/tsconfig.app.json",
-        "styles": ["apps/admin/src/styles.scss"],
+        "styles": [
+          "styles/tailwind.css",
+          "apps/admin/src/styles.scss"
+        ],
         "outputPath": "dist/apps/admin"
       }
     },
     "serve": {
       "executor": "@angular/build:dev-server",
-      "options": {"buildTarget":"admin:build", "proxyConfig":"apps/admin/proxy.conf.json", "port":4200, "host":"0.0.0.0"}
+      "options": {
+        "buildTarget": "admin:build",
+        "proxyConfig": "apps/admin/proxy.conf.json",
+        "port": 4200,
+        "host": "0.0.0.0"
+      }
     }
   }
 }
