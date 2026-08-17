@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+/* Shared Tailwind source registry for all Proto.ai Angular applications. */
+@source "../apps/admin/src/**/*.{html,ts}";
+@source "../apps/studio/src/**/*.{html,ts}";
+@source "../libs/**/*.{html,ts}";
+
+@theme {
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --color-proto-bg: #f5f6f8;
+  --color-proto-surface: #ffffff;
+  --color-proto-ink: #151820;
+  --color-proto-muted: #687080;
+  --color-proto-border: #e2e5ea;
+  --color-proto-sidebar: #11141a;
+  --color-proto-sidebar-active: #242933;
+
+  --radius-proto-sm: 0.5rem;
+  --radius-proto-md: 0.875rem;
+  --radius-proto-lg: 1.125rem;
+}
