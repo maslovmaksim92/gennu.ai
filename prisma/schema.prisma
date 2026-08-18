@@ -48,11 +48,12 @@ model User {
   updatedAt     DateTime   @updatedAt
   lastLoginAt   DateTime?
 
-  createdThemes Theme[] @relation("ThemeCreator")
+  createdThemes Theme[]           @relation("ThemeCreator")
   createdBlocks BlockDefinition[] @relation("BlockCreator")
-  invitesSent   AdminInvite[] @relation("InviteSender")
-  auditEntries  AuditLog[] @relation("AuditActor")
+  invitesSent   AdminInvite[]     @relation("InviteSender")
+  auditEntries  AuditLog[]        @relation("AuditActor")
   chatSessions  ChatSession[]
+  sites         Site[]
 }
 
 model AdminInvite {
@@ -68,32 +69,110 @@ model AdminInvite {
 }
 
 model Theme {
-  id          String        @id @default(cuid())
-  key         String        @unique
+  id          String         @id @default(cuid())
+  key         String         @unique
   name        String
   description String?
-  schema      Json
-  status      PublishStatus @default(DRAFT)
-  version     Int           @default(1)
   createdById String
-  createdBy   User          @relation("ThemeCreator", fields: [createdById], references: [id])
+  createdBy   User           @relation("ThemeCreator", fields: [createdById], references: [id])
+  versions    ThemeVersion[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model ThemeVersion {
+  id          String        @id @default(cuid())
+  themeId     String
+  theme       Theme         @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  version     String
+  major       Int
+  minor       Int
+  patch       Int
+  schema      Json
+  changelog   String?
+  migration   Json?
+  status      PublishStatus @default(DRAFT)
+  publishedAt DateTime?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  sites       Site[]
+
+  @@unique([themeId, version])
+  @@index([themeId, status, major, minor, patch])
 }
 
 model BlockDefinition {
-  id          String        @id @default(cuid())
-  key         String        @unique
+  id          String         @id @default(cuid())
+  key         String         @unique
   name        String
   description String?
-  schema      Json
-  defaults    Json?
-  status      PublishStatus @default(DRAFT)
-  version     Int           @default(1)
   createdById String
-  createdBy   User          @relation("BlockCreator", fields: [createdById], references: [id])
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdBy   User           @relation("BlockCreator", fields: [createdById], references: [id])
+  versions    BlockVersion[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model BlockVersion {
+  id               String          @id @default(cuid())
+  blockDefinitionId String
+  blockDefinition  BlockDefinition @relation(fields: [blockDefinitionId], references: [id], onDelete: Cascade)
+  version          String
+  major            Int
+  minor            Int
+  patch            Int
+  schema           Json
+  defaults         Json?
+  changelog        String?
+  migration        Json?
+  status           PublishStatus   @default(DRAFT)
+  publishedAt      DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  instances        BlockInstance[]
+
+  @@unique([blockDefinitionId, version])
+  @@index([blockDefinitionId, status, major, minor, patch])
+}
+
+model Site {
+  id             String        @id @default(cuid())
+  ownerId        String
+  owner          User          @relation(fields: [ownerId], references: [id])
+  name           String
+  themeVersionId String?
+  themeVersion   ThemeVersion? @relation(fields: [themeVersionId], references: [id])
+  pages          Page[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Page {
+  id        String          @id @default(cuid())
+  siteId    String
+  site      Site            @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  name      String
+  slug      String
+  blocks    BlockInstance[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@unique([siteId, slug])
+}
+
+model BlockInstance {
+  id             String       @id @default(cuid())
+  pageId         String
+  page           Page         @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  blockVersionId String
+  blockVersion   BlockVersion @relation(fields: [blockVersionId], references: [id])
+  data           Json
+  settings       Json?
+  sortOrder      Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([pageId, sortOrder])
 }
 
 model Integration {
