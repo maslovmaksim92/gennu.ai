@@ -15,9 +15,10 @@
     "format:ts:check": "prettier \"**/*.ts\" --check",
     "check:templates": "node scripts/check-inline-templates.mjs",
     "check": "pnpm format:check && pnpm check:templates",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy",
+    "db:generate": "prisma generate --schema=prisma/schema.prisma",
+    "db:push": "prisma db push --schema=prisma/schema.prisma",
+    "db:migrate": "prisma migrate dev --schema=prisma/schema.prisma",
+    "db:deploy": "prisma migrate deploy --schema=prisma/schema.prisma",
     "db:seed": "tsx prisma/seed.ts",
     "dev:infra": "docker compose -f compose/compose.dev.yml up -d postgres",
     "dev:infra:down": "docker compose -f compose/compose.dev.yml down"
