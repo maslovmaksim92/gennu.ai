@@ -12,7 +12,7 @@
         "tsConfig": "apps/admin/tsconfig.app.json",
         "styles": [
           "styles/tailwind.css",
-          "libs/ui/proto/src/styles.scss",
+          "libs/ui/atlas/src/styles.scss",
           "apps/admin/src/styles.scss"
         ],
         "outputPath": "dist/apps/admin"
