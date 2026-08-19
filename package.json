@@ -21,6 +21,7 @@
     "db:migrate": "prisma migrate dev --schema=prisma/schema.prisma",
     "db:deploy": "prisma migrate deploy --schema=prisma/schema.prisma",
     "db:seed": "node --env-file=.env --import=tsx prisma/seed.ts",
+    "db:setup": "pnpm db:generate && pnpm db:push && pnpm db:seed",
     "dev:infra": "docker compose -f compose/compose.dev.yml up -d postgres",
     "dev:infra:down": "docker compose -f compose/compose.dev.yml down"
   },
