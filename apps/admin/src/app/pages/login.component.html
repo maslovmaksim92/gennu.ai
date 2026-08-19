@@ -3,10 +3,7 @@
     <div class="login-hero">
       <div class="brand login-brand">
         <span class="brand-mark">▲</span>
-        <div>
-          <strong>Proto.ai</strong>
-          <small>Administration</small>
-        </div>
+        <div><strong>Proto.ai</strong><small>Administration</small></div>
       </div>
       <div>
         <span class="eyebrow">ADMIN CONSOLE</span>
@@ -17,28 +14,15 @@
     </div>
 
     <form class="login-card" (ngSubmit)="submit()">
-      <div class="login-card-head">
-        <h2>Sign in</h2>
-        <p>Enter your administrator credentials to continue.</p>
-      </div>
-      <label>
-        Email
-        <input type="email" name="email" [(ngModel)]="email" autocomplete="email" required />
-      </label>
-      <label>
-        Password
-        <input
-          type="password"
-          name="password"
-          [(ngModel)]="password"
-          autocomplete="current-password"
-          required
-        />
-      </label>
-      @if (error()) {
-        <div class="error">{{ error() }}</div>
-      }
-      <button class="primary login-submit" [disabled]="loading()">
+      <div class="login-card-head"><h2>Sign in</h2><p>Enter your administrator credentials to continue.</p></div>
+      <proto-field label="Email">
+        <input protoInput type="email" name="email" [(ngModel)]="email" autocomplete="email" required />
+      </proto-field>
+      <proto-field label="Password">
+        <input protoInput type="password" name="password" [(ngModel)]="password" autocomplete="current-password" required />
+      </proto-field>
+      @if (error()) { <div class="error">{{ error() }}</div> }
+      <button protoButton class="login-submit" [disabled]="loading()">
         {{ loading() ? 'Signing in…' : 'Continue' }}
       </button>
       <small class="login-hint">Access is restricted to active administrators.</small>

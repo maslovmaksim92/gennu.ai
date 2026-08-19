@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ProtoBadgeComponent, ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent } from '@proto/ui';
+
 @Component({
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ProtoBadgeComponent, ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent],
   templateUrl: './integrations.component.html',
 })
 export class IntegrationsComponent {
@@ -11,26 +13,22 @@ export class IntegrationsComponent {
   openaiKey = '';
   openaiModel = 'gpt-5.6-terra';
   openaiConnected = signal(false);
+
   constructor() {
-    this.http
-      .get<any[]>('/api/integrations')
-      .subscribe((x) =>
-        this.openaiConnected.set(x.some((i) => i.provider === 'OPENAI' && i.hasSecret)),
-      );
+    this.http.get<any[]>('/api/integrations').subscribe((x) =>
+      this.openaiConnected.set(x.some((i) => i.provider === 'OPENAI' && i.hasSecret)),
+    );
   }
+
   saveOpenAI() {
-    this.http
-      .put('/api/integrations/OPENAI', {
-        name: 'OpenAI',
-        status: 'CONNECTED',
-        secret: this.openaiKey,
-        config: {
-          model: this.openaiModel,
-        },
-      })
-      .subscribe(() => {
-        this.openaiKey = '';
-        this.openaiConnected.set(true);
-      });
+    this.http.put('/api/integrations/OPENAI', {
+      name: 'OpenAI',
+      status: 'CONNECTED',
+      secret: this.openaiKey,
+      config: { model: this.openaiModel },
+    }).subscribe(() => {
+      this.openaiKey = '';
+      this.openaiConnected.set(true);
+    });
   }
 }

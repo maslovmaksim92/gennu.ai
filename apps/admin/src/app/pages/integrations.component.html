@@ -1,37 +1,25 @@
 <section class="page">
   <header class="page-head">
-    <div>
-      <span class="eyebrow">EXTERNAL SERVICES</span>
-      <h1>Integrations</h1>
-      <p>Provider credentials and service settings are stored server-side.</p>
-    </div>
+    <div><span class="eyebrow">EXTERNAL SERVICES</span><h1>Integrations</h1><p>Provider credentials and service settings are stored server-side.</p></div>
   </header>
   <div class="integration-grid">
     <article class="panel">
       <div class="service-head">
-        <div>
-          <h2>OpenAI</h2>
-          <p>Admin AI Chat via Responses API.</p>
-        </div>
-        <span class="status">{{ openaiConnected() ? 'Connected' : 'Not configured' }}</span>
+        <div><h2>OpenAI</h2><p>Admin AI Chat via Responses API.</p></div>
+        <proto-badge [variant]="openaiConnected() ? 'success' : 'neutral'">{{ openaiConnected() ? 'Connected' : 'Not configured' }}</proto-badge>
       </div>
-      <label>
-        API key
-        <input type="password" [(ngModel)]="openaiKey" placeholder="sk-…" />
-      </label>
-      <label>
-        Model
-        <input [(ngModel)]="openaiModel" />
-      </label>
-      <button class="primary" (click)="saveOpenAI()">Save OpenAI</button>
+      <proto-field label="API key" hint="The secret is encrypted and never returned to the browser.">
+        <input protoInput type="password" [(ngModel)]="openaiKey" placeholder="sk-…" />
+      </proto-field>
+      <proto-field label="Model">
+        <input protoInput [(ngModel)]="openaiModel" />
+      </proto-field>
+      <button protoButton (click)="saveOpenAI()">Save OpenAI</button>
     </article>
     <article class="panel disabled">
       <div class="service-head">
-        <div>
-          <h2>Timeweb</h2>
-          <p>Billing, S3, CDN and domains will be enabled in a later milestone.</p>
-        </div>
-        <span class="status">Planned</span>
+        <div><h2>Timeweb</h2><p>Billing, S3, CDN and domains will be enabled in a later milestone.</p></div>
+        <proto-badge>Planned</proto-badge>
       </div>
     </article>
   </div>

@@ -1,10 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent } from '@proto/ui';
 import { AuthService } from '../core/auth.service';
+
 @Component({
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -14,6 +16,7 @@ export class LoginComponent {
   password = '';
   loading = signal(false);
   error = signal('');
+
   async submit() {
     this.loading.set(true);
     this.error.set('');

@@ -1,0 +1,14 @@
+<div class="proto-dialog-backdrop" (click)="close.emit()">
+  <section class="proto-dialog" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+    <header class="proto-dialog-head">
+      <div>
+        <h2>{{ title() }}</h2>
+        @if (description()) {
+          <p>{{ description() }}</p>
+        }
+      </div>
+      <button protoButton variant="ghost" size="sm" type="button" (click)="close.emit()">Close</button>
+    </header>
+    <div class="proto-dialog-body"><ng-content /></div>
+  </section>
+</div>

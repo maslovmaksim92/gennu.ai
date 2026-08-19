@@ -15,6 +15,7 @@
     "strict": true,
     "paths": {
       "@proto/contracts": ["./libs/contracts/src/index.ts"],
+      "@proto/ui": ["./libs/ui/proto/src/index.ts"],
       "@proto/ui-ag-grid": ["./libs/ui/ag-grid/src/index.ts"]
     }
   },
