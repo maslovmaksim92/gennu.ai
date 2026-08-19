@@ -1,0 +1,7 @@
+<label class="atlas-field-label">{{ label() }}</label>
+<div class="atlas-field-control"><ng-content /></div>
+@if (error()) {
+  <small class="atlas-field-error">{{ error() }}</small>
+} @else if (hint()) {
+  <small class="atlas-field-hint">{{ hint() }}</small>
+}
