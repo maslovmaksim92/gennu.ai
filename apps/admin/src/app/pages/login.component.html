@@ -15,14 +15,14 @@
 
     <form class="login-card" (ngSubmit)="submit()">
       <div class="login-card-head"><h2>Sign in</h2><p>Enter your administrator credentials to continue.</p></div>
-      <proto-field label="Email">
-        <input protoInput type="email" name="email" [(ngModel)]="email" autocomplete="email" required />
-      </proto-field>
-      <proto-field label="Password">
-        <input protoInput type="password" name="password" [(ngModel)]="password" autocomplete="current-password" required />
-      </proto-field>
+      <atlas-field label="Email">
+        <input atlasInput type="email" name="email" [(ngModel)]="email" autocomplete="email" required />
+      </atlas-field>
+      <atlas-field label="Password">
+        <input atlasInput type="password" name="password" [(ngModel)]="password" autocomplete="current-password" required />
+      </atlas-field>
       @if (error()) { <div class="error">{{ error() }}</div> }
-      <button protoButton class="login-submit" [disabled]="loading()">
+      <button atlasButton class="login-submit" [disabled]="loading()">
         {{ loading() ? 'Signing in…' : 'Continue' }}
       </button>
       <small class="login-hint">Access is restricted to active administrators.</small>
