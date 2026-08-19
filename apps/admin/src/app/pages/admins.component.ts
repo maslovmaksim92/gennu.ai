@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent } from '@proto/ui';
+import { AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent } from '@atlas/ui';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 
 @Component({
   standalone: true,
-  imports: [FormsModule, AgGridAngular, ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent],
+  imports: [FormsModule, AgGridAngular, AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent],
   templateUrl: './admins.component.html',
 })
 export class AdminsComponent {
@@ -23,9 +23,13 @@ export class AdminsComponent {
     { field: 'createdAt', headerName: 'Created', flex: 1 },
   ];
 
-  constructor() { this.load(); }
+  constructor() {
+    this.load();
+  }
 
-  load() { this.http.get<any[]>('/api/admins').subscribe((x) => this.rows.set(x)); }
+  load() {
+    this.http.get<any[]>('/api/admins').subscribe((x) => this.rows.set(x));
+  }
 
   invite() {
     this.http.post<any>('/api/admins/invite', { email: this.inviteEmail }).subscribe((x) => {
