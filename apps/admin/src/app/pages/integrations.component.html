@@ -6,20 +6,20 @@
     <article class="panel">
       <div class="service-head">
         <div><h2>OpenAI</h2><p>Admin AI Chat via Responses API.</p></div>
-        <proto-badge [variant]="openaiConnected() ? 'success' : 'neutral'">{{ openaiConnected() ? 'Connected' : 'Not configured' }}</proto-badge>
+        <atlas-badge [variant]="openaiConnected() ? 'success' : 'neutral'">{{ openaiConnected() ? 'Connected' : 'Not configured' }}</atlas-badge>
       </div>
-      <proto-field label="API key" hint="The secret is encrypted and never returned to the browser.">
-        <input protoInput type="password" [(ngModel)]="openaiKey" placeholder="sk-…" />
-      </proto-field>
-      <proto-field label="Model">
-        <input protoInput [(ngModel)]="openaiModel" />
-      </proto-field>
-      <button protoButton (click)="saveOpenAI()">Save OpenAI</button>
+      <atlas-field label="API key" hint="The secret is encrypted and never returned to the browser.">
+        <input atlasInput type="password" [(ngModel)]="openaiKey" placeholder="sk-…" />
+      </atlas-field>
+      <atlas-field label="Model">
+        <input atlasInput [(ngModel)]="openaiModel" />
+      </atlas-field>
+      <button atlasButton (click)="saveOpenAI()">Save OpenAI</button>
     </article>
     <article class="panel disabled">
       <div class="service-head">
         <div><h2>Timeweb</h2><p>Billing, S3, CDN and domains will be enabled in a later milestone.</p></div>
-        <proto-badge>Planned</proto-badge>
+        <atlas-badge>Planned</atlas-badge>
       </div>
     </article>
   </div>
