@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ProtoBadgeComponent, ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent } from '@proto/ui';
+import { AtlasBadgeComponent, AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent } from '@atlas/ui';
 
 @Component({
   standalone: true,
-  imports: [FormsModule, ProtoBadgeComponent, ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent],
+  imports: [FormsModule, AtlasBadgeComponent, AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent],
   templateUrl: './integrations.component.html',
 })
 export class IntegrationsComponent {
