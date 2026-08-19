@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import cookieParser from 'cookie-parser';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
@@ -10,11 +9,9 @@ import { AppModule } from './app/app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('api');
-  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.enableCors({
     origin: process.env.ADMIN_WEB_URL ?? 'http://localhost:4200',
-    credentials: true,
   });
 
   if (process.env.NODE_ENV === 'production') {
