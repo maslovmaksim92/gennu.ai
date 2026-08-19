@@ -20,7 +20,7 @@
     "db:push": "prisma db push --schema=prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema=prisma/schema.prisma",
     "db:deploy": "prisma migrate deploy --schema=prisma/schema.prisma",
-    "db:seed": "tsx --env-file=.env prisma/seed.ts",
+    "db:seed": "node --env-file=.env --import=tsx prisma/seed.ts",
     "dev:infra": "docker compose -f compose/compose.dev.yml up -d postgres",
     "dev:infra:down": "docker compose -f compose/compose.dev.yml down"
   },
@@ -89,6 +89,6 @@
     "vitest": "^4.0.8"
   },
   "prisma": {
-    "seed": "tsx --env-file=.env prisma/seed.ts"
+    "seed": "node --env-file=.env --import=tsx prisma/seed.ts"
   }
 }
