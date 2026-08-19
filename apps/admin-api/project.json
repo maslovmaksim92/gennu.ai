@@ -11,7 +11,8 @@
         "platform": "node",
         "outputPath": "dist/apps/admin-api",
         "format": ["cjs"],
-        "bundle": false,
+        "bundle": true,
+        "thirdParty": false,
         "main": "apps/admin-api/src/main.ts",
         "tsConfig": "apps/admin-api/tsconfig.app.json",
         "assets": []
@@ -21,10 +22,17 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
-      "options": {"buildTarget": "admin-api:build", "runBuildTargetDependencies": false},
+      "options": {
+        "buildTarget": "admin-api:build",
+        "runBuildTargetDependencies": false
+      },
       "configurations": {
-        "development": {"buildTarget": "admin-api:build"},
-        "production": {"buildTarget": "admin-api:build"}
+        "development": {
+          "buildTarget": "admin-api:build"
+        },
+        "production": {
+          "buildTarget": "admin-api:build"
+        }
       }
     }
   }
