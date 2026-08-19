@@ -2,33 +2,77 @@
   <header class="page-head">
     <div>
       <span class="eyebrow">OVERVIEW</span>
-      <h1>Platform dashboard</h1>
-      <p>Administrative control center for Proto.ai.</p>
+      <h1>Dashboard</h1>
+      <p>Monitor the core resources of your Proto.ai workspace.</p>
     </div>
+    <button class="secondary">View activity</button>
   </header>
+
   <div class="stats">
     <article>
-      <span>Admins</span>
+      <div class="stat-head"><span>Administrators</span><span class="stat-dot"></span></div>
       <strong>{{ admins() }}</strong>
+      <small>People with platform access</small>
     </article>
     <article>
-      <span>Users</span>
+      <div class="stat-head"><span>Users</span><span class="stat-dot"></span></div>
       <strong>{{ users() }}</strong>
+      <small>Registered customer accounts</small>
     </article>
     <article>
-      <span>Themes</span>
+      <div class="stat-head"><span>Themes</span><span class="stat-dot"></span></div>
       <strong>{{ themes() }}</strong>
+      <small>Versioned visual systems</small>
     </article>
     <article>
-      <span>Blocks</span>
+      <div class="stat-head"><span>Blocks</span><span class="stat-dot"></span></div>
       <strong>{{ blocks() }}</strong>
+      <small>Reusable content blocks</small>
     </article>
   </div>
-  <div class="panel">
-    <h2>Admin MVP</h2>
-    <p>
-      The current milestone focuses only on platform administration. Studio, publishing and customer
-      site editing will be enabled in later milestones.
-    </p>
+
+  <div class="dashboard-grid">
+    <section class="panel dashboard-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Admin workspace</h2>
+          <p>Current product scope and operational status.</p>
+        </div>
+        <span class="status">Active</span>
+      </div>
+      <div class="dashboard-row">
+        <span>Administration</span>
+        <strong>Available</strong>
+      </div>
+      <div class="dashboard-row">
+        <span>Studio</span>
+        <strong class="muted-value">Planned</strong>
+      </div>
+      <div class="dashboard-row">
+        <span>Publishing</span>
+        <strong class="muted-value">Planned</strong>
+      </div>
+    </section>
+
+    <section class="panel dashboard-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Platform status</h2>
+          <p>Core services for the current MVP.</p>
+        </div>
+      </div>
+      <div class="dashboard-row">
+        <span>Admin API</span>
+        <span class="status success">Operational</span>
+      </div>
+      <div class="dashboard-row">
+        <span>PostgreSQL</span>
+        <span class="status success">Operational</span>
+      </div>
+      <div class="dashboard-row">
+        <span>AI integration</span>
+        <span class="status">Configured per service</span>
+      </div>
+    </section>
   </div>
 </section>
