@@ -85,7 +85,7 @@
     "sass": "1.90.0",
     "tailwindcss": "4.3.3",
     "tsx": "4.20.4",
-    "typescript": "7.0.0"
+    "typescript": "6.0.3"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
