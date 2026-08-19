@@ -3,7 +3,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import type { AuthUser } from '@proto/contracts';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
@@ -11,23 +11,23 @@ export class AuthService {
   loaded = signal(false);
   authenticated = computed(() => !!this.user());
   async load() {
-    if (this.loaded())
-      return this.user();
+    if (this.loaded()) return this.user();
     try {
       this.user.set(await firstValueFrom(this.http.get<AuthUser>('/api/auth/me')));
-    }
-    catch {
+    } catch {
       this.user.set(null);
-    }
-    finally {
+    } finally {
       this.loaded.set(true);
     }
     return this.user();
   }
   async login(email: string, password: string) {
-    const user = await firstValueFrom(this.http.post<AuthUser>('/api/auth/login', {
-      email, password
-    }));
+    const user = await firstValueFrom(
+      this.http.post<AuthUser>('/api/auth/login', {
+        email,
+        password,
+      }),
+    );
     this.user.set(user);
     this.loaded.set(true);
     return user;

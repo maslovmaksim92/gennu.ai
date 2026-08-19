@@ -11,7 +11,13 @@ export class AuthController {
   @Post('login')
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const { token, user } = await this.auth.login(dto.email, dto.password);
-    res.cookie('proto_admin_access', token, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 8 * 60 * 60 * 1000, path: '/' });
+    res.cookie('proto_admin_access', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 8 * 60 * 60 * 1000,
+      path: '/',
+    });
     return user;
   }
 

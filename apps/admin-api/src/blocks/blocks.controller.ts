@@ -180,7 +180,9 @@ export class BlocksController {
       throw new NotFoundException('Block not found.');
     }
     if (block.versions.some((version) => version.status !== PublishStatus.DRAFT)) {
-      throw new ConflictException('A block with published history cannot be deleted; deprecate it instead.');
+      throw new ConflictException(
+        'A block with published history cannot be deleted; deprecate it instead.',
+      );
     }
 
     return this.prisma.blockDefinition.delete({ where: { id } });

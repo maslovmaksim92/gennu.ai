@@ -12,10 +12,14 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-  app.enableCors({ origin: process.env.ADMIN_WEB_URL ?? 'http://localhost:4200', credentials: true });
+  app.enableCors({
+    origin: process.env.ADMIN_WEB_URL ?? 'http://localhost:4200',
+    credentials: true,
+  });
 
   if (process.env.NODE_ENV === 'production') {
-    const staticRoot = process.env.ADMIN_STATIC_ROOT ?? join(process.cwd(), 'dist/apps/admin/browser');
+    const staticRoot =
+      process.env.ADMIN_STATIC_ROOT ?? join(process.cwd(), 'dist/apps/admin/browser');
     if (existsSync(staticRoot)) {
       app.useStaticAssets(staticRoot);
       const express = app.getHttpAdapter().getInstance();

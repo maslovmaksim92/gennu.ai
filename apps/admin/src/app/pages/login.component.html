@@ -11,15 +11,17 @@
     <p>Sign in to manage the platform.</p>
     <label>
       Email
-      <input type="email" name="email" [(ngModel)]="email" required>
+      <input type="email" name="email" [(ngModel)]="email" required />
     </label>
     <label>
       Password
-      <input type="password" name="password" [(ngModel)]="password" required>
+      <input type="password" name="password" [(ngModel)]="password" required />
     </label>
-    @if(error()){
-      <div class="error">{{error()}}</div>
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
     }
-    <button class="primary" [disabled]="loading()">{{loading()?'Signing in…':'Sign in'}}</button>
+    <button class="primary" [disabled]="loading()">
+      {{ loading() ? 'Signing in…' : 'Sign in' }}
+    </button>
   </form>
 </div>

@@ -8,17 +8,17 @@
   </header>
   <div class="chat panel">
     <div class="messages">
-      @for(item of messages();track $index){
-        <div class="message" [class.me]="item.role==='user'">
-          <small>{{item.role==='user'?'You':'Proto AI'}}</small>
-          <p>{{item.content}}</p>
+      @for (item of messages(); track $index) {
+        <div class="message" [class.me]="item.role === 'user'">
+          <small>{{ item.role === 'user' ? 'You' : 'Proto AI' }}</small>
+          <p>{{ item.content }}</p>
         </div>
       }
     </div>
     <form class="composer" (ngSubmit)="send()">
       <textarea name="message" [(ngModel)]="message" placeholder="Ask Proto AI…" rows="3">
       </textarea>
-      <button class="primary" [disabled]="loading()">{{loading()?'Thinking…':'Send'}}</button>
+      <button class="primary" [disabled]="loading()">{{ loading() ? 'Thinking…' : 'Send' }}</button>
     </form>
   </div>
 </section>

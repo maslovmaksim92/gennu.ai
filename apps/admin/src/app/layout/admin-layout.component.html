@@ -17,9 +17,9 @@
       <a routerLink="/ai" routerLinkActive="active">AI Chat</a>
     </nav>
     <div class="account">
-      <small>{{auth.user()?.email}}</small>
+      <small>{{ auth.user()?.email }}</small>
       <button (click)="logout()">Sign out</button>
     </div>
   </aside>
-  <main> <router-outlet /></main>
+  <main><router-outlet /></main>
 </div>

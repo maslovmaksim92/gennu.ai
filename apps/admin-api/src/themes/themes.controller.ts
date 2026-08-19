@@ -176,7 +176,9 @@ export class ThemesController {
       throw new NotFoundException('Theme not found.');
     }
     if (theme.versions.some((version) => version.status !== PublishStatus.DRAFT)) {
-      throw new ConflictException('A theme with published history cannot be deleted; deprecate it instead.');
+      throw new ConflictException(
+        'A theme with published history cannot be deleted; deprecate it instead.',
+      );
     }
 
     return this.prisma.theme.delete({ where: { id } });

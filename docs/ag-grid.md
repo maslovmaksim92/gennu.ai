@@ -71,7 +71,7 @@ Use AG Grid for data-heavy tables. Use Taiga UI for surrounding forms, dialogs, 
 The shared setup reads an optional runtime key from:
 
 ```ts
-globalThis.__PROTO_AG_GRID_LICENSE_KEY__
+globalThis.__PROTO_AG_GRID_LICENSE_KEY__;
 ```
 
 or accepts it directly:
@@ -89,7 +89,7 @@ Without a licence key, Enterprise can be evaluated locally but production shows 
 `AllEnterpriseModule` enables all grid/table modules, but AG Grid 36 does not bundle AG Charts. If Proto.ai starts using Integrated Charts or Sparklines, add the compatible `ag-charts-enterprise` package and register:
 
 ```ts
-AllEnterpriseModule.with(AgChartsEnterpriseModule)
+AllEnterpriseModule.with(AgChartsEnterpriseModule);
 ```
 
 Do not add AG Charts merely for normal tables.

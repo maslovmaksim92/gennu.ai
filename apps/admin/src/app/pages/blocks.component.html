@@ -7,31 +7,31 @@
     </div>
     <button class="primary" (click)="creating.set(!creating())">New block</button>
   </header>
-  @if(creating()){
+  @if (creating()) {
     <div class="design-editor">
       <div class="panel editor">
         <label>
           Key
-          <input [(ngModel)]="key">
+          <input [(ngModel)]="key" />
         </label>
         <label>
           Name
-          <input [(ngModel)]="name">
+          <input [(ngModel)]="name" />
         </label>
         <label>
           Block schema JSON
-          <textarea [(ngModel)]="schema" rows="16">
-          </textarea>
+          <textarea [(ngModel)]="schema" rows="16"> </textarea>
         </label>
         <button class="primary" (click)="create()">Save draft</button>
       </div>
       <proto-inline-ai
         title="Block assistant"
         context="You are helping an administrator define a reusable Proto.ai UI block. Keep data and settings separate, use a portable schema, variants and semantic theme tokens. Do not generate framework-specific code."
-        placeholder="Например: создай schema для Hero с split и centered variants…" />
+        placeholder="Например: создай schema для Hero с split и centered variants…"
+      />
     </div>
   }
   <div class="panel grid-panel">
-    <ag-grid-angular style="width:100%;height:480px" [rowData]="rows()" [columnDefs]="cols" />
+    <ag-grid-angular style="width: 100%; height: 480px" [rowData]="rows()" [columnDefs]="cols" />
   </div>
 </section>

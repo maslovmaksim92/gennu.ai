@@ -3,9 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../core/auth.service';
 @Component({
-  standalone: true, imports: [
-    FormsModule
-  ], templateUrl: './login.component.html'
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './login.component.html',
 })
 export class LoginComponent {
   auth = inject(AuthService);
@@ -20,11 +20,9 @@ export class LoginComponent {
     try {
       await this.auth.login(this.email, this.password);
       await this.router.navigateByUrl('/dashboard');
-    }
-    catch {
+    } catch {
       this.error.set('Invalid email or password');
-    }
-    finally {
+    } finally {
       this.loading.set(false);
     }
   }

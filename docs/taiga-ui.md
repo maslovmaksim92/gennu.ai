@@ -27,19 +27,17 @@ The monorepo pins Taiga UI 5.x packages compatible with Angular 22:
 Admin registers Taiga UI in `app.config.ts`:
 
 ```ts
-import {provideTaiga} from '@taiga-ui/core';
+import { provideTaiga } from '@taiga-ui/core';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideTaiga(),
-  ],
+  providers: [provideTaiga()],
 };
 ```
 
 The application root is wrapped in `TuiRoot`:
 
 ```ts
-import {TuiRoot} from '@taiga-ui/core';
+import { TuiRoot } from '@taiga-ui/core';
 
 @Component({
   imports: [TuiRoot, RouterOutlet],
@@ -68,7 +66,7 @@ Taiga UI is tree-shakeable. Import only the standalone components/directives req
 Example:
 
 ```ts
-import {TuiButton} from '@taiga-ui/core';
+import { TuiButton } from '@taiga-ui/core';
 
 @Component({
   imports: [TuiButton],

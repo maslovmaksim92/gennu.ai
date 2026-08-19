@@ -11,7 +11,15 @@ import { PrismaService } from '../common/prisma.service';
 import { AuditService } from '../common/audit.service';
 
 @Module({
-  imports: [AuthModule, AdminsModule, UsersModule, ThemesModule, BlocksModule, IntegrationsModule, AiModule],
+  imports: [
+    AuthModule,
+    AdminsModule,
+    UsersModule,
+    ThemesModule,
+    BlocksModule,
+    IntegrationsModule,
+    AiModule,
+  ],
   controllers: [HealthController],
   providers: [PrismaService, AuditService],
   exports: [PrismaService, AuditService],

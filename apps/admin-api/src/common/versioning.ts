@@ -3,7 +3,9 @@ import { PublishStatus } from '@prisma/client';
 
 export function assertDraft(status: PublishStatus): void {
   if (status !== PublishStatus.DRAFT) {
-    throw new ConflictException('Published or deprecated versions are immutable. Create a new version.');
+    throw new ConflictException(
+      'Published or deprecated versions are immutable. Create a new version.',
+    );
   }
 }
 
@@ -13,7 +15,11 @@ export function assertCanPublish(status: PublishStatus): void {
   }
 }
 
-export function parseSemanticVersion(value: string): { major: number; minor: number; patch: number } {
+export function parseSemanticVersion(value: string): {
+  major: number;
+  minor: number;
+  patch: number;
+} {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(value);
   if (!match) {
     throw new BadRequestException('Version must use MAJOR.MINOR.PATCH format.');

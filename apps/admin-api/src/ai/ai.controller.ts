@@ -13,14 +13,14 @@ class ChatDto {
 @Controller('ai')
 @UseGuards(JwtGuard, AdminGuard)
 export class AiController {
-  constructor(private ai: AiService) {
-  }
+  constructor(private ai: AiService) {}
   @Post('chat')
   chat(
-  @Req()
-  req: any, 
-  @Body()
-  dto: ChatDto) {
+    @Req()
+    req: any,
+    @Body()
+    dto: ChatDto,
+  ) {
     return this.ai.chat(req.user.sub, dto.message, dto.sessionId);
   }
 }

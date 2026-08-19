@@ -7,31 +7,31 @@
     </div>
     <button class="primary" (click)="creating.set(!creating())">New theme</button>
   </header>
-  @if(creating()){
+  @if (creating()) {
     <div class="design-editor">
       <div class="panel editor">
         <label>
           Key
-          <input [(ngModel)]="key">
+          <input [(ngModel)]="key" />
         </label>
         <label>
           Name
-          <input [(ngModel)]="name">
+          <input [(ngModel)]="name" />
         </label>
         <label>
           Theme JSON
-          <textarea [(ngModel)]="schema" rows="16">
-          </textarea>
+          <textarea [(ngModel)]="schema" rows="16"> </textarea>
         </label>
         <button class="primary" (click)="create()">Save draft</button>
       </div>
       <proto-inline-ai
         title="Theme assistant"
         context="You are helping an administrator create a Proto.ai Theme Schema. Suggest structured JSON using semantic design tokens. Do not generate arbitrary CSS."
-        placeholder="Например: сделай премиальную светлую тему с serif-заголовками…" />
+        placeholder="Например: сделай премиальную светлую тему с serif-заголовками…"
+      />
     </div>
   }
   <div class="panel grid-panel">
-    <ag-grid-angular style="width:100%;height:480px" [rowData]="rows()" [columnDefs]="cols" />
+    <ag-grid-angular style="width: 100%; height: 480px" [rowData]="rows()" [columnDefs]="cols" />
   </div>
 </section>

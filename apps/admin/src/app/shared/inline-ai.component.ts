@@ -4,10 +4,8 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'proto-inline-ai',
   standalone: true,
-  imports: [
-    FormsModule
-  ],
-  templateUrl: './inline-ai.component.html'
+  imports: [FormsModule],
+  templateUrl: './inline-ai.component.html',
 })
 export class InlineAiComponent {
   @Input()
@@ -20,45 +18,52 @@ export class InlineAiComponent {
   prompt = '';
   sessionId?: string;
   loading = signal(false);
-  messages = signal<{
-    role: string;
-    content: string;
-  }[]>([]);
+  messages = signal<
+    {
+      role: string;
+      content: string;
+    }[]
+  >([]);
   send() {
     const text = this.prompt.trim();
-    if (!text)
-      return;
-    this.messages.update(x => [
+    if (!text) return;
+    this.messages.update((x) => [
       ...x,
       {
-        role: 'user', content: text
-      }
+        role: 'user',
+        content: text,
+      },
     ]);
     this.prompt = '';
     this.loading.set(true);
     const message = this.context ? `${this.context}\n\nAdmin request: ${text}` : text;
-    this.http.post<any>('/api/ai/chat', {
-      message, sessionId: this.sessionId
-    }).subscribe({
-      next: x => {
-        this.sessionId = x.sessionId;
-        this.messages.update(m => [
-          ...m,
-          {
-            role: 'assistant', content: x.message
-          }
-        ]);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.messages.update(m => [
-          ...m,
-          {
-            role: 'assistant', content: 'AI integration is not configured or the request failed.'
-          }
-        ]);
-        this.loading.set(false);
-      }
-    });
+    this.http
+      .post<any>('/api/ai/chat', {
+        message,
+        sessionId: this.sessionId,
+      })
+      .subscribe({
+        next: (x) => {
+          this.sessionId = x.sessionId;
+          this.messages.update((m) => [
+            ...m,
+            {
+              role: 'assistant',
+              content: x.message,
+            },
+          ]);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.messages.update((m) => [
+            ...m,
+            {
+              role: 'assistant',
+              content: 'AI integration is not configured or the request failed.',
+            },
+          ]);
+          this.loading.set(false);
+        },
+      });
   }
 }

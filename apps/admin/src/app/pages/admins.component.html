@@ -7,21 +7,22 @@
     </div>
     <button class="primary" (click)="showInvite.set(!showInvite())">Add admin</button>
   </header>
-  @if(showInvite()){
+  @if (showInvite()) {
     <div class="panel form-row">
-      <input placeholder="admin@example.com" [(ngModel)]="inviteEmail">
+      <input placeholder="admin@example.com" [(ngModel)]="inviteEmail" />
       <button class="primary" (click)="invite()">Create invite</button>
-      @if(inviteToken()){
-        <code class="token">{{inviteToken()}}</code>
+      @if (inviteToken()) {
+        <code class="token">{{ inviteToken() }}</code>
       }
     </div>
   }
   <div class="panel grid-panel">
     <ag-grid-angular
-      style="width:100%;height:420px"
+      style="width: 100%; height: 420px"
       [rowData]="rows()"
       [columnDefs]="cols"
       [pagination]="true"
-      [paginationPageSize]="20" />
+      [paginationPageSize]="20"
+    />
   </div>
 </section>

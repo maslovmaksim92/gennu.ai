@@ -7,9 +7,7 @@ import { credentialsInterceptor } from './core/credentials.interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([
-      credentialsInterceptor
-    ])),
-    provideTaiga()
-  ]
+    provideHttpClient(withInterceptors([credentialsInterceptor])),
+    provideTaiga(),
+  ],
 };

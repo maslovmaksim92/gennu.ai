@@ -5,15 +5,9 @@ import { AdminGuard } from '../common/admin.guard';
 import { IntegrationsController } from './integrations.controller';
 import { CryptoService } from './crypto.service';
 @Module({
-  imports: [
-    AuthModule
-  ], controllers: [
-    IntegrationsController
-  ], providers: [
-    PrismaService, CryptoService, AdminGuard
-  ], exports: [
-    CryptoService
-  ]
+  imports: [AuthModule],
+  controllers: [IntegrationsController],
+  providers: [PrismaService, CryptoService, AdminGuard],
+  exports: [CryptoService],
 })
-export class IntegrationsModule {
-}
+export class IntegrationsModule {}

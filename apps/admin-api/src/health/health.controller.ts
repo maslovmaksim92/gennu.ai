@@ -4,7 +4,9 @@ export class HealthController {
   @Get()
   get() {
     return {
-      ok: true, service: 'admin-api', time: new Date().toISOString()
+      ok: true,
+      service: 'admin-api',
+      time: new Date().toISOString(),
     };
   }
 }

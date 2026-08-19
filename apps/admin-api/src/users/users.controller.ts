@@ -5,34 +5,45 @@ import { PrismaService } from '../common/prisma.service';
 @Controller('users')
 @UseGuards(JwtGuard, AdminGuard)
 export class UsersController {
-  constructor(private prisma: PrismaService) {
-  }
+  constructor(private prisma: PrismaService) {}
   @Get()
   list() {
     return this.prisma.user.findMany({
       select: {
-        id: true, email: true, role: true, status: true, emailVerified: true, lastLoginAt: true, createdAt: true
-      }, orderBy: {
-        createdAt: 'desc'
-      }
+        id: true,
+        email: true,
+        role: true,
+        status: true,
+        emailVerified: true,
+        lastLoginAt: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
   @Patch(':id/status')
   status(
-  @Param('id')
-  id: string, 
-  @Body()
-  body: {
-    status: 'ACTIVE' | 'BLOCKED';
-  }) {
+    @Param('id')
+    id: string,
+    @Body()
+    body: {
+      status: 'ACTIVE' | 'BLOCKED';
+    },
+  ) {
     return this.prisma.user.update({
       where: {
-        id
-      }, data: {
-        status: body.status
-      }, select: {
-        id: true, email: true, status: true
-      }
+        id,
+      },
+      data: {
+        status: body.status,
+      },
+      select: {
+        id: true,
+        email: true,
+        status: true,
+      },
     });
   }
 }

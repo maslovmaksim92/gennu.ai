@@ -4,13 +4,8 @@ import { PrismaService } from '../common/prisma.service';
 import { AdminGuard } from '../common/admin.guard';
 import { ThemesController } from './themes.controller';
 @Module({
-  imports: [
-    AuthModule
-  ], controllers: [
-    ThemesController
-  ], providers: [
-    PrismaService, AdminGuard
-  ]
+  imports: [AuthModule],
+  controllers: [ThemesController],
+  providers: [PrismaService, AdminGuard],
 })
-export class ThemesModule {
-}
+export class ThemesModule {}

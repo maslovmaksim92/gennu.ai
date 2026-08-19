@@ -13,15 +13,15 @@
           <h2>OpenAI</h2>
           <p>Admin AI Chat via Responses API.</p>
         </div>
-        <span class="status">{{openaiConnected()?'Connected':'Not configured'}}</span>
+        <span class="status">{{ openaiConnected() ? 'Connected' : 'Not configured' }}</span>
       </div>
       <label>
         API key
-        <input type="password" [(ngModel)]="openaiKey" placeholder="sk-…">
+        <input type="password" [(ngModel)]="openaiKey" placeholder="sk-…" />
       </label>
       <label>
         Model
-        <input [(ngModel)]="openaiModel">
+        <input [(ngModel)]="openaiModel" />
       </label>
       <button class="primary" (click)="saveOpenAI()">Save OpenAI</button>
     </article>
