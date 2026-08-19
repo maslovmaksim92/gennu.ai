@@ -5,17 +5,14 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "platform": "node",
         "outputPath": "dist/apps/admin-api",
-        "format": ["cjs"],
-        "bundle": true,
-        "thirdParty": false,
         "main": "apps/admin-api/src/main.ts",
         "tsConfig": "apps/admin-api/tsconfig.app.json",
-        "assets": []
+        "assets": [],
+        "clean": true
       }
     },
     "serve": {
