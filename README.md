@@ -8,7 +8,7 @@ First implementation slice of Proto.ai. This stage intentionally includes only t
 - NestJS 11 admin API
 - TypeScript 6
 - PostgreSQL + Prisma
-- Admin authentication with HTTP-only JWT cookie
+- Admin authentication with JWT Bearer tokens
 - Admin invitation and management
 - User list and status management
 - Versioned Themes and Blocks
@@ -88,6 +88,16 @@ Admin UI: http://localhost:4200
 
 Admin API: http://localhost:3001/api
 
+## Admin authentication
+
+`POST /api/auth/login` returns a JWT together with the authenticated administrator. The Angular Admin stores the access token in `sessionStorage` and sends it to protected API endpoints using:
+
+```http
+Authorization: Bearer <token>
+```
+
+The Admin application does not use authentication cookies. Closing the browser session clears the token from `sessionStorage`; logout also removes it locally.
+
 ## Database commands
 
 ```bash
@@ -111,6 +121,12 @@ pnpm db:deploy
 
 # Seed development data / initial administrator
 pnpm db:seed
+
+# Generate client, push schema and seed administrator
+pnpm db:setup
+
+# Open Prisma Studio
+pnpm db:studio
 ```
 
 `db:generate`, `db:push`, `db:migrate`, and `db:deploy` explicitly use `prisma/schema.prisma`.
