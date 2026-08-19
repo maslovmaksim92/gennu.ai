@@ -11,6 +11,8 @@
     "lint": "nx run-many -t lint --all",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
+    "format:ts": "prettier \"**/*.ts\" --write",
+    "format:ts:check": "prettier \"**/*.ts\" --check",
     "check:templates": "node scripts/check-inline-templates.mjs",
     "check": "pnpm format:check && pnpm check:templates",
     "db:generate": "prisma generate",
