@@ -13,7 +13,6 @@
     "lib": ["ES2022", "DOM"],
     "skipLibCheck": true,
     "strict": true,
-    "baseUrl": ".",
     "paths": {
       "@proto/contracts": ["libs/contracts/src/index.ts"],
       "@proto/ui-ag-grid": ["libs/ui/ag-grid/src/index.ts"]
