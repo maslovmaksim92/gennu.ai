@@ -57,61 +57,80 @@ select.atlas-control {
   color: #a3a3a3;
 }
 
+button[atlasButton],
 .atlas-button {
   min-height: var(--atlas-control-height);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
+  box-sizing: border-box;
   border-radius: var(--atlas-ui-radius);
   padding: 0 14px;
   font: inherit;
   font-size: 14px;
   font-weight: 500;
   line-height: 1;
+  text-decoration: none;
+  appearance: none;
   cursor: pointer;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease, opacity 120ms ease;
 }
 
+button[atlasButton][data-size='sm'],
 .atlas-button[data-size='sm'] {
   min-height: 32px;
   padding-inline: 10px;
   font-size: 13px;
 }
 
+button[atlasButton][data-variant='primary'],
 .atlas-button[data-variant='primary'] {
   border: 1px solid #000;
   background: #000;
   color: #fff;
 }
 
+button[atlasButton][data-variant='primary']:hover:not(:disabled),
 .atlas-button[data-variant='primary']:hover:not(:disabled) {
   background: #262626;
 }
 
+button[atlasButton][data-variant='secondary'],
 .atlas-button[data-variant='secondary'] {
   border: 1px solid var(--atlas-ui-border);
   background: #fff;
   color: #171717;
 }
 
+button[atlasButton][data-variant='secondary']:hover:not(:disabled),
 .atlas-button[data-variant='secondary']:hover:not(:disabled),
+button[atlasButton][data-variant='ghost']:hover:not(:disabled),
 .atlas-button[data-variant='ghost']:hover:not(:disabled) {
   background: var(--atlas-ui-bg-hover);
 }
 
+button[atlasButton][data-variant='ghost'],
 .atlas-button[data-variant='ghost'] {
   border: 1px solid transparent;
   background: transparent;
   color: #404040;
 }
 
+button[atlasButton][data-variant='danger'],
 .atlas-button[data-variant='danger'] {
   border: 1px solid #dc2626;
   background: #dc2626;
   color: #fff;
 }
 
+button[atlasButton]:focus-visible,
+.atlas-button:focus-visible {
+  outline: 2px solid var(--atlas-ui-focus);
+  outline-offset: 2px;
+}
+
+button[atlasButton]:disabled,
 .atlas-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
