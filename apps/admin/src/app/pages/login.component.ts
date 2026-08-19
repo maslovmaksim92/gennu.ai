@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent } from '@proto/ui';
+import { AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent } from '@atlas/ui';
 import { AuthService } from '../core/auth.service';
 
 @Component({
   standalone: true,
-  imports: [FormsModule, ProtoButtonDirective, ProtoControlDirective, ProtoFieldComponent],
+  imports: [FormsModule, AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
