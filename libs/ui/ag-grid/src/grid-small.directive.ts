@@ -1,15 +1,15 @@
 import { Directive, inject } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
-import { gridLocale } from '../grid-locale';
-import { CellTemplateHostDirective } from '../cell-template-render/grid-template.directive';
-import { GridThemeDirective } from '../grid-theme/grid-theme.directive';
-import { defaultColDef, pageSizeSelector } from '../grid-options';
+import { CellTemplateHostDirective } from './cell-template-render/grid-template.directive';
+import { GridThemeDirective } from './grid-theme/grid-theme.directive';
+import { defaultColDef, pageSizeSelector } from './grid-options';
+import { gridLocale } from './grid-locale';
 
 @Directive({
-  selector: 'ag-grid-angular[ppGridSm]',
+  selector: 'ag-grid-angular',
   hostDirectives: [CellTemplateHostDirective, GridThemeDirective],
 })
-export class PPGridSmallOptionsDirective {
+export class GridSmallOptionsDirective {
   private readonly agGridAngular = inject(AgGridAngular);
 
   constructor() {

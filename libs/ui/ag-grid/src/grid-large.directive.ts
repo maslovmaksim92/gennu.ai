@@ -4,8 +4,8 @@ import { AutoGroupColumnDef, Column, ICellRendererParams } from 'ag-grid-communi
 import { debounceTime, startWith, Subject, tap } from 'rxjs';
 import { bigGridDefaultColDef, pageSizeSelector } from './grid-options';
 import { gridLocale } from './grid-locale';
-import { CellTemplateHostDirective } from '../cell-template-render/grid-template.directive';
-import { GridThemeDirective } from '../grid-theme/grid-theme.directive';
+import { CellTemplateHostDirective } from './cell-template-render/grid-template.directive';
+import { GridThemeDirective } from './grid-theme/grid-theme.directive';
 
 const autoGroupColumnDef: AutoGroupColumnDef = {
   pinned: 'left',

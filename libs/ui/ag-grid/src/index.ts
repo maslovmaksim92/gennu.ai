@@ -1,6 +1,7 @@
 import { ModuleRegistry } from 'ag-grid-community';
 import { AllEnterpriseModule, LicenseManager } from 'ag-grid-enterprise';
 import { AgGridAngular } from 'ag-grid-angular';
+import { GridSmallOptionsDirective } from './grid-small.directive';
 
 declare global {
   // Optional runtime licence injection for Admin and Studio.
@@ -25,4 +26,6 @@ export function configureAgGridEnterprise(licenseKey?: string): void {
   configured = true;
 }
 
-export const AgGridImports = [AgGridAngular];
+export { GridSmallOptionsDirective };
+
+export const AgGridImports = [AgGridAngular, GridSmallOptionsDirective];

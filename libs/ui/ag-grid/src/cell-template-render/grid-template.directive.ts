@@ -18,7 +18,7 @@ import {
   assertInInjectionContext,
 } from '@angular/core';
 
-export class RenderData {
+export interface RenderData {
   model: unknown;
   index: number;
   elementContainer: Element;
@@ -33,28 +33,28 @@ export function injectCellRender() {
   const templateHost = inject(GridTemplateHostService);
   return (name: string, data: RenderData) => {
     const template = templateHost.getTemplate(name);
-    return template.render(data);
+    return template?.render(data);
   };
 }
 
 @Injectable()
 export class GridTemplateHostService implements OnDestroy {
-  #tempalates: Set<CellTemplateDirective>;
+  #tempalates?: Set<CellTemplateDirective>;
 
   ngOnDestroy() {
     this.clear();
   }
 
   public clear(): void {
-    this.#tempalates.clear();
+    this.#tempalates?.clear();
   }
 
   public setTemplates(tempalates: readonly CellTemplateDirective[]): void {
     this.#tempalates = new Set(tempalates);
   }
 
-  public getTemplate(name: string): CellTemplateDirective {
-    for (const item of this.#tempalates) {
+  public getTemplate(name: string) {
+    for (const item of this.#tempalates ?? []) {
       if (item.name() === name) {
         return item;
       }
@@ -82,9 +82,9 @@ export class CellTemplateHostDirective {
       container: document.querySelector('.selector')
     });
   */
-  public render(name: string, data: RenderData): unknown[] {
+  public render(name: string, data: RenderData) {
     const template = this.cellTemplates().find((c) => c.name() === name);
-    return template.render(data);
+    return template?.render(data);
   }
 }
 
