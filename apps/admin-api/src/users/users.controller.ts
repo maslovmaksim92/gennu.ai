@@ -36,6 +36,48 @@ export class UsersController {
     });
   }
 
+  @Patch(':id')
+  public async update(
+    @Param('id') id: string,
+    @Body()
+    body: {
+      email: string;
+      status: 'ACTIVE' | 'BLOCKED' | 'INVITED';
+      emailVerified: boolean;
+    },
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, role: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.role === 'ADMIN') {
+      throw new BadRequestException('Administrators must be edited from the Administrators table');
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        email: body.email.trim().toLowerCase(),
+        status: body.status,
+        emailVerified: body.emailVerified,
+      },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        status: true,
+        emailVerified: true,
+        lastLoginAt: true,
+        createdAt: true,
+      },
+    });
+  }
+
   @Patch(':id/status')
   public status(
     @Param('id') id: string,
