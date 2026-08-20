@@ -1,16 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { AgGridAngular } from 'ag-grid-angular';
+import { AgGridImports } from '@atlas/ui-ag-grid';
 import { ColDef } from 'ag-grid-community';
+
 @Component({
   standalone: true,
-  imports: [AgGridAngular],
+  imports: [AgGridImports],
   templateUrl: './users.component.html',
 })
 export class UsersComponent {
-  http = inject(HttpClient);
-  rows = signal<any[]>([]);
-  cols: ColDef[] = [
+  private readonly http = inject(HttpClient);
+
+  protected readonly rows = signal<any[]>([]);
+  protected readonly cols: ColDef[] = [
     {
       field: 'email',
       flex: 1,
@@ -39,7 +41,12 @@ export class UsersComponent {
       flex: 1,
     },
   ];
+
   constructor() {
-    this.http.get<any[]>('/api/users').subscribe((x) => this.rows.set(x));
+    this.load();
+  }
+
+  private load(): void {
+    this.http.get<any[]>('/api/users').subscribe((rows) => this.rows.set(rows));
   }
 }
