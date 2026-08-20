@@ -7,6 +7,7 @@
     </div>
     <button atlasButton (click)="showInvite.set(!showInvite())">Add admin</button>
   </header>
+
   @if (showInvite()) {
     <div class="panel form-row">
       <atlas-field
@@ -21,6 +22,7 @@
       }
     </div>
   }
+
   <div class="panel grid-panel">
     <ag-grid-angular
       [rowData]="rows()"
@@ -29,4 +31,31 @@
       [paginationPageSize]="20"
     />
   </div>
+
+  @if (editingAdmin(); as admin) {
+    <atlas-dialog
+      title="Edit administrator"
+      [description]="admin.email"
+      (close)="closeEdit()"
+    >
+      <div class="form-stack">
+        <atlas-field label="Email">
+          <input atlasInput type="email" [(ngModel)]="editEmail" />
+        </atlas-field>
+
+        <atlas-field label="Status">
+          <select atlasSelect [(ngModel)]="editStatus">
+            <option value="ACTIVE">Active</option>
+            <option value="BLOCKED">Blocked</option>
+            <option value="INVITED">Invited</option>
+          </select>
+        </atlas-field>
+
+        <div class="form-actions">
+          <button atlasButton variant="secondary" type="button" (click)="closeEdit()">Cancel</button>
+          <button atlasButton type="button" (click)="saveEdit()">Save changes</button>
+        </div>
+      </div>
+    </atlas-dialog>
+  }
 </section>
