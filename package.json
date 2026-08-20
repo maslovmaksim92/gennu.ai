@@ -47,6 +47,7 @@
     "@taiga-ui/icons": "^5.17.0",
     "@taiga-ui/kit": "^5.17.0",
     "@taiga-ui/layout": "^5.17.0",
+    "@taiga-ui/polymorpheus": "^5.0.1",
     "@taiga-ui/styles": "^5.17.0",
     "ag-grid-angular": "^36.0.2",
     "ag-grid-community": "^36.0.2",
