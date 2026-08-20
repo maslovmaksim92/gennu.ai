@@ -26,6 +26,17 @@ Do not invent future apps unless requested. A reserved README is acceptable.
 
 Use Angular for Admin, Studio, and Landing. Use NestJS for backend applications. Prefer standalone Angular components and `ApplicationConfig` providers.
 
+## Angular localize
+
+All Angular applications (Admin, Studio, and Landing) must be created with `@angular/localize` support enabled.
+
+- Keep `@angular/localize` aligned with the workspace Angular version.
+- Add `@angular/localize/init` to the application build `polyfills` when runtime `$localize` support is required.
+- Add `"@angular/localize"` to the application's TypeScript `types`.
+- Define an `i18n.sourceLocale` in the Nx project configuration. The current source locale is `en-US` until product localization requirements change.
+- Add an `extract-i18n` target using `@angular/build:extract-i18n` so messages can be extracted consistently.
+- Do not enable multi-locale production builds until actual translation files/locales have been defined.
+
 ## TypeScript access modifiers
 
 Use explicit access modifiers and the narrowest useful visibility for class members.
