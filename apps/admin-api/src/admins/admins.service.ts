@@ -64,6 +64,42 @@ export class AdminsService {
     return { id: user.id, email: user.email };
   }
 
+  public async update(
+    id: string,
+    data: { email: string; status: 'ACTIVE' | 'BLOCKED' | 'INVITED' },
+    actorId: string,
+  ) {
+    const admin = await this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, email: true, role: true },
+    });
+
+    if (!admin || admin.role !== 'ADMIN') {
+      throw new NotFoundException('Administrator not found');
+    }
+
+    if (id === actorId && data.status !== 'ACTIVE') {
+      throw new BadRequestException('You cannot disable your own administrator account');
+    }
+
+    const updated = await this.prisma.user.update({
+      where: { id },
+      data: {
+        email: data.email.trim().toLowerCase(),
+        status: data.status,
+      },
+      select: { id: true, email: true, status: true, lastLoginAt: true, createdAt: true },
+    });
+
+    await this.audit.log(actorId, 'ADMIN_UPDATED', 'User', admin.id, {
+      previousEmail: admin.email,
+      email: updated.email,
+      status: updated.status,
+    });
+
+    return updated;
+  }
+
   public async remove(id: string, actorId: string): Promise<{ id: string }> {
     if (id === actorId) {
       throw new BadRequestException('You cannot delete your own administrator account');
