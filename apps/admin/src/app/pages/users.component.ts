@@ -1,42 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { AtlasControlDirective, AtlasFieldComponent } from '@atlas/ui';
 import { AgGridImports } from '@atlas/ui-ag-grid';
-import { TuiButton, TuiDialog, TuiInput } from '@taiga-ui/core';
+import { TuiDialogService } from '@taiga-ui/core';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { ColDef, ICellRendererParams } from 'ag-grid-community';
-
-interface UserRow {
-  id: string;
-  email: string;
-  role: string;
-  status: 'ACTIVE' | 'BLOCKED' | 'INVITED';
-  emailVerified: boolean;
-  lastLoginAt: string | null;
-  createdAt: string;
-}
+import { EditUserDialogComponent } from './edit-user-dialog.component';
+import { UserRow } from './users.types';
 
 @Component({
-  imports: [
-    FormsModule,
-    AgGridImports,
-    AtlasControlDirective,
-    AtlasFieldComponent,
-    TuiButton,
-    TuiDialog,
-    TuiInput,
-  ],
+  imports: [AgGridImports],
   templateUrl: './users.component.html',
 })
 export class UsersComponent {
   private readonly http = inject(HttpClient);
+  private readonly dialogs = inject(TuiDialogService);
 
   protected readonly rows = signal<UserRow[]>([]);
-  protected readonly editingUser = signal<UserRow | null>(null);
-  protected editDialogOpen = false;
-  protected editEmail = '';
-  protected editStatus: UserRow['status'] = 'ACTIVE';
-  protected editEmailVerified = false;
   protected readonly cols: ColDef<UserRow>[] = [
     { field: 'email', flex: 1 },
     { field: 'role', width: 120 },
@@ -57,27 +36,6 @@ export class UsersComponent {
     this.load();
   }
 
-  protected closeEdit(): void {
-    this.editDialogOpen = false;
-    this.editingUser.set(null);
-  }
-
-  protected saveEdit(): void {
-    const user = this.editingUser();
-    if (!user) return;
-
-    this.http
-      .patch<UserRow>(`/api/users/${user.id}`, {
-        email: this.editEmail.trim(),
-        status: this.editStatus,
-        emailVerified: this.editEmailVerified,
-      })
-      .subscribe(() => {
-        this.closeEdit();
-        this.load();
-      });
-  }
-
   private createActions(user: UserRow | undefined): HTMLElement {
     const container = document.createElement('div');
     container.style.display = 'flex';
@@ -91,7 +49,9 @@ export class UsersComponent {
     editButton.textContent = 'Edit';
     editButton.disabled = !user;
     editButton.addEventListener('click', () => {
-      if (user) this.openEdit(user);
+      if (user) {
+        this.openEdit(user);
+      }
     });
 
     const deleteButton = document.createElement('button');
@@ -102,7 +62,9 @@ export class UsersComponent {
     deleteButton.textContent = 'Delete';
     deleteButton.disabled = !user || user.role === 'ADMIN';
     deleteButton.addEventListener('click', () => {
-      if (user) this.remove(user);
+      if (user) {
+        this.remove(user);
+      }
     });
 
     container.append(editButton, deleteButton);
@@ -110,15 +72,20 @@ export class UsersComponent {
   }
 
   private openEdit(user: UserRow): void {
-    this.editEmail = user.email;
-    this.editStatus = user.status;
-    this.editEmailVerified = user.emailVerified;
-    this.editingUser.set(user);
-    this.editDialogOpen = true;
+    this.dialogs
+      .open<UserRow>(new PolymorpheusComponent(EditUserDialogComponent), {
+        label: 'Edit user',
+        size: 's',
+        data: user,
+      })
+      .subscribe(() => this.load());
   }
 
   private remove(user: UserRow): void {
-    if (!window.confirm(`Delete user ${user.email}?`)) return;
+    if (!window.confirm(`Delete user ${user.email}?`)) {
+      return;
+    }
+
     this.http.delete(`/api/users/${user.id}`).subscribe(() => this.load());
   }
 
