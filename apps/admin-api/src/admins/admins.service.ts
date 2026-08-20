@@ -6,21 +6,24 @@ import { AuditService } from '../common/audit.service';
 
 @Injectable()
 export class AdminsService {
-  constructor(
-    private prisma: PrismaService,
-    private audit: AuditService,
+  public constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditService,
   ) {}
-  list() {
+
+  public list() {
     return this.prisma.user.findMany({
       where: { role: 'ADMIN' },
       select: { id: true, email: true, status: true, lastLoginAt: true, createdAt: true },
       orderBy: { createdAt: 'desc' },
     });
   }
-  invites() {
+
+  public invites() {
     return this.prisma.adminInvite.findMany({ orderBy: { createdAt: 'desc' } });
   }
-  async invite(email: string, actorId: string) {
+
+  public async invite(email: string, actorId: string) {
     const exists = await this.prisma.user.findUnique({ where: { email } });
     if (exists?.role === 'ADMIN') throw new BadRequestException('Already admin');
     const token = randomBytes(32).toString('hex');
@@ -36,7 +39,8 @@ export class AdminsService {
     await this.audit.log(actorId, 'ADMIN_INVITE_CREATED', 'AdminInvite', invite.id, { email });
     return { ...invite, inviteToken: token };
   }
-  async accept(token: string, password: string) {
+
+  public async accept(token: string, password: string) {
     const tokenHash = createHash('sha256').update(token).digest('hex');
     const invite = await this.prisma.adminInvite.findUnique({ where: { tokenHash } });
     if (!invite || invite.status !== 'PENDING' || invite.expiresAt < new Date())
@@ -58,5 +62,43 @@ export class AdminsService {
       data: { status: 'ACCEPTED', acceptedAt: new Date() },
     });
     return { id: user.id, email: user.email };
+  }
+
+  public async remove(id: string, actorId: string): Promise<{ id: string }> {
+    if (id === actorId) {
+      throw new BadRequestException('You cannot delete your own administrator account');
+    }
+
+    const admin = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        _count: {
+          select: {
+            createdThemes: true,
+            createdBlocks: true,
+            invitesSent: true,
+            auditEntries: true,
+            chatSessions: true,
+            sites: true,
+          },
+        },
+      },
+    });
+
+    if (!admin || admin.role !== 'ADMIN') {
+      throw new NotFoundException('Administrator not found');
+    }
+
+    const hasRelatedData = Object.values(admin._count).some((count) => count > 0);
+    if (hasRelatedData) {
+      throw new BadRequestException('Administrator has related data and cannot be deleted');
+    }
+
+    await this.audit.log(actorId, 'ADMIN_DELETED', 'User', admin.id, { email: admin.email });
+    await this.prisma.user.delete({ where: { id } });
+    return { id };
   }
 }
