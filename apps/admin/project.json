@@ -18,7 +18,15 @@
         "tsConfig": "apps/admin/tsconfig.json",
         "polyfills": ["@angular/localize/init"],
         "localize": false,
+        "assets": [
+          {
+            "glob": "**/*.svg",
+            "input": "node_modules/@taiga-ui/icons/src",
+            "output": "assets/taiga-ui/icons"
+          }
+        ],
         "styles": [
+          "@taiga-ui/styles/taiga-ui-global.less",
           "styles/tailwind.css",
           "libs/ui/atlas/src/styles.scss",
           "apps/admin/src/styles.scss",
