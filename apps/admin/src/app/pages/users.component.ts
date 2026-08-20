@@ -1,5 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+  AtlasButtonDirective,
+  AtlasControlDirective,
+  AtlasDialogComponent,
+  AtlasFieldComponent,
+} from '@atlas/ui';
 import { AgGridImports } from '@atlas/ui-ag-grid';
 import { ColDef, ICellRendererParams } from 'ag-grid-community';
 
@@ -7,20 +14,31 @@ interface UserRow {
   id: string;
   email: string;
   role: string;
-  status: string;
+  status: 'ACTIVE' | 'BLOCKED' | 'INVITED';
   emailVerified: boolean;
   lastLoginAt: string | null;
   createdAt: string;
 }
 
 @Component({
-  imports: [AgGridImports],
+  imports: [
+    FormsModule,
+    AgGridImports,
+    AtlasButtonDirective,
+    AtlasControlDirective,
+    AtlasDialogComponent,
+    AtlasFieldComponent,
+  ],
   templateUrl: './users.component.html',
 })
 export class UsersComponent {
   private readonly http = inject(HttpClient);
 
   protected readonly rows = signal<UserRow[]>([]);
+  protected readonly editingUser = signal<UserRow | null>(null);
+  protected editEmail = '';
+  protected editStatus: UserRow['status'] = 'ACTIVE';
+  protected editEmailVerified = false;
   protected readonly cols: ColDef<UserRow>[] = [
     { field: 'email', flex: 1 },
     { field: 'role', width: 120 },
@@ -30,10 +48,10 @@ export class UsersComponent {
     { field: 'createdAt', headerName: 'Created', flex: 1 },
     {
       headerName: '',
-      width: 110,
+      width: 180,
       sortable: false,
       filter: false,
-      cellRenderer: (params: ICellRendererParams<UserRow>) => this.createDeleteButton(params.data),
+      cellRenderer: (params: ICellRendererParams<UserRow>) => this.createActions(params.data),
     },
   ];
 
@@ -41,18 +59,62 @@ export class UsersComponent {
     this.load();
   }
 
-  private createDeleteButton(user: UserRow | undefined): HTMLButtonElement {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'atlas-button';
-    button.dataset.variant = 'danger';
-    button.dataset.size = 'sm';
-    button.textContent = 'Delete';
-    button.disabled = !user || user.role === 'ADMIN';
-    button.addEventListener('click', () => {
+  protected closeEdit(): void {
+    this.editingUser.set(null);
+  }
+
+  protected saveEdit(): void {
+    const user = this.editingUser();
+    if (!user) return;
+
+    this.http
+      .patch<UserRow>(`/api/users/${user.id}`, {
+        email: this.editEmail.trim(),
+        status: this.editStatus,
+        emailVerified: this.editEmailVerified,
+      })
+      .subscribe(() => {
+        this.closeEdit();
+        this.load();
+      });
+  }
+
+  private createActions(user: UserRow | undefined): HTMLElement {
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.gap = '6px';
+
+    const editButton = document.createElement('button');
+    editButton.type = 'button';
+    editButton.className = 'atlas-button';
+    editButton.dataset.variant = 'secondary';
+    editButton.dataset.size = 'sm';
+    editButton.textContent = 'Edit';
+    editButton.disabled = !user;
+    editButton.addEventListener('click', () => {
+      if (user) this.openEdit(user);
+    });
+
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'atlas-button';
+    deleteButton.dataset.variant = 'danger';
+    deleteButton.dataset.size = 'sm';
+    deleteButton.textContent = 'Delete';
+    deleteButton.disabled = !user || user.role === 'ADMIN';
+    deleteButton.addEventListener('click', () => {
       if (user) this.remove(user);
     });
-    return button;
+
+    container.append(editButton, deleteButton);
+    return container;
+  }
+
+  private openEdit(user: UserRow): void {
+    this.editEmail = user.email;
+    this.editStatus = user.status;
+    this.editEmailVerified = user.emailVerified;
+    this.editingUser.set(user);
   }
 
   private remove(user: UserRow): void {
