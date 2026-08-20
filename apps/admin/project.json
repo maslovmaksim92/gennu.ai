@@ -28,8 +28,11 @@
         "outputPath": "dist/apps/admin"
       },
       "configurations": {
-        "ru-RU": {
-          "localize": ["ru-RU"]
+        "development": {
+          "localize": ["ru-RU"],
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
         }
       }
     },
@@ -42,10 +45,11 @@
         "host": "0.0.0.0"
       },
       "configurations": {
-        "ru-RU": {
-          "buildTarget": "admin:build:ru-RU"
+        "development": {
+          "buildTarget": "admin:build:development"
         }
-      }
+      },
+      "defaultConfiguration": "development"
     },
     "extract-i18n": {
       "executor": "@angular/build:extract-i18n",
