@@ -12,6 +12,7 @@ apps/
 
 libs/
   ui/
+    atlas/
     ag-grid/
   contracts/
   theme-engine/
@@ -24,6 +25,36 @@ Do not invent future apps unless requested. A reserved README is acceptable.
 ## Angular and NestJS
 
 Use Angular for Admin, Studio, and Landing. Use NestJS for backend applications. Prefer standalone Angular components and `ApplicationConfig` providers.
+
+## TypeScript access modifiers
+
+Use explicit access modifiers and the narrowest useful visibility for class members.
+
+- Use `private` for implementation details, injected dependencies, helpers, and state that is only used inside the class.
+- Use `protected` for Angular component members and methods that are consumed by the component template but are not part of the component's external API.
+- Use `public` for intentional external APIs such as service methods, controller handlers, and members that other classes are expected to consume.
+- Prefer `readonly` for injected dependencies, signals, computed values, column definitions, configuration objects, and any field that should not be reassigned.
+- Do not make Angular template bindings `private` because templates must be able to access them.
+- NestJS constructor dependencies should normally be `private readonly` unless they intentionally form part of a subclass API.
+
+Example:
+
+```ts
+export class ExampleComponent {
+  private readonly http = inject(HttpClient);
+
+  protected readonly loading = signal(false);
+  protected query = '';
+
+  protected submit(): void {
+    this.load();
+  }
+
+  private load(): void {
+    // Internal implementation.
+  }
+}
+```
 
 ## Tailwind CSS
 
