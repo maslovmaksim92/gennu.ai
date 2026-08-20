@@ -1,0 +1,13 @@
+<form tuiForm (ngSubmit)="create()">
+  <tui-textfield>
+    <label tuiLabel>Administrator email</label>
+    <input tuiInput type="email" name="email" placeholder="admin@example.com" [(ngModel)]="email" />
+  </tui-textfield>
+
+  <p>An invitation token will be generated for this address.</p>
+
+  <footer>
+    <button appearance="secondary" tuiButton type="button" (click)="cancel()">Cancel</button>
+    <button tuiButton type="submit" [disabled]="creating">Create invite</button>
+  </footer>
+</form>
