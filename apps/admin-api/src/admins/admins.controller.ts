@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { IsEmail, IsString, MinLength } from 'class-validator';
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
@@ -33,6 +33,16 @@ export class AdminsController {
   @Post('invite')
   public invite(@Body() dto: InviteDto, @Req() req: any) {
     return this.service.invite(dto.email, req.user.sub);
+  }
+
+  @UseGuards(JwtGuard, AdminGuard)
+  @Patch(':id')
+  public update(
+    @Param('id') id: string,
+    @Body() body: { email: string; status: 'ACTIVE' | 'BLOCKED' | 'INVITED' },
+    @Req() req: any,
+  ) {
+    return this.service.update(id, body, req.user.sub);
   }
 
   @UseGuards(JwtGuard, AdminGuard)
