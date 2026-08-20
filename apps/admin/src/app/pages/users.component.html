@@ -15,4 +15,36 @@
       [paginationPageSize]="25"
     />
   </div>
+
+  @if (editingUser(); as user) {
+    <atlas-dialog
+      title="Edit user"
+      [description]="user.email"
+      (close)="closeEdit()"
+    >
+      <div class="form-stack">
+        <atlas-field label="Email">
+          <input atlasInput type="email" [(ngModel)]="editEmail" />
+        </atlas-field>
+
+        <atlas-field label="Status">
+          <select atlasSelect [(ngModel)]="editStatus">
+            <option value="ACTIVE">Active</option>
+            <option value="BLOCKED">Blocked</option>
+            <option value="INVITED">Invited</option>
+          </select>
+        </atlas-field>
+
+        <label class="form-check">
+          <input type="checkbox" [(ngModel)]="editEmailVerified" />
+          <span>Email verified</span>
+        </label>
+
+        <div class="form-actions">
+          <button atlasButton variant="secondary" type="button" (click)="closeEdit()">Cancel</button>
+          <button atlasButton type="button" (click)="saveEdit()">Save changes</button>
+        </div>
+      </div>
+    </atlas-dialog>
+  }
 </section>
