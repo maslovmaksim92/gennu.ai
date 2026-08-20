@@ -10,16 +10,18 @@ import { AuthService } from '../core/auth.service';
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
-  auth = inject(AuthService);
-  router = inject(Router);
-  email = '';
-  password = '';
-  loading = signal(false);
-  error = signal('');
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
-  async submit() {
+  protected email = '';
+  protected password = '';
+  protected readonly loading = signal(false);
+  protected readonly error = signal('');
+
+  protected async submit(): Promise<void> {
     this.loading.set(true);
     this.error.set('');
+
     try {
       await this.auth.login(this.email, this.password);
       await this.router.navigateByUrl('/dashboard');
