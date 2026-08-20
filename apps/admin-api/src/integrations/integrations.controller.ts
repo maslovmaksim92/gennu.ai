@@ -3,52 +3,61 @@ import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
 import { PrismaService } from '../common/prisma.service';
 import { CryptoService } from './crypto.service';
+
 @Controller('integrations')
 @UseGuards(JwtGuard, AdminGuard)
 export class IntegrationsController {
-  constructor(
-    private prisma: PrismaService,
-    private crypto: CryptoService,
+  public constructor(
+    private readonly prisma: PrismaService,
+    private readonly crypto: CryptoService,
   ) {}
+
   @Get()
-  async list() {
+  public async list() {
     const rows = await this.prisma.integration.findMany({
       orderBy: {
         provider: 'asc',
       },
     });
-    return rows.map(({ secretEncrypted, ...x }) => ({
-      ...x,
+
+    return rows.map(({ secretEncrypted, ...integration }) => ({
+      ...integration,
       hasSecret: Boolean(secretEncrypted),
     }));
   }
+
   @Put(':provider')
-  async save(
-    @Param('provider')
-    provider: string,
-    @Body()
-    body: any,
-  ) {
-    const secretEncrypted = body.secret ? this.crypto.encrypt(body.secret) : undefined;
-    return this.prisma.integration.upsert({
+  public async save(@Param('provider') provider: string, @Body() body: any) {
+    const normalizedProvider = provider.trim().toUpperCase();
+    const secret = typeof body.secret === 'string' ? body.secret.trim() : '';
+    const secretEncrypted = secret ? this.crypto.encrypt(secret) : undefined;
+    const existing = await this.prisma.integration.findFirst({
       where: {
-        provider,
+        provider: {
+          equals: normalizedProvider,
+          mode: 'insensitive',
+        },
       },
-      update: {
-        name: body.name ?? provider,
-        status: body.status ?? 'CONNECTED',
-        config: body.config ?? {},
-        ...(secretEncrypted
-          ? {
-              secretEncrypted,
-            }
-          : {}),
-      },
-      create: {
-        provider,
-        name: body.name ?? provider,
-        status: body.status ?? 'CONNECTED',
-        config: body.config ?? {},
+    });
+
+    const data = {
+      name: body.name ?? normalizedProvider,
+      status: body.status ?? 'CONNECTED',
+      config: body.config ?? {},
+      ...(secretEncrypted ? { secretEncrypted } : {}),
+    };
+
+    if (existing) {
+      return this.prisma.integration.update({
+        where: { id: existing.id },
+        data,
+      });
+    }
+
+    return this.prisma.integration.create({
+      data: {
+        provider: normalizedProvider,
+        ...data,
         secretEncrypted,
       },
     });
