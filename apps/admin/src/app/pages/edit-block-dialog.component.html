@@ -1,0 +1,43 @@
+<form tuiForm (submit.prevent)="save()">
+  <tui-textfield>
+    <label tuiLabel>Name</label>
+    <input tuiInput name="name" [(ngModel)]="name" />
+  </tui-textfield>
+
+  <tui-textfield>
+    <label tuiLabel>Description</label>
+    <input tuiInput name="description" [(ngModel)]="description" />
+  </tui-textfield>
+
+  <label class="form-stack">
+    <span>Block schema JSON</span>
+    <textarea
+      name="schema"
+      rows="12"
+      [disabled]="!canEditVersion"
+      [(ngModel)]="schema"
+    ></textarea>
+  </label>
+
+  <label class="form-stack">
+    <span>Defaults JSON</span>
+    <textarea
+      name="defaults"
+      rows="8"
+      [disabled]="!canEditVersion"
+      [(ngModel)]="defaults"
+    ></textarea>
+  </label>
+
+  @if (!canEditVersion) {
+    <small>Published or deprecated versions are immutable. Create a new version to change schema/defaults.</small>
+  }
+  @if (jsonError) {
+    <small class="error">{{ jsonError }}</small>
+  }
+
+  <footer class="form-actions">
+    <button appearance="secondary" tuiButton type="button" (click)="cancel()">Cancel</button>
+    <button tuiButton type="submit" [disabled]="saving">Save changes</button>
+  </footer>
+</form>
