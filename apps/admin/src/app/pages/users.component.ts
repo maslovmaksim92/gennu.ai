@@ -4,6 +4,7 @@ import { AgGridImports } from '@atlas/ui-ag-grid';
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { ColDef, ICellRendererParams } from 'ag-grid-community';
+import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { EditUserDialogComponent } from './edit-user-dialog.component';
 import { UserRow } from './users.types';
 
@@ -48,11 +49,7 @@ export class UsersComponent {
     editButton.dataset.size = 'sm';
     editButton.textContent = 'Edit';
     editButton.disabled = !user;
-    editButton.addEventListener('click', () => {
-      if (user) {
-        this.openEdit(user);
-      }
-    });
+    editButton.addEventListener('click', () => user && this.openEdit(user));
 
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
@@ -61,11 +58,7 @@ export class UsersComponent {
     deleteButton.dataset.size = 'sm';
     deleteButton.textContent = 'Delete';
     deleteButton.disabled = !user || user.role === 'ADMIN';
-    deleteButton.addEventListener('click', () => {
-      if (user) {
-        this.remove(user);
-      }
-    });
+    deleteButton.addEventListener('click', () => user && this.remove(user));
 
     container.append(editButton, deleteButton);
     return container;
@@ -82,11 +75,17 @@ export class UsersComponent {
   }
 
   private remove(user: UserRow): void {
-    if (!window.confirm(`Delete user ${user.email}?`)) {
-      return;
-    }
-
-    this.http.delete(`/api/users/${user.id}`).subscribe(() => this.load());
+    this.dialogs
+      .open<boolean>(new PolymorpheusComponent(ConfirmDialogComponent), {
+        label: 'Delete user',
+        size: 's',
+        data: { message: `Delete user ${user.email}?` },
+      })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.http.delete(`/api/users/${user.id}`).subscribe(() => this.load());
+        }
+      });
   }
 
   private load(): void {
