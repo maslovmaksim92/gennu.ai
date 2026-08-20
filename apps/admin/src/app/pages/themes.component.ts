@@ -88,9 +88,10 @@ export class ThemesComponent {
     deleteButton.dataset.variant = 'danger';
     deleteButton.dataset.size = 'sm';
     deleteButton.textContent = 'Delete';
-    deleteButton.disabled = !theme;
+    deleteButton.disabled = !theme || theme.status !== 'DRAFT';
+    deleteButton.title = theme?.status === 'DRAFT' ? '' : 'Published history cannot be deleted';
     deleteButton.addEventListener('click', () => {
-      if (theme) {
+      if (theme?.status === 'DRAFT') {
         this.remove(theme);
       }
     });
@@ -115,15 +116,12 @@ export class ThemesComponent {
         label: 'Delete theme',
         size: 's',
         data: {
-          message:
-            theme.status === 'DRAFT'
-              ? `Delete theme ${theme.name}?`
-              : 'This theme has published history and cannot be deleted. Deprecate it instead.',
+          message: `Delete theme ${theme.name}?`,
           confirmLabel: 'Delete',
         },
       })
       .subscribe((confirmed) => {
-        if (confirmed && theme.status === 'DRAFT') {
+        if (confirmed) {
           this.http.delete(`/api/themes/${theme.id}`).subscribe(() => this.load());
         }
       });
