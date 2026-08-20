@@ -1,17 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
+
 @Component({
   standalone: true,
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {
-  http = inject(HttpClient);
-  admins = signal(0);
-  users = signal(0);
-  themes = signal(0);
-  blocks = signal(0);
-  constructor() {
+  private readonly http = inject(HttpClient);
+
+  protected readonly admins = signal(0);
+  protected readonly users = signal(0);
+  protected readonly themes = signal(0);
+  protected readonly blocks = signal(0);
+
+  public constructor() {
     forkJoin({
       a: this.http.get<any[]>('/api/admins'),
       u: this.http.get<any[]>('/api/users'),
