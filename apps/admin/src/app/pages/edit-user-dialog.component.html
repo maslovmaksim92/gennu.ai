@@ -1,0 +1,25 @@
+<form tuiForm (ngSubmit)="save()">
+  <tui-textfield>
+    <label tuiLabel>Email</label>
+    <input name="email" type="email" tuiInput [(ngModel)]="email" />
+  </tui-textfield>
+
+  <label class="atlas-field">
+    <span class="atlas-field-label">Status</span>
+    <select class="atlas-control" name="status" [(ngModel)]="status">
+      <option value="ACTIVE">Active</option>
+      <option value="BLOCKED">Blocked</option>
+      <option value="INVITED">Invited</option>
+    </select>
+  </label>
+
+  <label class="form-check">
+    <input name="emailVerified" type="checkbox" [(ngModel)]="emailVerified" />
+    <span>Email verified</span>
+  </label>
+
+  <footer class="form-actions">
+    <button appearance="secondary" tuiButton type="button" (click)="cancel()">Cancel</button>
+    <button tuiButton type="submit" [disabled]="saving">Save changes</button>
+  </footer>
+</form>
