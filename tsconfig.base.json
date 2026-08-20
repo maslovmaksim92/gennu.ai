@@ -14,9 +14,10 @@
     "skipLibCheck": true,
     "strict": true,
     "paths": {
-      "@atlas/contracts": ["./libs/contracts/src/index.ts"],
-      "@atlas/ui": ["./libs/ui/atlas/src/index.ts"],
-      "@atlas/ui-ag-grid": ["./libs/ui/ag-grid/src/index.ts"]
+      "@atlas/contracts": [ "./libs/contracts/src/index.ts" ],
+      "@atlas/ui": [ "./libs/ui/atlas/src/index.ts" ],
+      "@atlas/ui-ag-grid": [ "./libs/ui/ag-grid/src/index.ts" ],
+      "@atlas/taiga-ui": [ "./libs/ui/taiga-ui/src/index.ts" ]
     }
   },
   "exclude": ["node_modules", "tmp"]
