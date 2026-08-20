@@ -1,13 +1,25 @@
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
 import { PrismaService } from '../common/prisma.service';
+
 @Controller('users')
 @UseGuards(JwtGuard, AdminGuard)
 export class UsersController {
-  constructor(private prisma: PrismaService) {}
+  public constructor(private readonly prisma: PrismaService) {}
+
   @Get()
-  list() {
+  public list() {
     return this.prisma.user.findMany({
       select: {
         id: true,
@@ -23,14 +35,11 @@ export class UsersController {
       },
     });
   }
+
   @Patch(':id/status')
-  status(
-    @Param('id')
-    id: string,
-    @Body()
-    body: {
-      status: 'ACTIVE' | 'BLOCKED';
-    },
+  public status(
+    @Param('id') id: string,
+    @Body() body: { status: 'ACTIVE' | 'BLOCKED' },
   ) {
     return this.prisma.user.update({
       where: {
@@ -45,5 +54,42 @@ export class UsersController {
         status: true,
       },
     });
+  }
+
+  @Delete(':id')
+  public async remove(@Param('id') id: string): Promise<{ id: string }> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        role: true,
+        _count: {
+          select: {
+            createdThemes: true,
+            createdBlocks: true,
+            invitesSent: true,
+            auditEntries: true,
+            chatSessions: true,
+            sites: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.role === 'ADMIN') {
+      throw new BadRequestException('Administrators must be deleted from the Administrators table');
+    }
+
+    const hasRelatedData = Object.values(user._count).some((count) => count > 0);
+    if (hasRelatedData) {
+      throw new BadRequestException('User has related data and cannot be deleted');
+    }
+
+    await this.prisma.user.delete({ where: { id } });
+    return { id };
   }
 }
