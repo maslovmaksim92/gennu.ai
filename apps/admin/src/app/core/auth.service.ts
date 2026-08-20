@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { AuthUser } from '@proto/contracts';
+import type { AuthUser } from '@atlas/contracts';
 
 interface LoginResponse {
   token: string;

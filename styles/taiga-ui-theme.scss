@@ -1,0 +1,360 @@
+:root {
+  $text-color: rgb(0 0 0 / 87%);
+  $primary-color: #03a9f4;
+  $accent-color: #f44336;
+  $accent-color-hover: #f11d0d;
+
+  &,
+  tui-root {
+    --tui-background-base: transparent;
+    --tui-background-accent-1: #{$primary-color};
+    --tui-background-accent-1-hover: #{darken($primary-color, 5%)};
+    --tui-background-accent-1-pressed: #{darken($primary-color, 5%)};
+    --tui-background-accent-2: #{$accent-color};
+    --tui-background-accent-2-hover: #{$accent-color-hover};
+    --tui-background-accent-2-pressed: #{$accent-color-hover};
+    --tui-border-normal: #e0e0e0;
+    --tui-radius-m: 2px;
+    --tui-radius-l: 2px;
+    --tui-radius-s: 2px;
+    --tui-radius-xs: 2px;
+    --tui-text-action: rgb(0 0 0 / 87%);
+    --tui-font-heading-4: 20px;
+    --tui-duration: 0;
+    --tui-disabled-opacity: 0.4;
+    --tui-status-negative-pale: #e5737350;
+  }
+
+  tui-dropdown {
+    --tui-duration: 0;
+  }
+  // Тайга полагается на анимацию, если выставить 0 то гдето что то не будет работать.
+  tui-expand {
+    --tui-duration: 50ms;
+  }
+
+  // Тайга полагается на анимацию, если выставить 0 то гдето что то не будет работать.
+  tui-expand {
+    --tui-duration: 50ms;
+  }
+
+  tui-dialogs {
+    --tui-duration: 200ms;
+  }
+
+  tui-dialog {
+    border-radius: 2px;
+
+    & > .t-content {
+      padding: 1rem !important;
+    }
+
+    &[data-size='m'] {
+      inline-size: 48.5rem !important;
+    }
+
+    &[data-size='l'] {
+      inline-size: 62rem !important;
+    }
+
+    .t-heading {
+      font-weight: 600;
+
+      &.t-heading_closable {
+        font-size: 20px;
+        font-weight: 400;
+        margin-bottom: 14px;
+      }
+    }
+  }
+
+  [tuiAppearance][data-appearance='textfield'] {
+    &::placeholder {
+      font-size: 12px !important;
+    }
+
+    &:read-only:not([data-mode]):disabled {
+      background: #1477f80f !important;
+      cursor: default !important;
+      user-select: none;
+      outline: 1px solid #b6b6b6 !important;
+    }
+  }
+
+  [tuiAppearance][data-mode~='readonly'] {
+    color: #00000061;
+  }
+
+  [tuiAppearance][data-appearance='textfield'] {
+    --tui-duration: 0;
+    --tui-text-secondary: rgb(0 0 0 / 60%);
+    box-shadow: none !important;
+
+    &:not(:disabled) {
+      &:hover {
+        --tui-border-normal: #{$text-color};
+      }
+
+      &:active,
+      &:focus {
+        --tui-border-normal: var(--tui-background-accent-1);
+        outline-width: 2px;
+      }
+    }
+  }
+
+  [tuiAppearance][data-appearance='outline']:not(:disabled):hover {
+    background: var(--tui-background-neutral-1);
+  }
+
+  [tuiAppearance].t-close {
+    --tui-status-neutral: #1477f8; // Цвет крестика
+    --tui-background-neutral-1: none;
+    --tui-background-neutral-1-hover: none;
+  }
+
+  [tuiAppearance].t-clear {
+    --t-size: 1rem;
+    background: #ddd;
+    border-radius: 50%;
+    align-self: center;
+  }
+
+  tui-textfield:has(textarea[tuiTextarea]) {
+    [tuiAppearance].t-clear {
+      position: absolute;
+      inset-inline-end: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      align-self: auto;
+    }
+  }
+
+  [tuiAppearance][tuiChip] {
+    --tui-background-neutral-1: #e0e0e0;
+    --tui-background-neutral-1-hover: #d9d9d9;
+    border-radius: 16px;
+  }
+
+  tui-input-chip[data-appearance='negative'] {
+    background: #e57373 !important;
+    color: #fff !important;
+  }
+
+  tui-input-chip[data-appearance='negative'] {
+    background: #e57373 !important;
+    color: #fff !important;
+  }
+
+  [tuiIconButton][data-size='xs']::before {
+    font-size: 0.8rem;
+  }
+
+  [tuiLabel] {
+    --tui-duration: 0;
+
+    input[type='checkbox']:not(:checked) {
+      box-shadow: none;
+      border: 2px solid rgb(0 0 0 / 54%);
+      outline: none !important;
+    }
+
+    input[tuiCheckbox]:disabled ~ small,
+    input[tuiCheckbox]:disabled ~ span {
+      color: rgba(0, 0, 0, 0.38);
+    }
+
+    &:has(> input[tuiCheckbox]:disabled) > small,
+    &:has(> input[tuiCheckbox]:disabled) > span {
+      color: rgba(0, 0, 0, 0.38);
+    }
+  }
+
+  [tuiButton],
+  [tuiButton][data-size='m'] {
+    --t-size: var(--tui-height-s);
+    --tui-duration: 0;
+    width: fit-content;
+    text-transform: uppercase;
+    border-width: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    font: var(--tui-font-text-s);
+
+    &:not([appearance|='flat']) {
+      box-shadow: 0 1px 3px rgb(0 0 0 / 24%);
+    }
+  }
+
+  [tuiOption] {
+    gap: 0.125rem;
+  }
+
+  tui-icon {
+    font-size: 1rem;
+  }
+
+  tui-textfield {
+    --tui-background-base: #1477f80f;
+
+    &[data-size='s'] {
+      &[tuiChevron][tuiIcons] {
+        &::after {
+          margin-right: -0.6rem;
+        }
+
+        &.tui-invalid::after {
+          margin-left: -0.6rem;
+        }
+      }
+    }
+
+    tui-error {
+      display: none !important;
+    }
+
+    &.tui-invalid {
+      .t-clear {
+        margin-right: 1.75rem;
+      }
+
+      .t-content {
+        &::after {
+          content: '!';
+          position: absolute;
+          top: 50%;
+          right: 0.4rem;
+          width: 1rem;
+          height: 1rem;
+          color: #fff;
+          border-radius: 50%;
+          font-size: 0.8rem;
+          line-height: 1rem;
+          font-weight: 500;
+          text-align: center;
+          pointer-events: none;
+          background-color: #f44336;
+          margin-top: -0.5rem;
+        }
+      }
+
+      &[tuiChevron] {
+        .t-content::after {
+          right: 0.5rem; // когда есть значение но все равно поле не валидно(tui-input-chip)
+        }
+
+        input,
+        textarea {
+          &._empty ~ .t-content::after {
+            right: 2rem;
+          }
+        }
+      }
+
+      [inputDate],
+      [tuiInputDate] {
+        & + .t-content::after {
+          right: 2rem;
+        }
+      }
+
+      input[disabled],
+      textarea[disabled] {
+        & ~ .t-content::after {
+          display: none;
+        }
+      }
+    }
+  }
+
+  tui-error {
+    --tui-duration: 200ms;
+
+    .t-message-text::before {
+      display: none !important;
+    }
+  }
+
+  tui-calendar-sheet {
+    .t-cell {
+      font-size: 0.75rem;
+    }
+  }
+
+  tui-hint {
+    --tui-background-accent-1: #616161;
+    max-height: 12rem;
+    overflow-y: auto;
+    white-space: pre-line;
+
+    &::before {
+      content: none;
+    }
+  }
+
+  tui-scrollbar {
+    // Не обнаружил случай, когда disabled элементы должны быть скрыты
+    // [tuiAppearance]:disabled {
+    //   display: none;
+    // }
+
+    [tuiOption]._selected {
+      &,
+      &:active,
+      &:hover {
+        background-color: #00000024;
+      }
+    }
+  }
+
+  [tuiTab] {
+    // margin-inline-start: 0;
+  }
+
+  label[tuiInputFiles][data-size='l'] {
+    min-block-size: 3rem;
+    padding: 0;
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 9fr;
+      inline-size: 100%;
+      justify-items: start;
+      min-block-size: 24px;
+    }
+  }
+
+  tui-textfield[multi] input[tuiInputChip]::placeholder {
+    font-size: 12px !important;
+  }
+
+  tui-dialog[data-appearance='40rem'] {
+    inline-size: 40rem !important;
+  }
+
+  tui-dialog[data-appearance='xl'] {
+    inline-size: 100rem !important;
+  }
+}
+
+tui-tabs-with-more {
+  height: 48px;
+  overflow: visible !important;
+}
+
+[tuiTabsV][data-size='l']:not([data-vertical]) {
+  //--header-height: 56px;
+  --tui-height-l: 48px;
+  [tuiTabV] {
+    padding-inline: 1rem;
+    // font-weight: 600;
+    &,
+    &:hover {
+      color: #646464 !important;
+    }
+
+    &._active {
+      color: #03a9f4 !important;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { ModuleRegistry } from 'ag-grid-community';
 import { AllEnterpriseModule, LicenseManager } from 'ag-grid-enterprise';
+import { AgGridAngular } from 'ag-grid-angular';
 
 declare global {
   // Optional runtime licence injection for Admin and Studio.
@@ -23,3 +24,5 @@ export function configureAgGridEnterprise(licenseKey?: string): void {
 
   configured = true;
 }
+
+export const AgGridImports = [AgGridAngular];

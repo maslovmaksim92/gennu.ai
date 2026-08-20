@@ -21,7 +21,7 @@ Do not register AG Grid modules inside page components.
 All grid modules are registered once through:
 
 ```ts
-import { configureAgGridEnterprise } from '@proto/ui-ag-grid';
+import { configureAgGridEnterprise } from '@atlas/ui-ag-grid';
 
 configureAgGridEnterprise();
 ```
@@ -37,7 +37,7 @@ The shared implementation registers `AllEnterpriseModule`, which includes all Co
 When Studio is created, its `main.ts` must use the same setup:
 
 ```ts
-import { configureAgGridEnterprise } from '@proto/ui-ag-grid';
+import { configureAgGridEnterprise } from '@atlas/ui-ag-grid';
 
 configureAgGridEnterprise();
 bootstrapApplication(AppComponent, appConfig);

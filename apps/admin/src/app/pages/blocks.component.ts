@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { InlineAiComponent } from '../shared/inline-ai.component';
-import { AgGridAngular } from 'ag-grid-angular';
+import { AgGridImports } from '@atlas/ui-ag-grid';
 import { ColDef } from 'ag-grid-community';
+import { InlineAiComponent } from '../shared/inline-ai.component';
+
 @Component({
   standalone: true,
-  imports: [FormsModule, AgGridAngular, InlineAiComponent],
+  imports: [FormsModule, AgGridImports, InlineAiComponent],
   templateUrl: './blocks.component.html',
 })
 export class BlocksComponent {

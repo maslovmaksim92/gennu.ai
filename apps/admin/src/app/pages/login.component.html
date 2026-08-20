@@ -14,14 +14,33 @@
     </div>
 
     <form class="login-card" (ngSubmit)="submit()">
-      <div class="login-card-head"><h2>Sign in</h2><p>Enter your administrator credentials to continue.</p></div>
+      <div class="login-card-head">
+        <h2>Sign in</h2>
+        <p>Enter your administrator credentials to continue.</p>
+      </div>
       <atlas-field label="Email">
-        <input atlasInput type="email" name="email" [(ngModel)]="email" autocomplete="email" required />
+        <input
+          atlasInput
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          autocomplete="email"
+          required
+        />
       </atlas-field>
       <atlas-field label="Password">
-        <input atlasInput type="password" name="password" [(ngModel)]="password" autocomplete="current-password" required />
+        <input
+          atlasInput
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          autocomplete="current-password"
+          required
+        />
       </atlas-field>
-      @if (error()) { <div class="error">{{ error() }}</div> }
+      @if (error()) {
+        <div class="error">{{ error() }}</div>
+      }
       <button atlasButton class="login-submit" [disabled]="loading()">
         {{ loading() ? 'Signing in…' : 'Continue' }}
       </button>

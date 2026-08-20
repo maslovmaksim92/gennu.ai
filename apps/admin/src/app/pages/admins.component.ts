@@ -2,12 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent } from '@atlas/ui';
-import { AgGridAngular } from 'ag-grid-angular';
+import { AgGridImports } from '@atlas/ui-ag-grid';
 import { ColDef } from 'ag-grid-community';
 
 @Component({
   standalone: true,
-  imports: [FormsModule, AgGridAngular, AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent],
+  imports: [
+    FormsModule,
+    AgGridImports,
+    AtlasButtonDirective,
+    AtlasControlDirective,
+    AtlasFieldComponent,
+  ],
   templateUrl: './admins.component.html',
 })
 export class AdminsComponent {
