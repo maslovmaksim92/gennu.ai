@@ -3,6 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AgGridImports } from '@atlas/ui-ag-grid';
 import { TuiDialogService } from '@taiga-ui/core';
+import { TuiTabs } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { ColDef, ICellRendererParams } from 'ag-grid-community';
 import { InlineAiComponent } from '../shared/inline-ai.component';
@@ -11,7 +12,7 @@ import { EditThemeDialogComponent } from './edit-theme-dialog.component';
 import { ThemeRow } from './themes.types';
 
 @Component({
-  imports: [FormsModule, AgGridImports, InlineAiComponent],
+  imports: [FormsModule, AgGridImports, InlineAiComponent, TuiTabs],
   templateUrl: './themes.component.html',
 })
 export class ThemesComponent {
@@ -20,6 +21,9 @@ export class ThemesComponent {
 
   protected readonly rows = signal<ThemeRow[]>([]);
   protected readonly creating = signal(false);
+  protected readonly createTabIndex = signal(0);
+  protected readonly imagePreview = signal<string | null>(null);
+  protected readonly imageName = signal<string | null>(null);
   protected key = '';
   protected name = '';
   protected schema = '{"colors":{},"typography":{},"spacing":{},"radius":{}}';
@@ -42,6 +46,16 @@ export class ThemesComponent {
     this.load();
   }
 
+  protected toggleCreate(): void {
+    const next = !this.creating();
+    this.creating.set(next);
+
+    if (!next) {
+      this.resetImage();
+      this.createTabIndex.set(0);
+    }
+  }
+
   protected create(): void {
     let parsed: Record<string, unknown> = {};
     try {
@@ -60,8 +74,31 @@ export class ThemesComponent {
         this.creating.set(false);
         this.key = '';
         this.name = '';
+        this.resetImage();
         this.load();
       });
+  }
+
+  protected selectImage(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file || !file.type.startsWith('image/')) {
+      this.resetImage();
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      this.imagePreview.set(typeof reader.result === 'string' ? reader.result : null);
+      this.imageName.set(file.name);
+    });
+    reader.readAsDataURL(file);
+  }
+
+  protected resetImage(): void {
+    this.imagePreview.set(null);
+    this.imageName.set(null);
   }
 
   private createActions(theme: ThemeRow | undefined): HTMLElement {
