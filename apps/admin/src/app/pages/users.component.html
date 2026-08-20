@@ -15,41 +15,4 @@
       [paginationPageSize]="25"
     />
   </div>
-
-  <ng-template
-    let-observer
-    [tuiDialogOptions]="{ label: 'Edit user', size: 's' }"
-    [(tuiDialog)]="editDialogOpen"
-  >
-    @if (editingUser(); as user) {
-      <div class="form-stack">
-        <p class="muted">{{ user.email }}</p>
-
-        <tui-textfield>
-          <label tuiLabel>Email</label>
-          <input tuiInput type="email" [(ngModel)]="editEmail" />
-        </tui-textfield>
-
-        <atlas-field label="Status">
-          <select atlasSelect [(ngModel)]="editStatus">
-            <option value="ACTIVE">Active</option>
-            <option value="BLOCKED">Blocked</option>
-            <option value="INVITED">Invited</option>
-          </select>
-        </atlas-field>
-
-        <label class="form-check">
-          <input type="checkbox" [(ngModel)]="editEmailVerified" />
-          <span>Email verified</span>
-        </label>
-
-        <div class="form-actions">
-          <button appearance="secondary" tuiButton type="button" (click)="observer.complete()">
-            Cancel
-          </button>
-          <button tuiButton type="button" (click)="saveEdit()">Save changes</button>
-        </div>
-      </div>
-    }
-  </ng-template>
 </section>
