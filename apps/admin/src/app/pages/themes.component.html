@@ -5,34 +5,107 @@
       <h1>Themes</h1>
       <p>System themes available to future Studio projects.</p>
     </div>
-    <button class="primary" (click)="creating.set(!creating())">New theme</button>
+    <button class="primary" type="button" (click)="toggleCreate()">
+      {{ creating() ? 'Close' : 'New theme' }}
+    </button>
   </header>
 
   @if (creating()) {
-    <div class="design-editor">
-      <div class="panel editor">
-        <label>
-          Key
-          <input [(ngModel)]="key" />
-        </label>
-        <label>
-          Name
-          <input [(ngModel)]="name" />
-        </label>
-        <label>
-          Theme JSON
-          <textarea [(ngModel)]="schema" rows="16"> </textarea>
-        </label>
-        <button class="primary" (click)="create()">Save draft</button>
-      </div>
-
-      <proto-inline-ai
-        title="Theme assistant"
-        context="You are helping an administrator create a Proto.ai Theme Schema. Suggest structured JSON using semantic design tokens. Do not generate arbitrary CSS."
-        placeholder="Например: сделай премиальную светлую тему с serif-заголовками…"
-      />
+    <div class="panel">
+      <tui-tabs
+        size="m"
+        [activeItemIndex]="createTabIndex()"
+        (activeItemIndexChange)="createTabIndex.set($event)"
+      >
+        <button tuiTab type="button">Manual</button>
+        <button tuiTab type="button">From image</button>
+      </tui-tabs>
     </div>
+
+    @switch (createTabIndex()) {
+      @case (0) {
+        <div class="design-editor">
+          <div class="panel editor">
+            <label>
+              Key
+              <input [(ngModel)]="key" />
+            </label>
+            <label>
+              Name
+              <input [(ngModel)]="name" />
+            </label>
+            <label>
+              Theme JSON
+              <textarea [(ngModel)]="schema" rows="16"></textarea>
+            </label>
+            <button class="primary" type="button" (click)="create()">Save draft</button>
+          </div>
+
+          <proto-inline-ai
+            title="Theme assistant"
+            context="You are helping an administrator create a Proto.ai Theme Schema. Suggest structured JSON using semantic design tokens. Do not generate arbitrary CSS."
+            placeholder="Например: сделай премиальную светлую тему с serif-заголовками…"
+          />
+        </div>
+      }
+
+      @case (1) {
+        <div class="design-editor">
+          <div class="panel editor">
+            <div>
+              <h2>Generate theme from image</h2>
+              <p class="muted">
+                Upload a screenshot, mockup or reference image. It will be used as the visual source
+                for generating theme tokens.
+              </p>
+            </div>
+
+            <label>
+              Key
+              <input [(ngModel)]="key" />
+            </label>
+
+            <label>
+              Name
+              <input [(ngModel)]="name" />
+            </label>
+
+            <label class="image-upload">
+              Reference image
+              <input accept="image/*" type="file" (change)="selectImage($event)" />
+            </label>
+
+            @if (imagePreview(); as preview) {
+              <div class="image-preview">
+                <img [src]="preview" [alt]="imageName() ?? 'Theme reference image'" />
+                <div class="form-actions">
+                  <span class="muted">{{ imageName() }}</span>
+                  <button class="secondary" type="button" (click)="resetImage()">Remove</button>
+                </div>
+              </div>
+            } @else {
+              <div class="image-drop-placeholder">
+                <strong>Upload reference image</strong>
+                <span>PNG, JPG, WEBP or another browser-supported image format.</span>
+              </div>
+            }
+
+            <p class="muted">
+              The upload and preview are ready. AI image analysis and automatic Theme Schema
+              generation will be connected to this flow next.
+            </p>
+          </div>
+
+          <proto-inline-ai
+            title="Theme image assistant"
+            context="You are helping an administrator prepare a Proto.ai theme from a visual reference. Ask for desired adjustments to colors, typography, spacing and radius. The actual image analysis is handled separately."
+            placeholder="Например: сделай результат светлее и сохрани акцентный синий цвет…"
+          />
+        </div>
+      }
+    }
   }
+
   <div class="panel grid-panel">
     <ag-grid-angular [rowData]="rows()" [columnDefs]="cols" />
   </div>
