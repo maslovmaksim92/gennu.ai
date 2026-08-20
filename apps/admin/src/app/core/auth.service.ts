@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import type { AuthUser } from '@atlas/contracts';
+import { firstValueFrom } from 'rxjs';
 
 interface LoginResponse {
   token: string;
@@ -14,14 +14,17 @@ const tokenStorageKey = 'proto_admin_access_token';
   providedIn: 'root',
 })
 export class AuthService {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
-  user = signal<AuthUser | null>(null);
-  loaded = signal(false);
-  authenticated = computed(() => !!this.user());
+  public readonly user = signal<AuthUser | null>(null);
+  public readonly loaded = signal(false);
+  public readonly authenticated = computed(() => !!this.user());
 
-  async load() {
-    if (this.loaded()) return this.user();
+  public async load(): Promise<AuthUser | null> {
+    if (this.loaded()) {
+      return this.user();
+    }
+
     if (!sessionStorage.getItem(tokenStorageKey)) {
       this.loaded.set(true);
       return null;
@@ -38,7 +41,7 @@ export class AuthService {
     return this.user();
   }
 
-  async login(email: string, password: string) {
+  public async login(email: string, password: string): Promise<AuthUser> {
     const response = await firstValueFrom(
       this.http.post<LoginResponse>('/api/auth/login', {
         email,
@@ -49,14 +52,15 @@ export class AuthService {
     sessionStorage.setItem(tokenStorageKey, response.token);
     this.user.set(response.user);
     this.loaded.set(true);
+
     return response.user;
   }
 
-  async logout() {
+  public async logout(): Promise<void> {
     this.clearSession();
   }
 
-  private clearSession() {
+  private clearSession(): void {
     sessionStorage.removeItem(tokenStorageKey);
     this.user.set(null);
   }
