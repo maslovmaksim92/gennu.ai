@@ -89,9 +89,10 @@ export class BlocksComponent {
     deleteButton.dataset.variant = 'danger';
     deleteButton.dataset.size = 'sm';
     deleteButton.textContent = 'Delete';
-    deleteButton.disabled = !block;
+    deleteButton.disabled = !block || block.status !== 'DRAFT';
+    deleteButton.title = block?.status === 'DRAFT' ? '' : 'Published history cannot be deleted';
     deleteButton.addEventListener('click', () => {
-      if (block) {
+      if (block?.status === 'DRAFT') {
         this.remove(block);
       }
     });
@@ -116,15 +117,12 @@ export class BlocksComponent {
         label: 'Delete block',
         size: 's',
         data: {
-          message:
-            block.status === 'DRAFT'
-              ? `Delete block ${block.name}?`
-              : 'This block has published history and cannot be deleted. Deprecate it instead.',
+          message: `Delete block ${block.name}?`,
           confirmLabel: 'Delete',
         },
       })
       .subscribe((confirmed) => {
-        if (confirmed && block.status === 'DRAFT') {
+        if (confirmed) {
           this.http.delete(`/api/blocks/${block.id}`).subscribe(() => this.load());
         }
       });
