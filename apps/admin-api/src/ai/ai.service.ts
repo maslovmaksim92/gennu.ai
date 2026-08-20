@@ -109,24 +109,29 @@ export class AiService {
   }
 
   private async settings(): Promise<OpenAiSettings> {
-    const integration = await this.prisma.integration.findUnique({
+    const integration = await this.prisma.integration.findFirst({
       where: {
-        provider: 'OPENAI',
+        provider: {
+          equals: 'OPENAI',
+          mode: 'insensitive',
+        },
       },
     });
 
     const config = (integration?.config ?? {}) as OpenAiIntegrationConfig;
     const apiKey = integration?.secretEncrypted
       ? this.crypto.decrypt(integration.secretEncrypted)
-      : process.env.OPENAI_API_KEY;
+      : process.env.OPENAI_API_KEY?.trim();
 
     if (!apiKey) {
-      throw new BadRequestException('OpenAI integration is not configured');
+      throw new BadRequestException(
+        'OpenAI integration is not configured. Save an API key in Admin > Integrations > OpenAI or set OPENAI_API_KEY.',
+      );
     }
 
     return {
       apiKey,
-      model: config.model?.trim() || process.env.OPENAI_MODEL || 'gpt-5.6-terra',
+      model: config.model?.trim() || process.env.OPENAI_MODEL?.trim() || 'gpt-5.6-terra',
     };
   }
 }
