@@ -20,12 +20,13 @@ import {
   templateUrl: './integrations.component.html',
 })
 export class IntegrationsComponent {
-  http = inject(HttpClient);
-  openaiKey = '';
-  openaiModel = 'gpt-5.6-terra';
-  openaiConnected = signal(false);
+  private readonly http = inject(HttpClient);
 
-  constructor() {
+  protected openaiKey = '';
+  protected openaiModel = 'gpt-5.6-terra';
+  protected readonly openaiConnected = signal(false);
+
+  public constructor() {
     this.http
       .get<any[]>('/api/integrations')
       .subscribe((x) =>
@@ -33,7 +34,7 @@ export class IntegrationsComponent {
       );
   }
 
-  saveOpenAI() {
+  protected saveOpenAI(): void {
     this.http
       .put('/api/integrations/OPENAI', {
         name: 'OpenAI',
