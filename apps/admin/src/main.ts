@@ -4,4 +4,5 @@ import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
 
 configureAgGridEnterprise();
+
 bootstrapApplication(AppComponent, appConfig).catch(console.error);
