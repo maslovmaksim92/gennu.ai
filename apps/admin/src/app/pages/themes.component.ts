@@ -14,6 +14,7 @@ import { ThemeRow } from './themes.types';
 @Component({
   imports: [FormsModule, AgGridImports, InlineAiComponent, TuiTabs],
   templateUrl: './themes.component.html',
+  styleUrl: './themes.component.scss',
 })
 export class ThemesComponent {
   private readonly http = inject(HttpClient);
