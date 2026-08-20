@@ -16,16 +16,19 @@
     />
   </div>
 
-  @if (editingUser(); as user) {
-    <atlas-dialog
-      title="Edit user"
-      [description]="user.email"
-      (close)="closeEdit()"
-    >
+  <ng-template
+    let-observer
+    [tuiDialogOptions]="{ label: 'Edit user', size: 's' }"
+    [(tuiDialog)]="editDialogOpen"
+  >
+    @if (editingUser(); as user) {
       <div class="form-stack">
-        <atlas-field label="Email">
-          <input atlasInput type="email" [(ngModel)]="editEmail" />
-        </atlas-field>
+        <p class="muted">{{ user.email }}</p>
+
+        <tui-textfield>
+          <label tuiLabel>Email</label>
+          <input tuiInput type="email" [(ngModel)]="editEmail" />
+        </tui-textfield>
 
         <atlas-field label="Status">
           <select atlasSelect [(ngModel)]="editStatus">
@@ -41,10 +44,12 @@
         </label>
 
         <div class="form-actions">
-          <button atlasButton variant="secondary" type="button" (click)="closeEdit()">Cancel</button>
-          <button atlasButton type="button" (click)="saveEdit()">Save changes</button>
+          <button appearance="secondary" tuiButton type="button" (click)="observer.complete()">
+            Cancel
+          </button>
+          <button tuiButton type="button" (click)="saveEdit()">Save changes</button>
         </div>
       </div>
-    </atlas-dialog>
-  }
+    }
+  </ng-template>
 </section>
