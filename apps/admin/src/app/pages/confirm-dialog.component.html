@@ -1,0 +1,8 @@
+<p>{{ context.data.message }}</p>
+
+<footer>
+  <button appearance="secondary" tuiButton type="button" (click)="cancel()">Cancel</button>
+  <button appearance="negative" tuiButton type="button" (click)="confirm()">
+    {{ context.data.confirmLabel || 'Delete' }}
+  </button>
+</footer>
