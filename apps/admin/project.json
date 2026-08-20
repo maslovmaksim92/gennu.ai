@@ -3,6 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/admin/src",
   "projectType": "application",
+  "i18n": {
+    "sourceLocale": "en-US"
+  },
   "targets": {
     "build": {
       "executor": "@angular/build:application",
@@ -10,6 +13,8 @@
         "browser": "apps/admin/src/main.ts",
         "index": "apps/admin/src/index.html",
         "tsConfig": "apps/admin/tsconfig.app.json",
+        "polyfills": ["@angular/localize/init"],
+        "localize": false,
         "styles": [
           "styles/tailwind.css",
           "libs/ui/atlas/src/styles.scss",
@@ -27,6 +32,15 @@
         "proxyConfig": "apps/admin/proxy.conf.json",
         "port": 4200,
         "host": "0.0.0.0"
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n",
+      "options": {
+        "buildTarget": "admin:build",
+        "format": "xlf2",
+        "outputPath": "apps/admin/src/locale",
+        "outFile": "messages.xlf"
       }
     }
   }
