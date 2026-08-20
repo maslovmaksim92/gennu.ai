@@ -4,7 +4,10 @@
   "sourceRoot": "apps/admin/src",
   "projectType": "application",
   "i18n": {
-    "sourceLocale": "en-US"
+    "sourceLocale": "en-US",
+    "locales": {
+      "ru-RU": "apps/admin/src/locale/messages.ru-RU.xlf"
+    }
   },
   "targets": {
     "build": {
@@ -23,6 +26,11 @@
           "styles/taiga-ui-theme.scss"
         ],
         "outputPath": "dist/apps/admin"
+      },
+      "configurations": {
+        "ru-RU": {
+          "localize": ["ru-RU"]
+        }
       }
     },
     "serve": {
@@ -32,6 +40,11 @@
         "proxyConfig": "apps/admin/proxy.conf.json",
         "port": 4200,
         "host": "0.0.0.0"
+      },
+      "configurations": {
+        "ru-RU": {
+          "buildTarget": "admin:build:ru-RU"
+        }
       }
     },
     "extract-i18n": {
