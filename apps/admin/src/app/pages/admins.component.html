@@ -5,21 +5,13 @@
       <h1>Administrators</h1>
       <p>Manage active administrators and invitations.</p>
     </div>
-    <button atlasButton (click)="showInvite.set(!showInvite())">Add admin</button>
+    <button atlasButton type="button" (click)="openInvite()">Add admin</button>
   </header>
 
-  @if (showInvite()) {
+  @if (inviteToken()) {
     <div class="panel form-row">
-      <atlas-field
-        label="Administrator email"
-        hint="An invitation token will be generated for this address."
-      >
-        <input atlasInput type="email" placeholder="admin@example.com" [(ngModel)]="inviteEmail" />
-      </atlas-field>
-      <button atlasButton (click)="invite()">Create invite</button>
-      @if (inviteToken()) {
-        <code class="token">{{ inviteToken() }}</code>
-      }
+      <span>Invitation token</span>
+      <code class="token">{{ inviteToken() }}</code>
     </div>
   }
 
@@ -31,31 +23,4 @@
       [paginationPageSize]="20"
     />
   </div>
-
-  @if (editingAdmin(); as admin) {
-    <atlas-dialog
-      title="Edit administrator"
-      [description]="admin.email"
-      (close)="closeEdit()"
-    >
-      <div class="form-stack">
-        <atlas-field label="Email">
-          <input atlasInput type="email" [(ngModel)]="editEmail" />
-        </atlas-field>
-
-        <atlas-field label="Status">
-          <select atlasSelect [(ngModel)]="editStatus">
-            <option value="ACTIVE">Active</option>
-            <option value="BLOCKED">Blocked</option>
-            <option value="INVITED">Invited</option>
-          </select>
-        </atlas-field>
-
-        <div class="form-actions">
-          <button atlasButton variant="secondary" type="button" (click)="closeEdit()">Cancel</button>
-          <button atlasButton type="button" (click)="saveEdit()">Save changes</button>
-        </div>
-      </div>
-    </atlas-dialog>
-  }
 </section>
