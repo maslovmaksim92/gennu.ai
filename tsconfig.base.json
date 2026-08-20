@@ -16,7 +16,7 @@
     "paths": {
       "@proto/contracts": ["./libs/contracts/src/index.ts"],
       "@atlas/ui": ["./libs/ui/atlas/src/index.ts"],
-      "@proto/ui-ag-grid": ["./libs/ui/ag-grid/src/index.ts"]
+      "@atlas/ui-ag-grid": ["./libs/ui/ag-grid/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
