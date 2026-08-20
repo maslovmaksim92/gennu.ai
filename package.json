@@ -7,6 +7,7 @@
     "dev:admin": "nx run-many -t serve -p admin admin-api --parallel=2",
     "dev:all": "pnpm dev:infra && pnpm dev:admin",
     "build:admin": "nx run-many -t build -p admin admin-api",
+    "i18n:extract:admin": "nx run admin:extract-i18n",
     "nx:check": "nx show projects && nx show project admin && nx show project admin-api",
     "test": "nx run-many -t test --all",
     "lint": "nx run-many -t lint --all",
