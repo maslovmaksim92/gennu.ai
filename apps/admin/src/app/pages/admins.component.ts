@@ -1,44 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import {
-  AtlasButtonDirective,
-  AtlasControlDirective,
-  AtlasDialogComponent,
-  AtlasFieldComponent,
-} from '@atlas/ui';
+import { AtlasButtonDirective } from '@atlas/ui';
 import { AgGridImports } from '@atlas/ui-ag-grid';
+import { TuiDialogService } from '@taiga-ui/core';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { ColDef, ICellRendererParams } from 'ag-grid-community';
-
-interface AdminRow {
-  id: string;
-  email: string;
-  status: 'ACTIVE' | 'BLOCKED' | 'INVITED';
-  lastLoginAt: string | null;
-  createdAt: string;
-}
+import { AdminInviteResult, AdminRow } from './admins.types';
+import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { EditAdminDialogComponent } from './edit-admin-dialog.component';
+import { InviteAdminDialogComponent } from './invite-admin-dialog.component';
 
 @Component({
-  imports: [
-    FormsModule,
-    AgGridImports,
-    AtlasButtonDirective,
-    AtlasControlDirective,
-    AtlasDialogComponent,
-    AtlasFieldComponent,
-  ],
+  imports: [AgGridImports, AtlasButtonDirective],
   templateUrl: './admins.component.html',
 })
 export class AdminsComponent {
   private readonly http = inject(HttpClient);
+  private readonly dialogs = inject(TuiDialogService);
 
   protected readonly rows = signal<AdminRow[]>([]);
-  protected readonly showInvite = signal(false);
-  protected readonly editingAdmin = signal<AdminRow | null>(null);
-  protected inviteEmail = '';
   protected readonly inviteToken = signal('');
-  protected editEmail = '';
-  protected editStatus: AdminRow['status'] = 'ACTIVE';
   protected readonly cols: ColDef<AdminRow>[] = [
     { field: 'email', flex: 1 },
     { field: 'status', width: 130 },
@@ -57,29 +38,14 @@ export class AdminsComponent {
     this.load();
   }
 
-  protected invite(): void {
-    this.http.post<any>('/api/admins/invite', { email: this.inviteEmail }).subscribe((x) => {
-      this.inviteToken.set(x.inviteToken);
-      this.inviteEmail = '';
-      this.load();
-    });
-  }
-
-  protected closeEdit(): void {
-    this.editingAdmin.set(null);
-  }
-
-  protected saveEdit(): void {
-    const admin = this.editingAdmin();
-    if (!admin) return;
-
-    this.http
-      .patch<AdminRow>(`/api/admins/${admin.id}`, {
-        email: this.editEmail.trim(),
-        status: this.editStatus,
+  protected openInvite(): void {
+    this.dialogs
+      .open<AdminInviteResult>(new PolymorpheusComponent(InviteAdminDialogComponent), {
+        label: 'Add administrator',
+        size: 's',
       })
-      .subscribe(() => {
-        this.closeEdit();
+      .subscribe((result) => {
+        this.inviteToken.set(result.inviteToken);
         this.load();
       });
   }
@@ -96,9 +62,7 @@ export class AdminsComponent {
     editButton.dataset.size = 'sm';
     editButton.textContent = 'Edit';
     editButton.disabled = !admin;
-    editButton.addEventListener('click', () => {
-      if (admin) this.openEdit(admin);
-    });
+    editButton.addEventListener('click', () => admin && this.openEdit(admin));
 
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
@@ -107,23 +71,34 @@ export class AdminsComponent {
     deleteButton.dataset.size = 'sm';
     deleteButton.textContent = 'Delete';
     deleteButton.disabled = !admin;
-    deleteButton.addEventListener('click', () => {
-      if (admin) this.remove(admin);
-    });
+    deleteButton.addEventListener('click', () => admin && this.remove(admin));
 
     container.append(editButton, deleteButton);
     return container;
   }
 
   private openEdit(admin: AdminRow): void {
-    this.editEmail = admin.email;
-    this.editStatus = admin.status;
-    this.editingAdmin.set(admin);
+    this.dialogs
+      .open<AdminRow>(new PolymorpheusComponent(EditAdminDialogComponent), {
+        label: 'Edit administrator',
+        size: 's',
+        data: admin,
+      })
+      .subscribe(() => this.load());
   }
 
   private remove(admin: AdminRow): void {
-    if (!window.confirm(`Delete administrator ${admin.email}?`)) return;
-    this.http.delete(`/api/admins/${admin.id}`).subscribe(() => this.load());
+    this.dialogs
+      .open<boolean>(new PolymorpheusComponent(ConfirmDialogComponent), {
+        label: 'Delete administrator',
+        size: 's',
+        data: { message: `Delete administrator ${admin.email}?` },
+      })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.http.delete(`/api/admins/${admin.id}`).subscribe(() => this.load());
+        }
+      });
   }
 
   private load(): void {
