@@ -1,13 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  AtlasButtonDirective,
-  AtlasControlDirective,
-  AtlasDialogComponent,
-  AtlasFieldComponent,
-} from '@atlas/ui';
+import { AtlasControlDirective, AtlasFieldComponent } from '@atlas/ui';
 import { AgGridImports } from '@atlas/ui-ag-grid';
+import { TuiButton, TuiDialog, TuiInput } from '@taiga-ui/core';
 import { ColDef, ICellRendererParams } from 'ag-grid-community';
 
 interface UserRow {
@@ -24,10 +20,11 @@ interface UserRow {
   imports: [
     FormsModule,
     AgGridImports,
-    AtlasButtonDirective,
     AtlasControlDirective,
-    AtlasDialogComponent,
     AtlasFieldComponent,
+    TuiButton,
+    TuiDialog,
+    TuiInput,
   ],
   templateUrl: './users.component.html',
 })
@@ -36,6 +33,7 @@ export class UsersComponent {
 
   protected readonly rows = signal<UserRow[]>([]);
   protected readonly editingUser = signal<UserRow | null>(null);
+  protected editDialogOpen = false;
   protected editEmail = '';
   protected editStatus: UserRow['status'] = 'ACTIVE';
   protected editEmailVerified = false;
@@ -60,6 +58,7 @@ export class UsersComponent {
   }
 
   protected closeEdit(): void {
+    this.editDialogOpen = false;
     this.editingUser.set(null);
   }
 
@@ -115,6 +114,7 @@ export class UsersComponent {
     this.editStatus = user.status;
     this.editEmailVerified = user.emailVerified;
     this.editingUser.set(user);
+    this.editDialogOpen = true;
   }
 
   private remove(user: UserRow): void {
