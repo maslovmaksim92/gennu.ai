@@ -3,7 +3,6 @@ import { Component, Input, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'proto-inline-ai',
-  standalone: true,
   imports: [FormsModule],
   templateUrl: './inline-ai.component.html',
 })

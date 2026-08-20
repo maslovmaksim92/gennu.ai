@@ -4,7 +4,6 @@ import { AgGridImports } from '@atlas/ui-ag-grid';
 import { ColDef } from 'ag-grid-community';
 
 @Component({
-  standalone: true,
   imports: [AgGridImports],
   templateUrl: './users.component.html',
 })

@@ -7,7 +7,6 @@ import { AppTheme, ThemeService } from './theme.service';
 
 @Directive({
   selector: '[agGridSurfaceTheme]',
-  standalone: true,
 })
 export class GridSurfaceThemeDirective implements AfterViewInit, OnDestroy {
   private readonly themeService = inject(ThemeService);

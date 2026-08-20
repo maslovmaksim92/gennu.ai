@@ -10,7 +10,7 @@
       "options": {
         "outputPath": "dist/apps/admin-api",
         "main": "apps/admin-api/src/main.ts",
-        "tsConfig": "apps/admin-api/tsconfig.app.json",
+        "tsConfig": "apps/admin-api/tsconfig.json",
         "assets": [],
         "clean": true
       }

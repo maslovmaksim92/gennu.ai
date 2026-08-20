@@ -1,7 +1,21 @@
-import { ModuleRegistry } from 'ag-grid-community';
 import { AllEnterpriseModule, LicenseManager } from 'ag-grid-enterprise';
 import { AgGridAngular } from 'ag-grid-angular';
-import { GridSmallOptionsDirective } from './grid-small.directive';
+import { AllCommunityModule, CellStyleModule, ModuleRegistry } from 'ag-grid-community';
+import {
+  ColumnsToolPanelModule,
+  ContextMenuModule,
+  MultiFilterModule,
+  RowGroupingModule,
+  RowGroupingPanelModule,
+  ServerSideRowModelModule,
+  SetFilterModule,
+  SideBarModule,
+  TreeDataModule,
+} from 'ag-grid-enterprise';
+import { FiltersToolPanelModule } from 'ag-grid-enterprise';
+import './grid-license';
+
+import { GridDefaultOptionsDirective } from './grid-default.directive';
 
 declare global {
   // Optional runtime licence injection for Admin and Studio.
@@ -11,12 +25,25 @@ declare global {
 
 let configured = false;
 
-export function configureAgGridEnterprise(licenseKey?: string): void {
+export function configureAgGrid(licenseKey?: string): void {
   if (configured) {
     return;
   }
 
-  ModuleRegistry.registerModules([AllEnterpriseModule]);
+  ModuleRegistry.registerModules([
+    AllCommunityModule,
+    SideBarModule,
+    ColumnsToolPanelModule,
+    RowGroupingModule,
+    RowGroupingPanelModule,
+    SetFilterModule,
+    ServerSideRowModelModule,
+    ContextMenuModule,
+    CellStyleModule,
+    TreeDataModule,
+    FiltersToolPanelModule,
+    MultiFilterModule,
+  ]);
 
   const resolvedLicenseKey = licenseKey ?? globalThis.__PROTO_AG_GRID_LICENSE_KEY__;
   if (resolvedLicenseKey) {
@@ -26,6 +53,6 @@ export function configureAgGridEnterprise(licenseKey?: string): void {
   configured = true;
 }
 
-export { GridSmallOptionsDirective };
+export { GridDefaultOptionsDirective as GridSmallOptionsDirective };
 
-export const AgGridImports = [AgGridAngular, GridSmallOptionsDirective];
+export const AgGridImports = [AgGridAngular, GridDefaultOptionsDirective];

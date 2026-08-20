@@ -3,7 +3,6 @@ import { Component, inject, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 
 @Component({
-  standalone: true,
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {

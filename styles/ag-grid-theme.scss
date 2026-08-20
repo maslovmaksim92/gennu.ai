@@ -1,7 +1,5 @@
 :root {
-  --ag-data-background-color: #f5f5f5;
   --ag-row-hover-color: #fff;
-  --ag-header-background-color: #ebebeb;
   --ag-wrapper-border-radius: 0;
   --ag-wrapper-border: none;
   --ag-row-border: none;
@@ -9,9 +7,11 @@
   --ag-header-font-weight: 400;
   --ag-range-selection-border-color: transparent;
   --ag-border-color: #e0e0e0;
+  --ag-cell-horizontal-padding: 8px;
   --ag-row-hover-color: #f5f5f5;
   --ag-header-cell-hover-background-color: #f5f5f5;
-  --ag-cell-horizontal-padding: 8px;
+  // --ag-data-background-color: #f5f5f5;
+  // --ag-header-background-color: #ebebeb;
   // --ag-pinned-column-border: solid 2px #e0e0e0;
   // --ag-header-column-resize-handle-color: transparent;
   // --ag-input-disabled-background-color: #fff;
@@ -31,11 +31,11 @@
   }
 
   .ag-row-odd {
-    background-color: var(--ag-data-background-color);
+    //background-color: var(--ag-data-background-color);
   }
 
   .ag-row-hover {
-    background-color: var(--ag-row-hover-color);
+    //background-color: var(--ag-row-hover-color);
   }
 
   .ag-watermark::before {
@@ -92,14 +92,6 @@ ag-grid-angular[ppGridLg] {
 
 .ag-set-floating-filter-input {
   pointer-events: none;
-}
-
-.ag-header-cell {
-  &.ag-header-active {
-    .ag-header-cell-text {
-      text-shadow: 0.5px 0 0 #000;
-    }
-  }
 }
 
 .grid-wrapper {

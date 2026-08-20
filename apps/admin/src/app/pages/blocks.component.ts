@@ -6,7 +6,6 @@ import { ColDef } from 'ag-grid-community';
 import { InlineAiComponent } from '../shared/inline-ai.component';
 
 @Component({
-  standalone: true,
   imports: [FormsModule, AgGridImports, InlineAiComponent],
   templateUrl: './blocks.component.html',
 })

@@ -4,7 +4,6 @@ export type AtlasBadgeVariant = 'neutral' | 'success' | 'warning' | 'danger';
 
 @Component({
   selector: 'atlas-badge',
-  standalone: true,
   templateUrl: './atlas-badge.component.html',
   host: {
     class: 'atlas-badge',

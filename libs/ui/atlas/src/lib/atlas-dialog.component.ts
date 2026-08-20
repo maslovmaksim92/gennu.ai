@@ -3,7 +3,6 @@ import { AtlasButtonDirective } from './atlas-button.directive';
 
 @Component({
   selector: 'atlas-dialog',
-  standalone: true,
   imports: [AtlasButtonDirective],
   templateUrl: './atlas-dialog.component.html',
   host: { class: 'atlas-dialog-host' },

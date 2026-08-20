@@ -1,18 +1,32 @@
 <section class="page">
   <header class="page-head">
-    <div><span class="eyebrow">ACCESS</span><h1>Administrators</h1><p>Manage active administrators and invitations.</p></div>
+    <div>
+      <span class="eyebrow">ACCESS</span>
+      <h1>Administrators</h1>
+      <p>Manage active administrators and invitations.</p>
+    </div>
     <button atlasButton (click)="showInvite.set(!showInvite())">Add admin</button>
   </header>
   @if (showInvite()) {
     <div class="panel form-row">
-      <atlas-field label="Administrator email" hint="An invitation token will be generated for this address.">
+      <atlas-field
+        label="Administrator email"
+        hint="An invitation token will be generated for this address."
+      >
         <input atlasInput type="email" placeholder="admin@example.com" [(ngModel)]="inviteEmail" />
       </atlas-field>
       <button atlasButton (click)="invite()">Create invite</button>
-      @if (inviteToken()) { <code class="token">{{ inviteToken() }}</code> }
+      @if (inviteToken()) {
+        <code class="token">{{ inviteToken() }}</code>
+      }
     </div>
   }
   <div class="panel grid-panel">
-    <ag-grid-angular style="width: 100%; height: 420px" [rowData]="rows()" [columnDefs]="cols" [pagination]="true" [paginationPageSize]="20" />
+    <ag-grid-angular
+      [rowData]="rows()"
+      [columnDefs]="cols"
+      [pagination]="true"
+      [paginationPageSize]="20"
+    />
   </div>
 </section>

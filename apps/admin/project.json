@@ -15,7 +15,7 @@
       "options": {
         "browser": "apps/admin/src/main.ts",
         "index": "apps/admin/src/index.html",
-        "tsConfig": "apps/admin/tsconfig.app.json",
+        "tsConfig": "apps/admin/tsconfig.json",
         "polyfills": ["@angular/localize/init"],
         "localize": false,
         "styles": [

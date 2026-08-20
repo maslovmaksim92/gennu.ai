@@ -21,25 +21,25 @@ Do not register AG Grid modules inside page components.
 All grid modules are registered once through:
 
 ```ts
-import { configureAgGridEnterprise } from '@atlas/ui-ag-grid';
+import { configureAgGrid } from '@atlas/ui-ag-grid';
 
-configureAgGridEnterprise();
+configureAgGrid();
 ```
 
 The shared implementation registers `AllEnterpriseModule`, which includes all Community and Enterprise grid modules. This is intentional for the first versions of Proto.ai so every Admin/Studio table can use the full table feature set without adding page-specific module registrations.
 
 ## Admin
 
-`apps/admin/src/main.ts` already calls `configureAgGridEnterprise()` before Angular bootstrap.
+`apps/admin/src/main.ts` already calls `configureAgGrid()` before Angular bootstrap.
 
 ## Studio
 
 When Studio is created, its `main.ts` must use the same setup:
 
 ```ts
-import { configureAgGridEnterprise } from '@atlas/ui-ag-grid';
+import { configureAgGrid } from '@atlas/ui-ag-grid';
 
-configureAgGridEnterprise();
+configureAgGrid();
 bootstrapApplication(AppComponent, appConfig);
 ```
 
@@ -77,7 +77,7 @@ globalThis.__PROTO_AG_GRID_LICENSE_KEY__;
 or accepts it directly:
 
 ```ts
-configureAgGridEnterprise('YOUR_LICENSE_KEY');
+configureAgGrid('YOUR_LICENSE_KEY');
 ```
 
 AG Grid licence keys are client-side licence strings and are not treated as application secrets. Do not store a real production licence key in the repository.

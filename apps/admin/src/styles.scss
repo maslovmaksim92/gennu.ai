@@ -125,7 +125,9 @@ button {
   border-radius: var(--radius-sm);
   font-size: 13px;
   line-height: 1.35;
-  transition: background 120ms ease, color 120ms ease;
+  transition:
+    background 120ms ease,
+    color 120ms ease;
 }
 
 .shell nav a:hover {
@@ -322,7 +324,7 @@ button {
 }
 
 .grid-panel {
-  padding: 8px;
+  padding: 0px;
   overflow: hidden;
 }
 
@@ -609,7 +611,7 @@ label {
 }
 
 .ai-page {
-  height: calc(100vh - 52px);
+  // height: calc(100vh - 52px);
   display: flex;
   flex-direction: column;
 }
@@ -700,7 +702,7 @@ label {
   border: 1px solid #222;
   border-radius: var(--radius-md);
   background: #000;
-  color: #fff;
+  // color: #fff;
 }
 
 .inline-ai-head {
@@ -759,12 +761,6 @@ label {
   border-color: #333;
   color: #fff;
   resize: vertical;
-}
-
-.inline-ai-compose .primary {
-  border-color: #fff;
-  background: #fff;
-  color: #000;
 }
 
 @media (max-width: 1100px) {

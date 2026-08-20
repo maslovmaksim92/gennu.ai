@@ -7,6 +7,7 @@
     </div>
     <button class="primary" (click)="creating.set(!creating())">New theme</button>
   </header>
+
   @if (creating()) {
     <div class="design-editor">
       <div class="panel editor">
@@ -24,6 +25,7 @@
         </label>
         <button class="primary" (click)="create()">Save draft</button>
       </div>
+
       <proto-inline-ai
         title="Theme assistant"
         context="You are helping an administrator create a Proto.ai Theme Schema. Suggest structured JSON using semantic design tokens. Do not generate arbitrary CSS."
@@ -32,6 +34,6 @@
     </div>
   }
   <div class="panel grid-panel">
-    <ag-grid-angular style="width: 100%; height: 480px" [rowData]="rows()" [columnDefs]="cols" />
+    <ag-grid-angular [rowData]="rows()" [columnDefs]="cols" />
   </div>
 </section>

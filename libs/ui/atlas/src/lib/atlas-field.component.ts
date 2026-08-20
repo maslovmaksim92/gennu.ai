@@ -2,7 +2,6 @@ import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'atlas-field',
-  standalone: true,
   templateUrl: './atlas-field.component.html',
   host: { class: 'atlas-field' },
 })

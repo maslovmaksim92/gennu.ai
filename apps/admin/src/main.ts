@@ -1,8 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { configureAgGridEnterprise } from '@atlas/ui-ag-grid';
+import { configureAgGrid } from '@atlas/ui-ag-grid';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
 
-configureAgGridEnterprise();
+configureAgGrid();
 
 bootstrapApplication(AppComponent, appConfig).catch(console.error);

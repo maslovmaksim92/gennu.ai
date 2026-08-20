@@ -5,7 +5,6 @@ export type AtlasButtonSize = 'sm' | 'md';
 
 @Directive({
   selector: 'button[atlasButton]',
-  standalone: true,
   host: {
     class: 'atlas-button',
     '[attr.data-variant]': 'variant()',

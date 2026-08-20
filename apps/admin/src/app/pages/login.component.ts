@@ -5,7 +5,6 @@ import { AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent } from
 import { AuthService } from '../core/auth.service';
 
 @Component({
-  standalone: true,
   imports: [FormsModule, AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent],
   templateUrl: './login.component.html',
 })

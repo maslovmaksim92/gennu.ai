@@ -7,9 +7,9 @@ import { gridLocale } from './grid-locale';
 
 @Directive({
   selector: 'ag-grid-angular',
-  hostDirectives: [CellTemplateHostDirective, GridThemeDirective],
+  hostDirectives: [GridThemeDirective],
 })
-export class GridSmallOptionsDirective {
+export class GridDefaultOptionsDirective {
   private readonly agGridAngular = inject(AgGridAngular);
 
   constructor() {
@@ -24,5 +24,6 @@ export class GridSmallOptionsDirective {
     this.agGridAngular.suppressDragLeaveHidesColumns = true;
     this.agGridAngular.rowHeight = 32;
     this.agGridAngular.accentedSort = true;
+    this.agGridAngular.domLayout = 'autoHeight';
   }
 }

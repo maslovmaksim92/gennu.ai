@@ -4,7 +4,6 @@ import { iconOverrides, themeQuartz } from 'ag-grid-community';
 
 @Directive({
   selector: '[gridTheme]',
-  standalone: true,
 })
 export class GridThemeDirective {
   private readonly agGridAngular = inject(AgGridAngular);

@@ -9,7 +9,6 @@ import {
 } from '@atlas/ui';
 
 @Component({
-  standalone: true,
   imports: [
     FormsModule,
     AtlasBadgeComponent,
