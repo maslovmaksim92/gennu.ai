@@ -38,22 +38,23 @@ enum InviteStatus {
 }
 
 model User {
-  id            String     @id @default(cuid())
-  email         String     @unique
-  passwordHash  String
-  role          UserRole   @default(USER)
-  status        UserStatus @default(ACTIVE)
-  emailVerified Boolean    @default(false)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  lastLoginAt   DateTime?
+  id               String            @id @default(cuid())
+  email            String            @unique
+  passwordHash     String
+  role             UserRole          @default(USER)
+  status           UserStatus        @default(ACTIVE)
+  emailVerified    Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  lastLoginAt      DateTime?
 
-  createdThemes Theme[]           @relation("ThemeCreator")
-  createdBlocks BlockDefinition[] @relation("BlockCreator")
-  invitesSent   AdminInvite[]     @relation("InviteSender")
-  auditEntries  AuditLog[]        @relation("AuditActor")
-  chatSessions  ChatSession[]
-  sites         Site[]
+  createdThemes    Theme[]           @relation("ThemeCreator")
+  createdBlocks    BlockDefinition[] @relation("BlockCreator")
+  createdTemplates Template[]        @relation("TemplateCreator")
+  invitesSent      AdminInvite[]     @relation("InviteSender")
+  auditEntries     AuditLog[]        @relation("AuditActor")
+  chatSessions     ChatSession[]
+  sites            Site[]
 }
 
 model AdminInvite {
@@ -114,37 +115,71 @@ model BlockDefinition {
 }
 
 model BlockVersion {
-  id               String          @id @default(cuid())
+  id                String          @id @default(cuid())
   blockDefinitionId String
-  blockDefinition  BlockDefinition @relation(fields: [blockDefinitionId], references: [id], onDelete: Cascade)
-  version          String
-  major            Int
-  minor            Int
-  patch            Int
-  schema           Json
-  defaults         Json?
-  changelog        String?
-  migration        Json?
-  status           PublishStatus   @default(DRAFT)
-  publishedAt      DateTime?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  instances        BlockInstance[]
+  blockDefinition   BlockDefinition @relation(fields: [blockDefinitionId], references: [id], onDelete: Cascade)
+  version           String
+  major             Int
+  minor             Int
+  patch             Int
+  schema            Json
+  defaults          Json?
+  changelog         String?
+  migration         Json?
+  status            PublishStatus   @default(DRAFT)
+  publishedAt       DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  instances         BlockInstance[]
 
   @@unique([blockDefinitionId, version])
   @@index([blockDefinitionId, status, major, minor, patch])
 }
 
+model Template {
+  id          String            @id @default(cuid())
+  key         String            @unique
+  name        String
+  description String?
+  createdById String
+  createdBy   User              @relation("TemplateCreator", fields: [createdById], references: [id])
+  versions    TemplateVersion[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model TemplateVersion {
+  id          String        @id @default(cuid())
+  templateId  String
+  template    Template      @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  version     String
+  major       Int
+  minor       Int
+  patch       Int
+  schema      Json
+  changelog   String?
+  status      PublishStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  sites       Site[]
+
+  @@unique([templateId, version])
+  @@index([templateId, status, major, minor, patch])
+}
+
 model Site {
-  id             String        @id @default(cuid())
-  ownerId        String
-  owner          User          @relation(fields: [ownerId], references: [id])
-  name           String
-  themeVersionId String?
-  themeVersion   ThemeVersion? @relation(fields: [themeVersionId], references: [id])
-  pages          Page[]
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id                String           @id @default(cuid())
+  ownerId           String
+  owner             User             @relation(fields: [ownerId], references: [id])
+  name              String
+  templateVersionId String?
+  templateVersion   TemplateVersion? @relation(fields: [templateVersionId], references: [id])
+  themeVersionId    String?
+  themeVersion      ThemeVersion?    @relation(fields: [themeVersionId], references: [id])
+  pages             Page[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 }
 
 model Page {
