@@ -11,7 +11,8 @@ First implementation slice of Proto.ai. This stage intentionally includes only t
 - Admin authentication with JWT Bearer tokens
 - Admin invitation and management
 - User list and status management
-- Versioned Themes and Blocks
+- Versioned Themes, Blocks and Templates
+- AI Site Generator that creates Site/Page/BlockInstance drafts from pinned template versions
 - AG Grid Enterprise tables
 - Tailwind CSS
 - Taiga UI
@@ -135,6 +136,35 @@ Before running database commands, make sure `.env` exists and `DATABASE_URL` poi
 
 The initial administrator is created by `pnpm db:seed`. Configure its credentials in `.env` using the variables expected by `prisma/seed.ts`.
 
+After pulling a revision that changes `prisma/schema.prisma` (including the Template/Site Generator models), run:
+
+```bash
+pnpm db:generate
+pnpm db:push
+```
+
+## Site Generator
+
+Admin → Site Generator creates websites from versioned templates instead of asking AI to emit arbitrary HTML/CSS. A template version pins the exact BlockVersion IDs AI is allowed to select and can also pin a default ThemeVersion.
+
+Generation flow:
+
+```text
+TemplateVersion + prompt
+        ↓
+approved BlockVersion catalog
+        ↓
+OpenAI Responses API
+        ↓
+structured site JSON
+        ↓
+server validation
+        ↓
+Site → Page → BlockInstance
+```
+
+Generated sites persist the concrete `TemplateVersion`, optional `ThemeVersion`, and each `BlockVersion`, so later template/block/theme releases do not silently change existing sites.
+
 ## Formatting
 
 Format the repository:
@@ -167,7 +197,7 @@ The production image serves the Angular application and NestJS API from the same
 
 ## OpenAI
 
-Create an `openai` integration from Admin → Integrations and store an API key in the secret field. The key is encrypted before persistence and is never returned to Angular. The AI chat endpoint uses the configured integration on the server.
+Create an `openai` integration from Admin → Integrations and store an API key in the secret field. The key is encrypted before persistence and is never returned to Angular. The AI chat and Site Generator use the configured integration on the server.
 
 ## Documentation
 
