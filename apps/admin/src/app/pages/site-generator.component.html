@@ -1,0 +1,150 @@
+<section class="page">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">AI WEBSITE GENERATION</span>
+      <h1>Site Generator</h1>
+      <p>Generate structured websites from versioned templates and approved blocks.</p>
+    </div>
+    <button atlasButton data-variant="secondary" (click)="toggleTemplateForm()">
+      {{ creatingTemplate() ? 'Close template form' : 'New template' }}
+    </button>
+  </header>
+
+  @if (error()) {
+    <div class="error generator-error">{{ error() }}</div>
+  }
+
+  @if (creatingTemplate()) {
+    <section class="panel template-builder">
+      <div class="section-head">
+        <div>
+          <h2>Create template</h2>
+          <p>The first version is saved as 1.0.0 DRAFT and pins exact block versions.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <atlas-field label="Key">
+          <input atlasInput [(ngModel)]="templateKey" placeholder="saas-landing" />
+        </atlas-field>
+        <atlas-field label="Name">
+          <input atlasInput [(ngModel)]="templateName" placeholder="SaaS Landing" />
+        </atlas-field>
+      </div>
+
+      <atlas-field label="Description">
+        <textarea
+          atlasInput
+          [(ngModel)]="templateDescription"
+          rows="3"
+          placeholder="What kind of site this template should generate"
+        ></textarea>
+      </atlas-field>
+
+      <atlas-field label="Default theme version">
+        <select atlasInput [(ngModel)]="defaultThemeVersionId">
+          <option value="">No default theme</option>
+          @for (theme of availableThemes(); track theme.versionId) {
+            <option [value]="theme.versionId">
+              {{ theme.name }} · {{ theme.version }} · {{ theme.status }}
+            </option>
+          }
+        </select>
+      </atlas-field>
+
+      <div class="block-selector">
+        <div class="section-head compact">
+          <div>
+            <h2>Allowed blocks</h2>
+            <p>AI will only be allowed to use the selected versions.</p>
+          </div>
+          <span class="selection-count">{{ selectedBlockVersionIds().size }} selected</span>
+        </div>
+
+        <div class="block-options">
+          @for (block of availableBlocks(); track block.versionId) {
+            <label class="block-option">
+              <input
+                type="checkbox"
+                [checked]="selectedBlockVersionIds().has(block.versionId!)"
+                (change)="toggleBlock(block.versionId!, $any($event.target).checked)"
+              />
+              <span>
+                <strong>{{ block.name }}</strong>
+                <small>{{ block.key }} · {{ block.version }} · {{ block.status }}</small>
+              </span>
+            </label>
+          } @empty {
+            <p class="empty-state">Create at least one Block version before creating a template.</p>
+          }
+        </div>
+      </div>
+
+      <div class="actions">
+        <button atlasButton (click)="createTemplate()">Save template draft</button>
+      </div>
+    </section>
+  }
+
+  <div class="generator-layout">
+    <section class="panel generation-panel">
+      <div class="section-head">
+        <div>
+          <h2>Generate site</h2>
+          <p>The generated site stores the exact Template, Theme and Block versions used.</p>
+        </div>
+      </div>
+
+      <atlas-field label="Template version">
+        <select atlasInput [(ngModel)]="selectedTemplateVersionId">
+          <option value="">Select template</option>
+          @for (template of availableTemplates(); track template.versionId) {
+            <option [value]="template.versionId">
+              {{ template.name }} · {{ template.version }} · {{ template.status }}
+            </option>
+          }
+        </select>
+      </atlas-field>
+
+      <atlas-field label="Generation request">
+        <textarea
+          atlasInput
+          [(ngModel)]="prompt"
+          rows="9"
+          placeholder="Создай сайт стоматологии: главная, услуги, цены и контакты. Стиль спокойный и премиальный."
+        ></textarea>
+      </atlas-field>
+
+      <button
+        atlasButton
+        [disabled]="generating() || !selectedTemplateVersionId || !prompt.trim()"
+        (click)="generate()"
+      >
+        {{ generating() ? 'Generating…' : 'Generate site' }}
+      </button>
+    </section>
+
+    <section class="panel result-panel">
+      <div class="section-head">
+        <div>
+          <h2>Result</h2>
+          <p>Validated structured output saved as a site draft.</p>
+        </div>
+      </div>
+
+      @if (result(); as generated) {
+        <div class="result-summary">
+          <strong>{{ generated.site.name }}</strong>
+          <span>{{ generated.site.pages.length }} pages</span>
+          <span>{{ generated.generation.model }}</span>
+        </div>
+        <pre>{{ resultJson() }}</pre>
+      } @else {
+        <div class="empty-result">
+          <strong>No generation yet</strong>
+          <p>Select a template and describe the site you want to create.</p>
+        </div>
+      }
+    </section>
+  </div>
+</section>
