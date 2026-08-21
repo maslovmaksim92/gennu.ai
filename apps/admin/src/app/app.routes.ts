@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth.guard';
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -36,6 +37,11 @@ export const routes: Routes = [
       {
         path: 'blocks',
         loadComponent: () => import('./pages/blocks.component').then((m) => m.BlocksComponent),
+      },
+      {
+        path: 'site-generator',
+        loadComponent: () =>
+          import('./pages/site-generator.component').then((m) => m.SiteGeneratorComponent),
       },
       {
         path: 'integrations',
