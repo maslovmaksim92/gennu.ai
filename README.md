@@ -13,6 +13,8 @@ First implementation slice of Proto.ai. This stage intentionally includes only t
 - User list and status management
 - Versioned Themes, Blocks and Templates
 - AI Site Generator that creates Site/Page/BlockInstance drafts from pinned template versions
+- Portable render engine that turns a generated site into HTML from its pinned versions
+- Sandboxed site preview inside Admin
 - AG Grid Enterprise tables
 - Tailwind CSS
 - Taiga UI
@@ -123,8 +125,11 @@ pnpm db:deploy
 # Seed development data / initial administrator
 pnpm db:seed
 
-# Generate client, push schema and seed administrator
+# Generate client, push schema, seed administrator and the render demo set
 pnpm db:setup
+
+# Seed the demo theme, blocks and template used by the render engine
+pnpm db:seed:demo
 
 # Open Prisma Studio
 pnpm db:studio
@@ -164,6 +169,38 @@ Site → Page → BlockInstance
 ```
 
 Generated sites persist the concrete `TemplateVersion`, optional `ThemeVersion`, and each `BlockVersion`, so later template/block/theme releases do not silently change existing sites.
+
+## Rendering
+
+Generated sites are rendered by `libs/engine/render`, a dependency-free engine
+that walks a declarative node tree instead of interpolating HTML strings. Tags
+and attributes are allowlisted, URLs and CSS are sanitised and all text is
+escaped, so neither a block layout nor model-generated data can inject markup.
+
+A block stores its markup as a node tree in `BlockVersion.schema.layout`; a
+theme stores design tokens in `ThemeVersion.schema.tokens`, which become CSS
+custom properties. Rendering always reads the exact versions a site pinned.
+
+Admin -> Site Generator shows a live preview in a sandboxed iframe. The iframe
+loads a short-lived, site-scoped preview token rather than the admin session
+token, because an iframe cannot send an `Authorization` header.
+
+Seed a theme, three blocks and a template to try it:
+
+```bash
+pnpm db:seed:demo
+```
+
+The contract is documented in [docs/rendering.md](docs/rendering.md).
+
+## Tests
+
+```bash
+pnpm test
+```
+
+Regressions for the render engine live next to it in `libs/engine/render`. The
+`pnpm check` script runs formatting, the inline-template rule and the tests.
 
 ## Formatting
 

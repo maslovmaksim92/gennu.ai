@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent } from '@atlas/ui';
+import { SitePreviewComponent } from './site-preview.component';
 
 interface TemplateRow {
   id: string;
@@ -54,7 +55,13 @@ interface GeneratedSiteResponse {
 }
 
 @Component({
-  imports: [FormsModule, AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent],
+  imports: [
+    FormsModule,
+    AtlasButtonDirective,
+    AtlasControlDirective,
+    AtlasFieldComponent,
+    SitePreviewComponent,
+  ],
   templateUrl: './site-generator.component.html',
   styleUrl: './site-generator.component.scss',
 })
@@ -86,6 +93,8 @@ export class SiteGeneratorComponent {
   protected readonly availableTemplates = computed(() =>
     this.templates().filter((template) => template.versionId && template.status !== 'DEPRECATED'),
   );
+  /** Feeds the preview panel so a freshly generated site is shown at once. */
+  protected readonly generatedSiteId = computed(() => this.result()?.site.id ?? null);
   protected readonly resultJson = computed(() =>
     this.result() ? JSON.stringify(this.result(), null, 2) : '',
   );

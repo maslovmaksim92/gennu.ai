@@ -1,0 +1,146 @@
+.preview-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+.section-head p {
+  margin: 5px 0 0;
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+
+.preview-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.control {
+  display: grid;
+  gap: 5px;
+}
+
+.control span {
+  color: var(--muted-foreground);
+  font-size: 11px;
+}
+
+.control select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  color: inherit;
+  font: inherit;
+}
+
+.viewports {
+  display: flex;
+  gap: 4px;
+}
+
+.viewport-button {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  color: var(--muted-foreground);
+  font-size: 11px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.viewport-button.active {
+  border-color: var(--foreground);
+  color: var(--foreground);
+}
+
+.pinned-versions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pinned-versions span {
+  padding: 4px 7px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--muted-foreground);
+  font-size: 10px;
+}
+
+.render-issues {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  font-size: 11px;
+}
+
+.render-issues summary {
+  cursor: pointer;
+  color: var(--muted-foreground);
+}
+
+.render-issues ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+}
+
+.frame-wrap {
+  display: flex;
+  justify-content: center;
+  min-height: 420px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+}
+
+.preview-frame {
+  height: 640px;
+  max-width: 100%;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.empty-preview {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+
+.empty-preview strong {
+  color: var(--foreground);
+}
+
+.empty-preview p {
+  max-width: 320px;
+  margin: 6px 0 0;
+}
+
+@media (max-width: 980px) {
+  .preview-controls {
+    grid-template-columns: 1fr;
+  }
+}

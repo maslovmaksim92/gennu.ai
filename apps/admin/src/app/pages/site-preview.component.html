@@ -1,0 +1,94 @@
+<section class="panel preview-panel">
+  <div class="section-head">
+    <div>
+      <h2>Preview</h2>
+      <p>Rendered from the pinned Theme and Block versions of the site.</p>
+    </div>
+    <button atlasButton data-variant="secondary" (click)="reload()" [disabled]="!selectedSiteId()">
+      Refresh
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  <div class="preview-controls">
+    <label class="control">
+      <span>Site</span>
+      <select [value]="selectedSiteId()" (change)="selectSite($any($event.target).value)">
+        <option value="">Select site</option>
+        @for (site of sites(); track site.id) {
+          <option [value]="site.id">{{ site.name }} · {{ site.pageCount }} pages</option>
+        }
+      </select>
+    </label>
+
+    <label class="control">
+      <span>Page</span>
+      <select [value]="selectedSlug()" (change)="selectPage($any($event.target).value)">
+        @for (page of pages(); track page.id) {
+          <option [value]="page.slug">{{ page.name }} · {{ page.slug }}</option>
+        }
+      </select>
+    </label>
+
+    <div class="viewports">
+      @for (option of ['desktop', 'tablet', 'mobile']; track option) {
+        <button
+          type="button"
+          class="viewport-button"
+          [class.active]="viewport() === option"
+          (click)="setViewport($any(option))"
+        >
+          {{ option }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (selectedSite(); as site) {
+    <div class="pinned-versions">
+      @if (site.templateName) {
+        <span>Template: {{ site.templateName }} · {{ site.templateVersion }}</span>
+      }
+      @if (site.themeName) {
+        <span>Theme: {{ site.themeName }} · {{ site.themeVersion }}</span>
+      } @else {
+        <span>No theme pinned</span>
+      }
+    </div>
+  }
+
+  @if (issues().length) {
+    <details class="render-issues">
+      <summary>{{ issues().length }} render issues</summary>
+      <ul>
+        @for (issue of issues(); track issue.path + issue.blockId) {
+          <li>
+            <code>{{ issue.path }}</code> — {{ issue.message }}
+          </li>
+        }
+      </ul>
+    </details>
+  }
+
+  <div class="frame-wrap">
+    @if (frameUrl(); as url) {
+      <iframe
+        class="preview-frame"
+        [style.width]="frameWidth()"
+        [src]="url"
+        title="Site preview"
+        sandbox=""
+        referrerpolicy="no-referrer"
+        loading="lazy"
+      ></iframe>
+    } @else {
+      <div class="empty-preview">
+        <strong>{{ loading() ? 'Loading preview…' : 'No site selected' }}</strong>
+        <p>Generate a site or pick an existing one to see it rendered.</p>
+      </div>
+    }
+  </div>
+</section>
