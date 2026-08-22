@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PublishStatus } from '@prisma/client';
+import { validateBlockSchema, type BlockSchema } from '@atlas/render';
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
 import { PrismaService } from '../common/prisma.service';
@@ -135,6 +136,24 @@ export class BlocksController {
         migration: body.migration,
       },
     });
+  }
+
+  /**
+   * Reports whether a block version can actually be rendered.
+   *
+   * This is advisory on purpose: publishing is not blocked, so existing block
+   * versions created before the render engine keep working. The admin uses it
+   * to show what would be dropped at render time.
+   */
+  @Get('versions/:versionId/render-check')
+  async renderCheck(@Param('versionId') versionId: string) {
+    const version = await this.prisma.blockVersion.findUnique({ where: { id: versionId } });
+    if (!version) {
+      throw new NotFoundException('Block version not found.');
+    }
+
+    const issues = validateBlockSchema((version.schema ?? {}) as BlockSchema);
+    return { renderable: issues.length === 0, issues };
   }
 
   @Post('versions/:versionId/publish')

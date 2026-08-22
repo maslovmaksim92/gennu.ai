@@ -7,7 +7,9 @@ import { AuditService } from '../common/audit.service';
 import { PrismaService } from '../common/prisma.service';
 import { HealthController } from '../health/health.controller';
 import { IntegrationsModule } from '../integrations/integrations.module';
+import { RenderModule } from '../render/render.module';
 import { SiteGeneratorModule } from '../site-generator/site-generator.module';
+import { SitesModule } from '../sites/sites.module';
 import { TemplatesModule } from '../templates/templates.module';
 import { ThemesModule } from '../themes/themes.module';
 import { UsersModule } from '../users/users.module';
@@ -23,6 +25,8 @@ import { UsersModule } from '../users/users.module';
     IntegrationsModule,
     AiModule,
     SiteGeneratorModule,
+    SitesModule,
+    RenderModule,
   ],
   controllers: [HealthController],
   providers: [PrismaService, AuditService],

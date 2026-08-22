@@ -20,7 +20,7 @@ async function bootstrap() {
     if (existsSync(staticRoot)) {
       app.useStaticAssets(staticRoot);
       const express = app.getHttpAdapter().getInstance();
-      express.get('*', (req: any, res: any, next: any) => {
+      express.get('/*path', (req: any, res: any, next: any) => {
         if (req.path.startsWith('/api')) return next();
         return res.sendFile(join(staticRoot, 'index.html'));
       });
