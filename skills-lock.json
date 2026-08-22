@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "ag-dev": {
+      "source": "ag-grid/skills",
+      "sourceType": "github",
+      "skillPath": "skills/ag-dev/SKILL.md",
+      "computedHash": "c4fffe577cc8b550c2c1d16882fbf325dcb583550cd3d5a7047d24714e15d3ce"
+    },
+    "ag-update": {
+      "source": "ag-grid/skills",
+      "sourceType": "github",
+      "skillPath": "skills/ag-update/SKILL.md",
+      "computedHash": "1f1c55df1b964d58ad3dad7c13a6774748d6e7d1aea7e29245e3a7dc8ca8dcec"
+    },
+    "angular-developer": {
+      "source": "angular/angular",
+      "sourceType": "github",
+      "skillPath": "skills/dev-skills/angular-developer/SKILL.md",
+      "computedHash": "b347918e4684319dabde773c882cce231a738454166a221684f991a6197749eb"
+    },
+    "angular-new-app": {
+      "source": "angular/angular",
+      "sourceType": "github",
+      "skillPath": "skills/dev-skills/angular-new-app/SKILL.md",
+      "computedHash": "49bd84ab08bd3498c52f476bed48fbb942dc6dbc0925607e84549adbed34bccf"
+    }
+  }
+}
