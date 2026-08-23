@@ -104,18 +104,26 @@ h1 {
 } /* .blk-hero h1 { … } */
 ```
 
-## How admin-api imports the engine
+## How the engine is packaged
 
-`tsconfig.base.json` maps `@atlas/render` to the engine sources, and the Angular
-admin and the tests resolve it through that alias. `admin-api` imports the
-engine by relative path instead, because it is compiled with plain `tsc`
-(`@nx/js:tsc`), which does not rewrite path aliases into the emitted JavaScript:
-the alias compiles but throws `MODULE_NOT_FOUND` at runtime.
+`libs/engine/render` is a pnpm workspace package named `@atlas/render`, so the
+name resolves in two ways and both are deliberate:
 
-For the same reason the `admin-api` build sets `rootDir` to the workspace root,
-so the engine sources are allowed to be part of the compilation. That moves the
-entry point to `dist/apps/admin-api/apps/admin-api/src/main.js`, which is what
-`docker/admin.Dockerfile` runs.
+- through `node_modules` to the package's built `dist/`, which is how
+  `admin-api` uses it at runtime;
+- through the `tsconfig.base.json` path alias straight to `src/`, which is how
+  the Angular admin and the Vitest specs use it while developing.
+
+The package exists because `admin-api` is compiled with plain `tsc`
+(`@nx/js:tsc`), and `tsc` does not rewrite path aliases into the emitted
+JavaScript. An alias-only import compiles and then throws `MODULE_NOT_FOUND` on
+boot. `apps/admin-api/tsconfig.json` therefore resets `paths` to `{}` so that
+`admin-api` resolves the name through `node_modules` rather than the alias, and
+`admin-api:build` declares `dependsOn` on `render-engine:build` so the `dist/`
+it imports always exists first.
+
+`libs/engine/render/dist` is generated and git-ignored. `pnpm build:admin`
+builds it as part of the graph; `npx nx build render-engine` builds it alone.
 
 ## Versioning
 

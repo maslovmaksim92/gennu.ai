@@ -12,9 +12,14 @@
         "main": "apps/admin-api/src/main.ts",
         "tsConfig": "apps/admin-api/tsconfig.json",
         "assets": [],
-        "clean": true,
-        "rootDir": "."
-      }
+        "clean": true
+      },
+      "dependsOn": [
+        {
+          "projects": ["render-engine"],
+          "target": "build"
+        }
+      ]
     },
     "serve": {
       "executor": "@nx/js:node",

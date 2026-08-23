@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PublishStatus } from '@prisma/client';
-import { validateBlockSchema, type BlockSchema } from '../../../../libs/engine/render/src';
+import { validateBlockSchema, type BlockSchema } from '@atlas/render';
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
 import { PrismaService } from '../common/prisma.service';
