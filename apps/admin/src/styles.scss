@@ -314,9 +314,9 @@ button {
 .panel,
 .stats article {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  // border: 1px solid var(--border);
+  // border-radius: var(--radius-md);
+  // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .panel {
@@ -364,10 +364,6 @@ button {
 .empty-cell {
   color: var(--muted-foreground);
   text-align: center;
-}
-
-tui-table-pagination {
-  border-top: 1px solid var(--border);
 }
 
 .stats {

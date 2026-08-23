@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.17.1",
   "scripts": {
+    "dev:install": "pnpm install && pnpm db:generate",
     "dev:admin": "nx run-many -t serve -p admin admin-api --parallel=2",
     "dev:all": "pnpm dev:infra && pnpm dev:admin",
     "build:admin": "nx run-many -t build -p admin admin-api",
