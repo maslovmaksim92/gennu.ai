@@ -11,13 +11,13 @@
     "i18n:extract:admin": "nx run admin:extract-i18n",
     "nx:check": "nx show projects && nx show project admin && nx show project admin-api",
     "test": "vitest run",
-    "lint": "nx run-many -t lint --all",
+    "lint": "eslint .",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "format:ts": "prettier \"**/*.ts\" --write",
     "format:ts:check": "prettier \"**/*.ts\" --check",
     "check:templates": "node scripts/check-inline-templates.mjs",
-    "check": "pnpm format:check && pnpm check:templates && pnpm test",
+    "check": "pnpm format:check && pnpm lint && pnpm check:templates && pnpm test",
     "db:generate": "prisma generate --schema=prisma/schema.prisma",
     "db:push": "prisma db push --schema=prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema=prisma/schema.prisma",
@@ -28,7 +28,8 @@
     "db:studio": "prisma studio --schema=prisma/schema.prisma",
     "dev:infra": "docker compose -f compose/compose.dev.yml up -d postgres",
     "dev:infra:down": "docker compose -f compose/compose.dev.yml down",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@angular/animations": "^22.0.0",
@@ -45,6 +46,7 @@
     "@nestjs/core": "11.1.28",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/platform-express": "11.1.28",
+    "@nestjs/throttler": "^6.5.0",
     "@prisma/client": "^6.19.3",
     "@taiga-ui/addon-mobile": "^5.20.0",
     "@taiga-ui/addon-table": "^5.20.0",
@@ -71,6 +73,7 @@
     "@angular/build": "^22.1.4",
     "@angular/cli": "^22.1.4",
     "@angular/compiler-cli": "^22.1.0",
+    "@eslint/js": "^10.0.1",
     "@nestjs/schematics": "^11.0.7",
     "@nestjs/testing": "^11.1.28",
     "@nx/angular": "^23.1.0",
@@ -86,6 +89,7 @@
     "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.3",
     "@types/node": "^22.0.0",
+    "angular-eslint": "^22.1.0",
     "eslint": "^9.33.0",
     "jest": "^30.0.5",
     "jsdom": "^28.0.0",
@@ -97,6 +101,7 @@
     "tailwindcss": "^4.1.12",
     "tsx": "^4.20.4",
     "typescript": "~6.0.2",
+    "typescript-eslint": "^8.67.0",
     "vitest": "^4.0.8"
   },
   "prisma": {

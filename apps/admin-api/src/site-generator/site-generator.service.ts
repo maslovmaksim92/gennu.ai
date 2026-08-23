@@ -171,8 +171,23 @@ export class SiteGeneratorService {
         throw new BadRequestException('AI returned an invalid page.');
       }
 
-      if (!page.slug.startsWith('/')) {
+      /**
+       * Normalise before checking, and keep the normalised value on the draft.
+       *
+       * The rows are created from `page.slug.trim()`, so validating the raw
+       * string let "/a" and "/a " both through as distinct slugs and then
+       * collide on the `[siteId, slug]` unique index — a 500 from the database
+       * instead of a message naming the problem.
+       */
+      page.slug = page.slug.trim();
+      page.name = page.name.trim();
+
+      if (!page.slug.startsWith('/') || /\s/.test(page.slug)) {
         throw new BadRequestException(`Invalid page slug: ${page.slug}`);
+      }
+
+      if (!page.name) {
+        throw new BadRequestException(`Page ${page.slug} has no name.`);
       }
 
       if (slugs.has(page.slug)) {

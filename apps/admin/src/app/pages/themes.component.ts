@@ -55,7 +55,7 @@ export class ThemesComponent {
   }
 
   protected create(): void {
-    let parsed: Record<string, unknown> = {};
+    let parsed: Record<string, unknown>;
     try {
       parsed = JSON.parse(this.schema) as Record<string, unknown>;
     } catch {

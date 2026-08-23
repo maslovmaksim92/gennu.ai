@@ -12,6 +12,7 @@ import {
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
 import { PrismaService } from '../common/prisma.service';
+import { AddBlockDto, ReorderBlocksDto, UpdatePageDto } from './editor.dto';
 import { EditorService, PAGE_INCLUDE } from './editor.service';
 
 @Controller('pages')
@@ -28,7 +29,7 @@ export class PagesController {
   }
 
   @Patch(':id')
-  public async update(@Param('id') id: string, @Body() body: any) {
+  public async update(@Param('id') id: string, @Body() body: UpdatePageDto) {
     const page = await this.editor.pageOrFail(id);
     const slug =
       typeof body.slug === 'string'
@@ -60,7 +61,7 @@ export class PagesController {
 
   /** Appends a block instance, seeded with the block version's defaults. */
   @Post(':id/blocks')
-  public async addBlock(@Param('id') id: string, @Body() body: any) {
+  public async addBlock(@Param('id') id: string, @Body() body: AddBlockDto) {
     const page = await this.editor.pageOrFail(id);
     const version = await this.editor.assertBlockVersionAllowed(page.siteId, body.blockVersionId);
     const last = await this.prisma.blockInstance.findFirst({
@@ -89,16 +90,10 @@ export class PagesController {
    * would leave the remaining blocks with colliding sort orders.
    */
   @Post(':id/blocks/reorder')
-  public async reorder(@Param('id') id: string, @Body() body: any) {
+  public async reorder(@Param('id') id: string, @Body() body: ReorderBlocksDto) {
     const page = await this.editor.pageOrFail(id);
-    const ids: unknown = body.ids;
-
-    if (!Array.isArray(ids) || ids.some((value) => typeof value !== 'string')) {
-      throw new BadRequestException('ids must be an array of block instance ids.');
-    }
-
     const current = page.blocks.map((block) => block.id);
-    const next = ids as string[];
+    const next = body.ids;
 
     if (next.length !== current.length || new Set(next).size !== next.length) {
       throw new BadRequestException('ids must list every block on the page exactly once.');

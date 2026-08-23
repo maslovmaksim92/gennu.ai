@@ -14,6 +14,7 @@ import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
 import { PrismaService } from '../common/prisma.service';
 import { EditorService } from '../editor/editor.service';
+import { CreatePageDto, UpdateSiteDto } from './sites.dto';
 
 @Controller('sites')
 @UseGuards(JwtGuard, AdminGuard)
@@ -60,7 +61,7 @@ export class SitesController {
    * on its own.
    */
   @Patch(':id')
-  public async update(@Param('id') id: string, @Body() body: any) {
+  public async update(@Param('id') id: string, @Body() body: UpdateSiteDto) {
     const site = await this.prisma.site.findUnique({ where: { id } });
 
     if (!site) {
@@ -91,7 +92,7 @@ export class SitesController {
   }
 
   @Post(':id/pages')
-  public async addPage(@Param('id') id: string, @Body() body: any) {
+  public async addPage(@Param('id') id: string, @Body() body: CreatePageDto) {
     const site = await this.prisma.site.findUnique({ where: { id } });
 
     if (!site) {

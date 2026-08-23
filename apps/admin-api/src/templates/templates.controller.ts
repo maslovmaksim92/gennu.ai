@@ -15,8 +15,15 @@ import {
 import { Prisma, PublishStatus } from '@prisma/client';
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
+import { toJson } from '../common/dto';
 import { PrismaService } from '../common/prisma.service';
 import { assertCanPublish, assertDraft, parseSemanticVersion } from '../common/versioning';
+import {
+  CreateVersionDto,
+  CreateVersionedResourceDto,
+  UpdateDraftVersionDto,
+  UpdateResourceDefinitionDto,
+} from '../common/versioned.dto';
 
 interface TemplateSchema {
   allowedBlockVersionIds?: unknown;
@@ -64,7 +71,7 @@ export class TemplatesController {
   }
 
   @Post()
-  public create(@Req() req: any, @Body() body: any) {
+  public create(@Req() req: any, @Body() body: CreateVersionedResourceDto) {
     return this.prisma.template.create({
       data: {
         key: body.key,
@@ -77,7 +84,7 @@ export class TemplatesController {
             major: 1,
             minor: 0,
             patch: 0,
-            schema: body.schema ?? {},
+            schema: toJson(body.schema ?? {}),
           },
         },
       },
@@ -86,7 +93,7 @@ export class TemplatesController {
   }
 
   @Patch(':id')
-  public updateDefinition(@Param('id') id: string, @Body() body: any) {
+  public updateDefinition(@Param('id') id: string, @Body() body: UpdateResourceDefinitionDto) {
     return this.prisma.template.update({
       where: { id },
       data: {
@@ -97,7 +104,7 @@ export class TemplatesController {
   }
 
   @Post(':id/versions')
-  public async createVersion(@Param('id') id: string, @Body() body: any) {
+  public async createVersion(@Param('id') id: string, @Body() body: CreateVersionDto) {
     const version = parseSemanticVersion(body.version);
     const template = await this.prisma.template.findUnique({
       where: { id },
@@ -119,14 +126,17 @@ export class TemplatesController {
         templateId: id,
         version: body.version,
         ...version,
-        schema: (body.schema ?? source?.schema ?? {}) as Prisma.InputJsonValue,
+        schema: toJson(body.schema) ?? (source?.schema as Prisma.InputJsonValue) ?? {},
         changelog: body.changelog,
       },
     });
   }
 
   @Patch('versions/:versionId')
-  public async updateDraftVersion(@Param('versionId') versionId: string, @Body() body: any) {
+  public async updateDraftVersion(
+    @Param('versionId') versionId: string,
+    @Body() body: UpdateDraftVersionDto,
+  ) {
     const version = await this.prisma.templateVersion.findUnique({ where: { id: versionId } });
 
     if (!version) {
@@ -142,7 +152,7 @@ export class TemplatesController {
     return this.prisma.templateVersion.update({
       where: { id: versionId },
       data: {
-        schema: body.schema as Prisma.InputJsonValue,
+        schema: toJson(body.schema),
         changelog: body.changelog,
       },
     });

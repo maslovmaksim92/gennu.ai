@@ -67,6 +67,9 @@ model AdminInvite {
   expiresAt   DateTime
   acceptedAt  DateTime?
   createdAt   DateTime     @default(now())
+
+  @@index([email])
+  @@index([invitedById])
 }
 
 model Theme {
@@ -180,6 +183,13 @@ model Site {
   pages             Page[]
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
+
+  // PostgreSQL does not index foreign keys on its own, and every one of these
+  // columns is a filter the admin runs: the site list joins the owner, and the
+  // version panels ask which sites pin a given theme or template version.
+  @@index([ownerId])
+  @@index([themeVersionId])
+  @@index([templateVersionId])
 }
 
 model Page {
@@ -208,6 +218,8 @@ model BlockInstance {
   updatedAt      DateTime     @updatedAt
 
   @@index([pageId, sortOrder])
+  // "Where used" and every block upgrade filter on the pinned version.
+  @@index([blockVersionId])
 }
 
 model Integration {
@@ -232,6 +244,11 @@ model AuditLog {
   entityId   String?
   metadata   Json?
   createdAt  DateTime @default(now())
+
+  // The audit trail is read by actor, by subject and by time.
+  @@index([actorId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
 }
 
 model ChatSession {
@@ -243,6 +260,8 @@ model ChatSession {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   messages  ChatMessage[]
+
+  @@index([userId, updatedAt])
 }
 
 model ChatMessage {
@@ -253,4 +272,7 @@ model ChatMessage {
   content   String
   metadata  Json?
   createdAt DateTime    @default(now())
+
+  // Every chat turn reads the newest messages of one session.
+  @@index([sessionId, createdAt])
 }

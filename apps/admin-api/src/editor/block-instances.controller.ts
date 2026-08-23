@@ -10,6 +10,7 @@ import {
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
 import { PrismaService } from '../common/prisma.service';
+import { UpdateBlockInstanceDto } from './editor.dto';
 import { EditorService } from './editor.service';
 
 @Controller('block-instances')
@@ -27,7 +28,7 @@ export class BlockInstancesController {
    * another block version is a version migration, not an edit.
    */
   @Patch(':id')
-  public async update(@Param('id') id: string, @Body() body: any) {
+  public async update(@Param('id') id: string, @Body() body: UpdateBlockInstanceDto) {
     const instance = await this.prisma.blockInstance.findUnique({ where: { id } });
 
     if (!instance) {

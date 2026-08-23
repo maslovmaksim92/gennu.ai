@@ -11,12 +11,15 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { PublishStatus } from '@prisma/client';
+import { Prisma, PublishStatus } from '@prisma/client';
 import { validateBlockSchema, type BlockSchema } from '@atlas/render';
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
+import { toJson } from '../common/dto';
 import { PrismaService } from '../common/prisma.service';
 import { assertCanPublish, assertDraft, parseSemanticVersion } from '../common/versioning';
+import { UpdateResourceDefinitionDto } from '../common/versioned.dto';
+import { CreateBlockDto, CreateBlockVersionDto, UpdateBlockDraftVersionDto } from './blocks.dto';
 
 @Controller('blocks')
 @UseGuards(JwtGuard, AdminGuard)
@@ -82,7 +85,7 @@ export class BlocksController {
   }
 
   @Post()
-  create(@Req() req: any, @Body() body: any) {
+  create(@Req() req: any, @Body() body: CreateBlockDto) {
     return this.prisma.blockDefinition.create({
       data: {
         key: body.key,
@@ -95,8 +98,8 @@ export class BlocksController {
             major: 1,
             minor: 0,
             patch: 0,
-            schema: body.schema ?? {},
-            defaults: body.defaults ?? {},
+            schema: toJson(body.schema ?? {}),
+            defaults: toJson(body.defaults ?? {}),
             changelog: body.changelog,
           },
         },
@@ -106,7 +109,7 @@ export class BlocksController {
   }
 
   @Patch(':id')
-  updateDefinition(@Param('id') id: string, @Body() body: any) {
+  updateDefinition(@Param('id') id: string, @Body() body: UpdateResourceDefinitionDto) {
     return this.prisma.blockDefinition.update({
       where: { id },
       data: {
@@ -117,7 +120,7 @@ export class BlocksController {
   }
 
   @Post(':id/versions')
-  async createVersion(@Param('id') id: string, @Body() body: any) {
+  async createVersion(@Param('id') id: string, @Body() body: CreateBlockVersionDto) {
     const version = parseSemanticVersion(body.version);
     const block = await this.prisma.blockDefinition.findUnique({
       where: { id },
@@ -139,16 +142,19 @@ export class BlocksController {
         blockDefinitionId: id,
         version: body.version,
         ...version,
-        schema: body.schema ?? source?.schema ?? {},
-        defaults: body.defaults ?? source?.defaults ?? {},
+        schema: toJson(body.schema) ?? (source?.schema as Prisma.InputJsonValue) ?? {},
+        defaults: toJson(body.defaults) ?? (source?.defaults as Prisma.InputJsonValue) ?? {},
         changelog: body.changelog,
-        migration: body.migration,
+        migration: toJson(body.migration),
       },
     });
   }
 
   @Patch('versions/:versionId')
-  async updateDraftVersion(@Param('versionId') versionId: string, @Body() body: any) {
+  async updateDraftVersion(
+    @Param('versionId') versionId: string,
+    @Body() body: UpdateBlockDraftVersionDto,
+  ) {
     const version = await this.prisma.blockVersion.findUnique({ where: { id: versionId } });
     if (!version) {
       throw new NotFoundException('Block version not found.');
@@ -158,10 +164,10 @@ export class BlocksController {
     return this.prisma.blockVersion.update({
       where: { id: versionId },
       data: {
-        schema: body.schema,
-        defaults: body.defaults,
+        schema: toJson(body.schema),
+        defaults: toJson(body.defaults),
         changelog: body.changelog,
-        migration: body.migration,
+        migration: toJson(body.migration),
       },
     });
   }

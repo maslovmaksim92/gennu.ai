@@ -19,8 +19,20 @@ export class AdminsService {
     });
   }
 
+  /** `tokenHash` never leaves the server: only the invite link carries the token. */
   public invites() {
-    return this.prisma.adminInvite.findMany({ orderBy: { createdAt: 'desc' } });
+    return this.prisma.adminInvite.findMany({
+      select: {
+        id: true,
+        email: true,
+        status: true,
+        invitedById: true,
+        expiresAt: true,
+        acceptedAt: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   public async invite(email: string, actorId: string) {
@@ -37,7 +49,8 @@ export class AdminsService {
       },
     });
     await this.audit.log(actorId, 'ADMIN_INVITE_CREATED', 'AdminInvite', invite.id, { email });
-    return { ...invite, inviteToken: token };
+    const { tokenHash: _stored, ...safe } = invite;
+    return { ...safe, inviteToken: token };
   }
 
   public async accept(token: string, password: string) {

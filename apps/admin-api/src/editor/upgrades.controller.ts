@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
+import { BlockUpgradeDto, TemplateUpgradeDto } from './editor.dto';
 import { UpgradesService } from './upgrades.service';
 
 /**
@@ -21,17 +22,17 @@ export class UpgradesController {
   }
 
   @Post(':id/upgrades/blocks/preview')
-  public previewBlocks(@Param('id') id: string, @Body() body: any) {
-    return this.upgrades.previewBlockUpgrade(id, body?.fromBlockVersionId, body?.toBlockVersionId);
+  public previewBlocks(@Param('id') id: string, @Body() body: BlockUpgradeDto) {
+    return this.upgrades.previewBlockUpgrade(id, body.fromBlockVersionId, body.toBlockVersionId);
   }
 
   @Post(':id/upgrades/blocks')
-  public applyBlocks(@Param('id') id: string, @Body() body: any) {
-    return this.upgrades.applyBlockUpgrade(id, body?.fromBlockVersionId, body?.toBlockVersionId);
+  public applyBlocks(@Param('id') id: string, @Body() body: BlockUpgradeDto) {
+    return this.upgrades.applyBlockUpgrade(id, body.fromBlockVersionId, body.toBlockVersionId);
   }
 
   @Post(':id/upgrades/template')
-  public applyTemplate(@Param('id') id: string, @Body() body: any) {
-    return this.upgrades.applyTemplateUpgrade(id, body?.templateVersionId);
+  public applyTemplate(@Param('id') id: string, @Body() body: TemplateUpgradeDto) {
+    return this.upgrades.applyTemplateUpgrade(id, body.templateVersionId);
   }
 }

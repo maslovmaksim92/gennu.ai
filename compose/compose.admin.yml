@@ -6,6 +6,10 @@ services:
     environment:
       NODE_ENV: production
       ADMIN_PORT: 3001
+      # Required in production: it is the CORS origin, and an unset value used
+      # to fall back silently to the development URL. The container serves the
+      # admin itself, so its own address is the right default.
+      ADMIN_WEB_URL: ${ADMIN_WEB_URL:-http://localhost:3001}
       DATABASE_URL: ${DATABASE_URL}
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
       INTEGRATION_ENCRYPTION_KEY: ${INTEGRATION_ENCRYPTION_KEY}

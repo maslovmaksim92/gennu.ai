@@ -2,6 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/prisma.service';
 import { CryptoService } from '../integrations/crypto.service';
 
+/** How many past messages of a chat session are replayed to the model. */
+const HISTORY_TURNS = 20;
+
 interface OpenAiIntegrationConfig {
   model?: string;
 }
@@ -58,15 +61,24 @@ export class AiService {
       },
     });
 
-    const history = await this.prisma.chatMessage.findMany({
+    /**
+     * The most recent turns, not the first ones.
+     *
+     * Ordering ascending and taking 20 would pin the window to the start of the
+     * session: past twenty messages the assistant would keep re-reading the
+     * opening and never see what the user just wrote. So take the newest and
+     * put them back in chronological order for the model.
+     */
+    const recent = await this.prisma.chatMessage.findMany({
       where: {
         sessionId: session.id,
       },
       orderBy: {
-        createdAt: 'asc',
+        createdAt: 'desc',
       },
-      take: 20,
+      take: HISTORY_TURNS,
     });
+    const history = recent.reverse();
 
     const settings = await this.settings();
     const data = await this.request(settings, [

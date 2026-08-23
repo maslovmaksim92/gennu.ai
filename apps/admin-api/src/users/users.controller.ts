@@ -12,6 +12,7 @@ import {
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
 import { PrismaService } from '../common/prisma.service';
+import { UpdateUserDto, UpdateUserStatusDto } from './users.dto';
 
 @Controller('users')
 @UseGuards(JwtGuard, AdminGuard)
@@ -37,15 +38,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  public async update(
-    @Param('id') id: string,
-    @Body()
-    body: {
-      email: string;
-      status: 'ACTIVE' | 'BLOCKED' | 'INVITED';
-      emailVerified: boolean;
-    },
-  ) {
+  public async update(@Param('id') id: string, @Body() body: UpdateUserDto) {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: { id: true, role: true },
@@ -78,8 +71,28 @@ export class UsersController {
     });
   }
 
+  /**
+   * Blocks or unblocks a non-admin user.
+   *
+   * The role check is the same one `update()` makes, and it belongs here too:
+   * without it this route was a way around the Administrators table, where
+   * disabling an admin — including yourself — is deliberately refused.
+   */
   @Patch(':id/status')
-  public status(@Param('id') id: string, @Body() body: { status: 'ACTIVE' | 'BLOCKED' }) {
+  public async status(@Param('id') id: string, @Body() body: UpdateUserStatusDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, role: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.role === 'ADMIN') {
+      throw new BadRequestException('Administrators must be edited from the Administrators table');
+    }
+
     return this.prisma.user.update({
       where: {
         id,

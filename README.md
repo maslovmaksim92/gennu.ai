@@ -201,7 +201,19 @@ pnpm test
 ```
 
 Regressions for the render engine live next to it in `libs/engine/render`. The
-`pnpm check` script runs formatting, the inline-template rule and the tests.
+`pnpm check` script runs formatting, ESLint, the inline-template rule and the
+tests.
+
+## Linting
+
+```bash
+pnpm lint
+pnpm lint:fix
+```
+
+ESLint runs over the whole repository from `eslint.config.mjs`, TypeScript and
+Angular templates alike. Type-aware rules are deliberately off, so the check
+stays fast; Prettier owns formatting and ESLint owns correctness.
 
 ## Formatting
 
@@ -224,6 +236,14 @@ pnpm check
 ```
 
 Angular inline templates longer than 100 normalized characters must be moved to a sibling `.component.html` file and referenced through `templateUrl`.
+
+## Required environment
+
+`JWT_ACCESS_SECRET` (32 characters or more) and `INTEGRATION_ENCRYPTION_KEY`
+(64 hex characters, `openssl rand -hex 32`) are checked before the API starts,
+along with `DATABASE_URL` and — in production — `ADMIN_WEB_URL`. A deployment
+missing one refuses to boot and names it, rather than reporting itself healthy
+and failing later on a login or an integration save.
 
 ## Production container
 

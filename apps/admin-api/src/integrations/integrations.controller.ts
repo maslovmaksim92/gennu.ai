@@ -1,8 +1,30 @@
 import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
+import { toJson } from '../common/dto';
 import { PrismaService } from '../common/prisma.service';
 import { CryptoService } from './crypto.service';
+import { SaveIntegrationDto } from './integrations.dto';
+
+/**
+ * Every response shape here is an explicit `select`.
+ *
+ * `secretEncrypted` must never leave the server — not even encrypted, and not
+ * even to an authenticated admin. Returning the whole row from a write is the
+ * easy way to leak it into a browser, a proxy log or a screenshot, so no query
+ * in this controller returns the model unfiltered.
+ */
+const PUBLIC_FIELDS = {
+  id: true,
+  provider: true,
+  name: true,
+  status: true,
+  config: true,
+  lastCheckedAt: true,
+  lastError: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
 
 @Controller('integrations')
 @UseGuards(JwtGuard, AdminGuard)
@@ -15,9 +37,8 @@ export class IntegrationsController {
   @Get()
   public async list() {
     const rows = await this.prisma.integration.findMany({
-      orderBy: {
-        provider: 'asc',
-      },
+      orderBy: { provider: 'asc' },
+      select: { ...PUBLIC_FIELDS, secretEncrypted: true },
     });
 
     return rows.map(({ secretEncrypted, ...integration }) => ({
@@ -27,9 +48,9 @@ export class IntegrationsController {
   }
 
   @Put(':provider')
-  public async save(@Param('provider') provider: string, @Body() body: any) {
+  public async save(@Param('provider') provider: string, @Body() dto: SaveIntegrationDto) {
     const normalizedProvider = provider.trim().toUpperCase();
-    const secret = typeof body.secret === 'string' ? body.secret.trim() : '';
+    const secret = dto.secret?.trim() ?? '';
     const secretEncrypted = secret ? this.crypto.encrypt(secret) : undefined;
     const existing = await this.prisma.integration.findFirst({
       where: {
@@ -38,28 +59,32 @@ export class IntegrationsController {
           mode: 'insensitive',
         },
       },
+      select: { id: true },
     });
 
     const data = {
-      name: body.name ?? normalizedProvider,
-      status: body.status ?? 'CONNECTED',
-      config: body.config ?? {},
+      name: dto.name ?? normalizedProvider,
+      status: dto.status ?? 'CONNECTED',
+      config: toJson(dto.config ?? {}),
       ...(secretEncrypted ? { secretEncrypted } : {}),
     };
 
-    if (existing) {
-      return this.prisma.integration.update({
-        where: { id: existing.id },
-        data,
-      });
-    }
+    const saved = existing
+      ? await this.prisma.integration.update({
+          where: { id: existing.id },
+          data,
+          select: { ...PUBLIC_FIELDS, secretEncrypted: true },
+        })
+      : await this.prisma.integration.create({
+          data: {
+            provider: normalizedProvider,
+            ...data,
+            secretEncrypted,
+          },
+          select: { ...PUBLIC_FIELDS, secretEncrypted: true },
+        });
 
-    return this.prisma.integration.create({
-      data: {
-        provider: normalizedProvider,
-        ...data,
-        secretEncrypted,
-      },
-    });
+    const { secretEncrypted: stored, ...integration } = saved;
+    return { ...integration, hasSecret: Boolean(stored) };
   }
 }

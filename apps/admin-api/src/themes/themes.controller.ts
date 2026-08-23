@@ -11,11 +11,18 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { PublishStatus } from '@prisma/client';
+import { Prisma, PublishStatus } from '@prisma/client';
 import { JwtGuard } from '../auth/jwt.guard';
 import { AdminGuard } from '../common/admin.guard';
+import { toJson } from '../common/dto';
 import { PrismaService } from '../common/prisma.service';
 import { assertCanPublish, assertDraft, parseSemanticVersion } from '../common/versioning';
+import {
+  CreateVersionDto,
+  CreateVersionedResourceDto,
+  UpdateDraftVersionDto,
+  UpdateResourceDefinitionDto,
+} from '../common/versioned.dto';
 
 @Controller('themes')
 @UseGuards(JwtGuard, AdminGuard)
@@ -52,7 +59,7 @@ export class ThemesController {
   }
 
   @Post()
-  create(@Req() req: any, @Body() body: any) {
+  create(@Req() req: any, @Body() body: CreateVersionedResourceDto) {
     return this.prisma.theme.create({
       data: {
         key: body.key,
@@ -65,7 +72,7 @@ export class ThemesController {
             major: 1,
             minor: 0,
             patch: 0,
-            schema: body.schema ?? {},
+            schema: toJson(body.schema ?? {}),
             changelog: body.changelog,
           },
         },
@@ -75,7 +82,7 @@ export class ThemesController {
   }
 
   @Patch(':id')
-  updateDefinition(@Param('id') id: string, @Body() body: any) {
+  updateDefinition(@Param('id') id: string, @Body() body: UpdateResourceDefinitionDto) {
     return this.prisma.theme.update({
       where: { id },
       data: {
@@ -86,7 +93,7 @@ export class ThemesController {
   }
 
   @Post(':id/versions')
-  async createVersion(@Param('id') id: string, @Body() body: any) {
+  async createVersion(@Param('id') id: string, @Body() body: CreateVersionDto) {
     const version = parseSemanticVersion(body.version);
     const theme = await this.prisma.theme.findUnique({
       where: { id },
@@ -108,15 +115,18 @@ export class ThemesController {
         themeId: id,
         version: body.version,
         ...version,
-        schema: body.schema ?? source?.schema ?? {},
+        schema: toJson(body.schema) ?? (source?.schema as Prisma.InputJsonValue) ?? {},
         changelog: body.changelog,
-        migration: body.migration,
+        migration: toJson(body.migration),
       },
     });
   }
 
   @Patch('versions/:versionId')
-  async updateDraftVersion(@Param('versionId') versionId: string, @Body() body: any) {
+  async updateDraftVersion(
+    @Param('versionId') versionId: string,
+    @Body() body: UpdateDraftVersionDto,
+  ) {
     const version = await this.prisma.themeVersion.findUnique({ where: { id: versionId } });
     if (!version) {
       throw new NotFoundException('Theme version not found.');
@@ -126,9 +136,9 @@ export class ThemesController {
     return this.prisma.themeVersion.update({
       where: { id: versionId },
       data: {
-        schema: body.schema,
+        schema: toJson(body.schema),
         changelog: body.changelog,
-        migration: body.migration,
+        migration: toJson(body.migration),
       },
     });
   }
