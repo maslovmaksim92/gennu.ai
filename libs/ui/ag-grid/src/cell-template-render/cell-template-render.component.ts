@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @angular-eslint/prefer-inject */
-import { Component, inject, signal, DestroyRef, ElementRef, effect, AfterContentInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  DestroyRef,
+  ElementRef,
+  effect,
+  AfterContentInit,
+} from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ColDef, ICellRendererParams } from 'ag-grid-community';
 import { injectCellRender } from './grid-template.directive';
@@ -9,7 +17,9 @@ export interface CellActionParams extends ICellRendererParams {
   templateName: string;
 }
 
-export function cellTemplateRender(templateName: string): Pick<ColDef, 'cellRenderer' | 'cellRendererParams'> {
+export function cellTemplateRender(
+  templateName: string,
+): Pick<ColDef, 'cellRenderer' | 'cellRendererParams'> {
   return {
     cellRenderer: CellTemplateRenderComponent,
     cellRendererParams: {

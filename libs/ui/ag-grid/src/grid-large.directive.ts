@@ -43,11 +43,15 @@ export class PPGridLargeOptionsDirective implements AfterViewInit {
     this.agGridAngular.animateRows = true;
     this.agGridAngular.rowGroupPanelShow = 'always';
     this.agGridAngular.localeText = gridLocale;
-    this.agGridAngular.defaultColDef = Object.assign({}, this.agGridAngular.defaultColDef ?? {}, bigGridDefaultColDef);
+    this.agGridAngular.defaultColDef = Object.assign(
+      {},
+      this.agGridAngular.defaultColDef ?? {},
+      bigGridDefaultColDef,
+    );
     this.agGridAngular.autoGroupColumnDef = Object.assign(
       {},
       this.agGridAngular.autoGroupColumnDef ?? {},
-      autoGroupColumnDef
+      autoGroupColumnDef,
     );
     this.agGridAngular.enableBrowserTooltips = true;
     this.agGridAngular.pagination = true;
@@ -66,12 +70,14 @@ export class PPGridLargeOptionsDirective implements AfterViewInit {
       https://www.ag-grid.com/angular-data-grid/column-sizing/
     */
     api.addEventListener('columnVisible', () =>
-      this.agGridAngular.api.autoSizeColumns({ scaleUpToFitGridWidth: true })
+      this.agGridAngular.api.autoSizeColumns({ scaleUpToFitGridWidth: true }),
     );
-    api.addEventListener('columnsReset', () => this.agGridAngular.api.autoSizeColumns({ scaleUpToFitGridWidth: true }));
+    api.addEventListener('columnsReset', () =>
+      this.agGridAngular.api.autoSizeColumns({ scaleUpToFitGridWidth: true }),
+    );
     api.addEventListener('toolPanelSizeChanged', () => this.updateFitGridWidth$.next());
     api.addEventListener('toolPanelVisibleChanged', () =>
-      this.agGridAngular.api.autoSizeColumns({ scaleUpToFitGridWidth: true })
+      this.agGridAngular.api.autoSizeColumns({ scaleUpToFitGridWidth: true }),
     );
 
     this.updateFitGridWidth$
@@ -80,7 +86,7 @@ export class PPGridLargeOptionsDirective implements AfterViewInit {
         startWith(undefined),
         tap(() => {
           this.agGridAngular.api.autoSizeColumns({ scaleUpToFitGridWidth: true });
-        })
+        }),
       )
       .subscribe();
   }

@@ -1,10 +1,14 @@
 import { Provider, signal } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { tuiButtonOptionsProvider, tuiCheckboxOptionsProvider, tuiRadioOptionsProvider, tuiScrollbarOptionsProvider, tuiTextfieldOptionsProvider, tuiValidationErrorsProvider } from '@taiga-ui/core';
 import {
-  tuiSwitchOptionsProvider,
-  tuiTextareaOptionsProvider,
-} from '@taiga-ui/kit';
+  tuiButtonOptionsProvider,
+  tuiCheckboxOptionsProvider,
+  tuiRadioOptionsProvider,
+  tuiScrollbarOptionsProvider,
+  tuiTextfieldOptionsProvider,
+  tuiValidationErrorsProvider,
+} from '@taiga-ui/core';
+import { tuiSwitchOptionsProvider, tuiTextareaOptionsProvider } from '@taiga-ui/kit';
 import { of } from 'rxjs';
 import { TUI_LANGUAGE, TUI_RUSSIAN_LANGUAGE } from '@taiga-ui/i18n';
 import { provideTaiga, tuiAssetsPathProvider } from '@taiga-ui/core';

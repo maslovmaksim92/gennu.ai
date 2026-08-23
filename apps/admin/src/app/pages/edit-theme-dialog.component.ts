@@ -18,7 +18,8 @@ export class EditThemeDialogComponent {
   protected name = this.context.data.name;
   protected description = this.context.data.description ?? '';
   protected schema = JSON.stringify(this.context.data.schema ?? {}, null, 2);
-  protected readonly canEditSchema = this.context.data.status === 'DRAFT' && !!this.context.data.versionId;
+  protected readonly canEditSchema =
+    this.context.data.status === 'DRAFT' && !!this.context.data.versionId;
   protected saving = false;
   protected schemaError = '';
 
@@ -49,11 +50,19 @@ export class EditThemeDialogComponent {
     });
     const version$ =
       this.canEditSchema && this.context.data.versionId
-        ? this.http.patch(`/api/themes/versions/${this.context.data.versionId}`, { schema: parsedSchema })
+        ? this.http.patch(`/api/themes/versions/${this.context.data.versionId}`, {
+            schema: parsedSchema,
+          })
         : of(null);
 
     forkJoin([definition$, version$]).subscribe({
-      next: () => this.context.completeWith({ ...this.context.data, name: this.name.trim(), description: this.description.trim() || null, schema: parsedSchema }),
+      next: () =>
+        this.context.completeWith({
+          ...this.context.data,
+          name: this.name.trim(),
+          description: this.description.trim() || null,
+          schema: parsedSchema,
+        }),
       error: () => {
         this.saving = false;
       },

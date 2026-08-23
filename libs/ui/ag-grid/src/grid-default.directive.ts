@@ -16,7 +16,11 @@ export class GridDefaultOptionsDirective {
     this.agGridAngular.animateRows = true;
     this.agGridAngular.rowGroupPanelShow = 'never';
     this.agGridAngular.localeText = gridLocale;
-    this.agGridAngular.defaultColDef = Object.assign({}, defaultColDef, this.agGridAngular.defaultColDef ?? {});
+    this.agGridAngular.defaultColDef = Object.assign(
+      {},
+      defaultColDef,
+      this.agGridAngular.defaultColDef ?? {},
+    );
     this.agGridAngular.enableBrowserTooltips = true;
     this.agGridAngular.pagination = true;
     this.agGridAngular.paginationPageSizeSelector = false;

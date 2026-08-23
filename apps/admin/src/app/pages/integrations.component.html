@@ -1,14 +1,26 @@
 <section class="page">
   <header class="page-head">
-    <div><span class="eyebrow">EXTERNAL SERVICES</span><h1>Integrations</h1><p>Provider credentials and service settings are stored server-side.</p></div>
+    <div>
+      <span class="eyebrow">EXTERNAL SERVICES</span>
+      <h1>Integrations</h1>
+      <p>Provider credentials and service settings are stored server-side.</p>
+    </div>
   </header>
   <div class="integration-grid">
     <article class="panel">
       <div class="service-head">
-        <div><h2>OpenAI</h2><p>Admin AI Chat via Responses API.</p></div>
-        <atlas-badge [variant]="openaiConnected() ? 'success' : 'neutral'">{{ openaiConnected() ? 'Connected' : 'Not configured' }}</atlas-badge>
+        <div>
+          <h2>OpenAI</h2>
+          <p>Admin AI Chat via Responses API.</p>
+        </div>
+        <atlas-badge [variant]="openaiConnected() ? 'success' : 'neutral'">{{
+          openaiConnected() ? 'Connected' : 'Not configured'
+        }}</atlas-badge>
       </div>
-      <atlas-field label="API key" hint="The secret is encrypted and never returned to the browser.">
+      <atlas-field
+        label="API key"
+        hint="The secret is encrypted and never returned to the browser."
+      >
         <input atlasInput type="password" [(ngModel)]="openaiKey" placeholder="sk-…" />
       </atlas-field>
       <atlas-field label="Model">
@@ -18,7 +30,10 @@
     </article>
     <article class="panel disabled">
       <div class="service-head">
-        <div><h2>Timeweb</h2><p>Billing, S3, CDN and domains will be enabled in a later milestone.</p></div>
+        <div>
+          <h2>Timeweb</h2>
+          <p>Billing, S3, CDN and domains will be enabled in a later milestone.</p>
+        </div>
         <atlas-badge>Planned</atlas-badge>
       </div>
     </article>

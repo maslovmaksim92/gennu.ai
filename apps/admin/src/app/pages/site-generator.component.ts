@@ -1,11 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  AtlasButtonDirective,
-  AtlasControlDirective,
-  AtlasFieldComponent,
-} from '@atlas/ui';
+import { AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent } from '@atlas/ui';
 
 interface TemplateRow {
   id: string;

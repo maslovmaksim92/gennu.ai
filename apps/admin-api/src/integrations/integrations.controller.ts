@@ -27,11 +27,14 @@ export class IntegrationsController {
   }
 
   @Put(':provider')
-  public async save(@Param('provider') provider: string, @Body() body: any) {
-    const normalizedProvider = provider.trim().toUpperCase();
-    const secret = typeof body.secret === 'string' ? body.secret.trim() : '';
-    const secretEncrypted = secret ? this.crypto.encrypt(secret) : undefined;
-    const existing = await this.prisma.integration.findFirst({
+  async save(
+    @Param('provider')
+    provider: string,
+    @Body()
+    body: any,
+  ) {
+    const secretEncrypted = body.secret ? this.crypto.encrypt(body.secret) : undefined;
+    return this.prisma.integration.upsert({
       where: {
         provider: {
           equals: normalizedProvider,

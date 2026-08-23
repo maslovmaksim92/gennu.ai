@@ -158,9 +158,8 @@ export class AiService {
   private outputText(data: OpenAiResponse): string {
     return (
       data.output_text ??
-      data.output
-        ?.flatMap((item) => item.content ?? [])
-        .find((item) => item.type === 'output_text')?.text ??
+      data.output?.flatMap((item) => item.content ?? []).find((item) => item.type === 'output_text')
+        ?.text ??
       ''
     );
   }

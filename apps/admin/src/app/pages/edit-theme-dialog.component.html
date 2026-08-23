@@ -11,14 +11,12 @@
 
   <label class="form-stack">
     <span>Theme JSON</span>
-    <textarea
-      name="schema"
-      rows="16"
-      [disabled]="!canEditSchema"
-      [(ngModel)]="schema"
-    ></textarea>
+    <textarea name="schema" rows="16" [disabled]="!canEditSchema" [(ngModel)]="schema"></textarea>
     @if (!canEditSchema) {
-      <small>Published or deprecated versions are immutable. Create a new version to change the schema.</small>
+      <small
+        >Published or deprecated versions are immutable. Create a new version to change the
+        schema.</small
+      >
     }
     @if (schemaError) {
       <small class="error">{{ schemaError }}</small>

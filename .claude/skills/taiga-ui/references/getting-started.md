@@ -12,6 +12,7 @@ npm i @taiga-ui/layout          // Layout components
 ```
 
 ---
+
 ## angular-json-styles.md
 
 ```json
@@ -35,10 +36,11 @@ npm i @taiga-ui/layout          // Layout components
 ```
 
 ---
+
 ## app-standalone.md
 
 ```ts
-import {TuiRoot} from '@taiga-ui/core';
+import { TuiRoot } from '@taiga-ui/core';
 // ..
 @Component({
   selector: 'app-root',
@@ -52,6 +54,7 @@ export class App {}
 ```
 
 ---
+
 ## app-template.md
 
 ```html
@@ -64,6 +67,7 @@ export class App {}
 ```
 
 ---
+
 ## assets.md
 
 ```json
@@ -88,6 +92,7 @@ export class App {}
 ```
 
 ---
+
 ## config.md
 
 ```ts
@@ -99,11 +104,12 @@ export interface TuiOptions {
   // Global window scrollbars, 'custom' by default
   readonly scrollbars: 'custom' | 'native';
   // Opt-in to experimental features as they are introduced, 'stable' by default
-  readonly apis: 'stable' | {all: boolean} | Record<string, boolean>;
+  readonly apis: 'stable' | { all: boolean } | Record<string, boolean>;
 }
 ```
 
 ---
+
 ## index.md
 
 ```html
@@ -126,10 +132,11 @@ export interface TuiOptions {
 ```
 
 ---
+
 ## main-standalone.md
 
 ```ts
-import {provideTaiga} from '@taiga-ui/core';
+import { provideTaiga } from '@taiga-ui/core';
 // ...
 bootstrapApplication(App, {
   providers: [
@@ -140,6 +147,7 @@ bootstrapApplication(App, {
 ```
 
 ---
+
 ## main.md
 
 ```bash
@@ -147,14 +155,15 @@ npm i @taiga-ui/{cdk,core,kit,icons}
 ```
 
 ---
+
 ## main.server.md
 
 ```ts
-import {bootstrapApplication, type BootstrapContext} from '@angular/platform-browser';
-import {mergeApplicationConfig, type ApplicationRef} from '@angular/core';
-import {provideServerRendering} from '@angular/platform-server';
-import {provideUniversal} from '@ng-web-apis/universal';
-import {appConfig} from './app.config';
+import { bootstrapApplication, type BootstrapContext } from '@angular/platform-browser';
+import { mergeApplicationConfig, type ApplicationRef } from '@angular/core';
+import { provideServerRendering } from '@angular/platform-server';
+import { provideUniversal } from '@ng-web-apis/universal';
+import { appConfig } from './app.config';
 const serverConfig = mergeApplicationConfig(appConfig, {
   providers: [provideServerRendering(), provideUniversal()],
 });
@@ -163,6 +172,7 @@ export default async (context: BootstrapContext): Promise<ApplicationRef> =>
 ```
 
 ---
+
 ## nx-add.md
 
 ```bash
@@ -171,6 +181,7 @@ nx g taiga-ui:ng-add
 ```
 
 ---
+
 ## nx-assets.md
 
 ```json
@@ -193,6 +204,7 @@ nx g taiga-ui:ng-add
 ```
 
 ---
+
 ## nx-migrate.md
 
 ```bash
@@ -201,6 +213,7 @@ nx migrate --run-migrations=migrations.json
 ```
 
 ---
+
 ## ponyfill.md
 
 ```bash
@@ -208,6 +221,7 @@ npm install css-vars-ponyfill
 ```
 
 ---
+
 ## project-json-styles.md
 
 ```json

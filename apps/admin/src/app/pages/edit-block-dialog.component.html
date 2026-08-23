@@ -11,12 +11,7 @@
 
   <label class="form-stack">
     <span>Block schema JSON</span>
-    <textarea
-      name="schema"
-      rows="12"
-      [disabled]="!canEditVersion"
-      [(ngModel)]="schema"
-    ></textarea>
+    <textarea name="schema" rows="12" [disabled]="!canEditVersion" [(ngModel)]="schema"></textarea>
   </label>
 
   <label class="form-stack">
@@ -30,7 +25,10 @@
   </label>
 
   @if (!canEditVersion) {
-    <small>Published or deprecated versions are immutable. Create a new version to change schema/defaults.</small>
+    <small
+      >Published or deprecated versions are immutable. Create a new version to change
+      schema/defaults.</small
+    >
   }
   @if (jsonError) {
     <small class="error">{{ jsonError }}</small>

@@ -25,7 +25,10 @@
   font: inherit;
   font-size: 14px;
   outline: none;
-  transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
 }
 
 textarea.atlas-control {
@@ -74,7 +77,11 @@ button[atlasButton],
   text-decoration: none;
   appearance: none;
   cursor: pointer;
-  transition: background 120ms ease, border-color 120ms ease, color 120ms ease, opacity 120ms ease;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    opacity 120ms ease;
 }
 
 button[atlasButton][data-size='sm'],

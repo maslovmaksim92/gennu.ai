@@ -1,5 +1,4 @@
-
-import { iconSetMaterial, themeQuartz } from "ag-grid-community";
+import { iconSetMaterial, themeQuartz } from 'ag-grid-community';
 
 export const GridSurfaceDark = themeQuartz.withPart(iconSetMaterial).withParams({
   accentColor: 'var(--primary)',

@@ -12,11 +12,11 @@ those docs — treat them as the source of truth over memory.
 
 ## Versions in this repository
 
-| Package | Version | Notes |
-| --- | --- | --- |
-| `@taiga-ui/*` | `^5.7.0` | v5 — standalone components/directives only, no NgModules |
-| `@angular/core` | `^22.1.0` | standalone + signals |
-| `ag-grid-*` | `^36.0.2` | separate concern, see boundary below |
+| Package         | Version   | Notes                                                    |
+| --------------- | --------- | -------------------------------------------------------- |
+| `@taiga-ui/*`   | `^5.7.0`  | v5 — standalone components/directives only, no NgModules |
+| `@angular/core` | `^22.1.0` | standalone + signals                                     |
+| `ag-grid-*`     | `^36.0.2` | separate concern, see boundary below                     |
 
 Installed packages: `cdk`, `core`, `kit`, `layout`, `icons`, `styles`, `i18n`,
 `event-plugins`, `polymorpheus`, `addon-table`, `addon-mobile`, `experimental`.
@@ -55,7 +55,7 @@ Per-screen overrides use the same `tui*OptionsProvider` functions in the compone
 ## Hard rules
 
 - **v5 API only.** Anything `NgModule`-based (`TuiInputModule`, `TuiButtonModule`, …) is
-  v3 and does not exist here. In v5, `TuiButton` is a *directive* on a native
+  v3 and does not exist here. In v5, `TuiButton` is a _directive_ on a native
   `<button>`/`<a>`, not a wrapper component.
 - **`ChangeDetectionStrategy.OnPush`** on every component.
 - **CDK types, not native ones.** Dates and times are `TuiDay`, `TuiMonth`, `TuiYear`,

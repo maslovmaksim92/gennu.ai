@@ -79,10 +79,7 @@ export class UsersController {
   }
 
   @Patch(':id/status')
-  public status(
-    @Param('id') id: string,
-    @Body() body: { status: 'ACTIVE' | 'BLOCKED' },
-  ) {
+  public status(@Param('id') id: string, @Body() body: { status: 'ACTIVE' | 'BLOCKED' }) {
     return this.prisma.user.update({
       where: {
         id,

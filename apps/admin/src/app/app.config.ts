@@ -10,7 +10,7 @@ import { taigaUIProviders } from '@atlas/taiga-ui';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authTokenInterceptor])),    
-    taigaUIProviders
+    provideHttpClient(withInterceptors([authTokenInterceptor])),
+    taigaUIProviders,
   ],
 };

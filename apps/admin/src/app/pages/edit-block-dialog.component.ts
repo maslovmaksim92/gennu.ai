@@ -19,7 +19,8 @@ export class EditBlockDialogComponent {
   protected description = this.context.data.description ?? '';
   protected schema = JSON.stringify(this.context.data.schema ?? {}, null, 2);
   protected defaults = JSON.stringify(this.context.data.defaults ?? {}, null, 2);
-  protected readonly canEditVersion = this.context.data.status === 'DRAFT' && !!this.context.data.versionId;
+  protected readonly canEditVersion =
+    this.context.data.status === 'DRAFT' && !!this.context.data.versionId;
   protected saving = false;
   protected jsonError = '';
 

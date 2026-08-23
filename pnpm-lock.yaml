@@ -51,40 +51,40 @@ importers:
         specifier: ^6.19.3
         version: 6.19.3(prisma@6.19.3(typescript@6.0.3))(typescript@6.0.3)
       '@taiga-ui/addon-mobile':
-        specifier: ^5.7.0
+        specifier: ^5.20.0
         version: 5.20.0(c3094822b43b3bb89c5572228a37e745)
       '@taiga-ui/addon-table':
-        specifier: ^5.7.0
+        specifier: ^5.20.0
         version: 5.20.0(43fa2eefe38aba5a717b59e3333103c2)
       '@taiga-ui/cdk':
-        specifier: ^5.7.0
+        specifier: ^5.20.0
         version: 5.20.0(f4c81d2af5bddbbcda2749a903decbb1)
       '@taiga-ui/core':
-        specifier: ^5.7.0
+        specifier: ^5.20.0
         version: 5.20.0(936d6fcf76170358e113ee3ea9603808)
       '@taiga-ui/event-plugins':
         specifier: ^5.0.0
         version: 5.0.0(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@22.1.2(@angular/animations@22.1.2(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.1.2(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@taiga-ui/experimental':
-        specifier: ^5.7.0
+        specifier: ^5.20.0
         version: 5.20.0(4f56748053f09fcb9fa7b831e11cdff6)
       '@taiga-ui/i18n':
         specifier: ^5.20.0
         version: 5.20.0(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(@ng-web-apis/common@5.3.0(@angular/common@22.1.2(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(@types/dom-speech-recognition@0.0.10)(rxjs@7.8.2))(rxjs@7.8.2)
       '@taiga-ui/icons':
-        specifier: ^5.7.0
+        specifier: ^5.20.0
         version: 5.20.0
       '@taiga-ui/kit':
-        specifier: ^5.7.0
+        specifier: ^5.20.0
         version: 5.20.0(dd014d8c7292003e5880feab6a5a5328)
       '@taiga-ui/layout':
-        specifier: ^5.7.0
+        specifier: ^5.20.0
         version: 5.20.0(@angular/common@22.1.2(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(@taiga-ui/cdk@5.20.0(f4c81d2af5bddbbcda2749a903decbb1))(@taiga-ui/core@5.20.0(936d6fcf76170358e113ee3ea9603808))(@taiga-ui/kit@5.20.0(dd014d8c7292003e5880feab6a5a5328))(@taiga-ui/polymorpheus@5.0.1(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@22.1.2(@angular/animations@22.1.2(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.1.2(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))))(rxjs@7.8.2)
       '@taiga-ui/polymorpheus':
         specifier: ^5.0.1
         version: 5.0.1(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@22.1.2(@angular/animations@22.1.2(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.1.2(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.1.2(@angular/compiler@22.1.2)(rxjs@7.8.2)(zone.js@0.15.1)))
       '@taiga-ui/styles':
-        specifier: ^5.7.0
+        specifier: ^5.20.0
         version: 5.20.0(@taiga-ui/design-tokens@0.316.0)
       ag-grid-angular:
         specifier: ^36.0.2

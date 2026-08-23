@@ -31,7 +31,6 @@
 - Do NOT copy `@demo/emulate/*` imports from demo code — use standard Angular APIs instead
 - Verify component properties exist in the API documentation before using them
 
-
 ---
 
 # Common Mistakes
@@ -80,6 +79,4 @@ Demo pages use internal imports like `@demo/emulate/change-detection`. In real c
 When using structural directives (e.g. `*tuiDropdown`, `*tuiItem`), the corresponding directive class must be in the
 component's `imports` array. Check the **Import Map** for the correct package.
 
-
 ---
-

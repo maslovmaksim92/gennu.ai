@@ -18,6 +18,7 @@
 ```bash
 ng update @taiga-ui/cdk
 ```
+
 **Nx CLI:**
 
 ```bash
@@ -30,7 +31,6 @@ nx migrate --run-migrations=migrations.json
 - [ ] You can find out that your codebase now contains some imports from @taiga-ui/legacy . This package is a transitional state for many outdated entities before their full removal. Everything you find inside this package in the {NEXT_MAJOR}th major release will be removed in the {NEXT_MAJOR}th one. So, you can just continue to use them for a while. However, some of those components already have modern alternatives – they will be marked by comment with @deprecated tag (most IDEs displays the such entities as stricken-through). We strongly recommend to replace them by new alternatives as soon as possible!
 
 ## Troubleshooting
-
 
 **Problem:** After running the migration schematics, I have a large amount of TypeScript errors TS6133: is declared but its value is never read.
 
@@ -56,10 +56,12 @@ nx migrate --run-migrations=migrations.json
 2. Check that node_modules/@taiga-ui/cdk/package.json contains the {NEXT_MAJOR}th major version
 3. Execute: or
 
-```bash
+````bash
 ```bash
 nx migrate @taiga-ui/cdk --from="@taiga-ui/cdk@x.x.x"
 nx migrate --run-migrations
-```
+````
+
 ```
 
+```

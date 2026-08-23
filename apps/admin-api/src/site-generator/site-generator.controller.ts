@@ -9,10 +9,7 @@ export class SiteGeneratorController {
   public constructor(private readonly generator: SiteGeneratorService) {}
 
   @Post('generate')
-  public generate(
-    @Req() req: any,
-    @Body() body: { templateVersionId: string; prompt: string },
-  ) {
+  public generate(@Req() req: any, @Body() body: { templateVersionId: string; prompt: string }) {
     return this.generator.generate(req.user.sub, body.templateVersionId, body.prompt);
   }
 }
