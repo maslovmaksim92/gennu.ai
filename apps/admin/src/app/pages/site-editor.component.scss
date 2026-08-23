@@ -1,3 +1,9 @@
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .editor-layout {
   display: grid;
   grid-template-columns: minmax(240px, 0.8fr) minmax(280px, 1fr) minmax(320px, 1.4fr);

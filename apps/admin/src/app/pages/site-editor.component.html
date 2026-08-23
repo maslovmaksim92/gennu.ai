@@ -16,7 +16,12 @@
           }
         </p>
       </div>
-      <a class="atlas-button" data-variant="secondary" routerLink="/sites">Back to sites</a>
+      <div class="head-actions">
+        <button atlasButton type="button" variant="secondary" (click)="openUpgrades()">
+          Versions
+        </button>
+        <a class="atlas-button" data-variant="secondary" routerLink="/sites">Back to sites</a>
+      </div>
     </header>
 
     @if (error()) {

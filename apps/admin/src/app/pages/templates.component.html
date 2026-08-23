@@ -1,0 +1,107 @@
+<section class="page">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">DESIGN SYSTEM</span>
+      <h1>Templates</h1>
+      <p>A template version decides which exact block versions a site may contain.</p>
+    </div>
+    <button class="primary" type="button" (click)="toggleCreate()">
+      {{ creating() ? 'Close' : 'New template' }}
+    </button>
+  </header>
+
+  @if (error(); as message) {
+    <p class="version-error">{{ message }}</p>
+  }
+
+  @if (creating()) {
+    <div class="panel editor">
+      <label>
+        Key
+        <input [(ngModel)]="key" placeholder="landing" />
+      </label>
+      <label>
+        Name
+        <input [(ngModel)]="name" placeholder="Landing" />
+      </label>
+      <label>
+        Description
+        <input [(ngModel)]="description" />
+      </label>
+      <p class="muted">
+        The first version starts as an empty draft. Open <strong>Versions</strong> to pick the
+        blocks it allows, then publish it.
+      </p>
+      <button atlasButton type="button" [disabled]="!key.trim() || !name.trim()" (click)="create()">
+        Create draft
+      </button>
+    </div>
+  }
+
+  <div class="panel table-panel">
+    <div class="table-scroll">
+      <table tuiTable class="data-table" size="s">
+        <thead>
+          <tr tuiThGroup>
+            <th tuiTh>Name</th>
+            <th tuiTh>Key</th>
+            <th tuiTh class="col-xs">Version</th>
+            <th tuiTh class="col-sm">Status</th>
+            <th tuiTh class="col-sm">Allowed blocks</th>
+            <th tuiTh class="col-md">Updated</th>
+            <th tuiTh class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody tuiTbody [data]="pagination.visible()">
+          @for (template of pagination.visible(); track template.id) {
+            <tr tuiTr>
+              <td tuiTd>{{ template.name }}</td>
+              <td tuiTd>{{ template.key }}</td>
+              <td tuiTd>{{ template.version || '—' }}</td>
+              <td tuiTd>{{ template.status || '—' }}</td>
+              <td tuiTd>{{ allowedCount(template) }}</td>
+              <td tuiTd>{{ template.updatedAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td tuiTd>
+                <div class="row-actions">
+                  <button
+                    atlasButton
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    (click)="openVersions(template)"
+                  >
+                    Versions
+                  </button>
+                  <button
+                    atlasButton
+                    type="button"
+                    variant="danger"
+                    size="sm"
+                    [disabled]="template.status !== 'DRAFT'"
+                    [title]="
+                      template.status === 'DRAFT' ? '' : 'Published history cannot be deleted'
+                    "
+                    (click)="remove(template)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr tuiTr>
+              <td tuiTd colspan="7" class="empty-cell">No templates yet</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <tui-table-pagination
+      [page]="pagination.page()"
+      [size]="pagination.size()"
+      [total]="rows().length"
+      (paginationChange)="pagination.update($event)"
+    />
+  </div>
+</section>

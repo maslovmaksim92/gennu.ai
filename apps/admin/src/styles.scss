@@ -353,12 +353,26 @@ button {
 }
 
 .data-table .col-actions {
-  width: 170px;
+  width: 250px;
 }
 
 .row-actions {
   display: flex;
   gap: 6px;
+}
+
+.muted {
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+}
+
+.version-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgb(220 38 38 / 8%);
+  color: #b91c1c;
+  font-size: 0.85rem;
 }
 
 .empty-cell {

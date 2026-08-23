@@ -133,6 +133,23 @@ export class ThemesController {
     });
   }
 
+  /**
+   * Sites pinned to this theme version.
+   *
+   * Deprecating stays allowed even when a version is in use — pinned sites keep
+   * rendering — but the admin shows this first so the decision is informed.
+   */
+  @Get('versions/:versionId/usage')
+  async usage(@Param('versionId') versionId: string) {
+    const sites = await this.prisma.site.findMany({
+      where: { themeVersionId: versionId },
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    });
+
+    return { siteCount: sites.length, sites };
+  }
+
   @Post('versions/:versionId/publish')
   async publishVersion(@Param('versionId') versionId: string) {
     const version = await this.prisma.themeVersion.findUnique({ where: { id: versionId } });

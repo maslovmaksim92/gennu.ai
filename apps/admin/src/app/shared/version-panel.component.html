@@ -1,0 +1,196 @@
+<section class="version-panel">
+  <header class="version-panel-head">
+    <div>
+      <h2>{{ context.data.title }}</h2>
+      <p class="muted">
+        A draft is editable. Publishing freezes it forever. Deprecating retires it — sites already
+        pinned to it keep rendering until someone upgrades them.
+      </p>
+    </div>
+    <button atlasButton type="button" variant="secondary" size="sm" (click)="toggleCreate()">
+      {{ creating() ? 'Close' : 'New version' }}
+    </button>
+  </header>
+
+  @if (error(); as message) {
+    <p class="version-error">{{ message }}</p>
+  }
+
+  @if (creating()) {
+    <div class="version-create">
+      <label>
+        Version
+        <input [(ngModel)]="newVersion" placeholder="1.0.1" />
+      </label>
+      <label>
+        Changelog
+        <input [(ngModel)]="newChangelog" placeholder="What changed" />
+      </label>
+      <button
+        atlasButton
+        type="button"
+        size="sm"
+        [disabled]="busy() || !newVersion.trim()"
+        (click)="createVersion()"
+      >
+        Create draft
+      </button>
+      <p class="muted">The new draft starts as a copy of the newest version.</p>
+    </div>
+  }
+
+  <ul class="version-list">
+    @for (version of versions(); track version.id) {
+      <li class="version-row" [attr.data-status]="version.status">
+        <div class="version-row-head">
+          <div>
+            <strong>{{ version.version }}</strong>
+            <span class="version-status">{{ version.status }}</span>
+            @if (version.publishedAt) {
+              <span class="muted">published {{ version.publishedAt | date: 'dd.MM.yyyy' }}</span>
+            }
+          </div>
+
+          <div class="version-actions">
+            @if (version.status === 'DRAFT') {
+              <button
+                atlasButton
+                type="button"
+                variant="secondary"
+                size="sm"
+                (click)="startEdit(version)"
+              >
+                Edit
+              </button>
+              <button
+                atlasButton
+                type="button"
+                size="sm"
+                [disabled]="busy()"
+                (click)="publish(version)"
+              >
+                Publish
+              </button>
+            }
+            @if (version.status === 'PUBLISHED') {
+              <button
+                atlasButton
+                type="button"
+                variant="danger"
+                size="sm"
+                [disabled]="busy()"
+                (click)="deprecate(version)"
+              >
+                Deprecate
+              </button>
+            }
+            <button
+              atlasButton
+              type="button"
+              variant="ghost"
+              size="sm"
+              (click)="loadUsage(version)"
+            >
+              Where used
+            </button>
+            @if (isBlock) {
+              <button
+                atlasButton
+                type="button"
+                variant="ghost"
+                size="sm"
+                (click)="loadRenderCheck(version)"
+              >
+                Render check
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (version.changelog) {
+          <p class="version-changelog">{{ version.changelog }}</p>
+        }
+
+        @if (usage()[version.id]; as used) {
+          <p class="version-usage">
+            @if (used.siteCount) {
+              Used by {{ used.siteCount }} site(s)
+              @if (used.instanceCount) {
+                , {{ used.instanceCount }} block instance(s)
+              }
+              :
+              @for (site of used.sites; track site.id) {
+                <span class="version-usage-site">{{ site.name }}</span>
+              }
+            } @else {
+              Not used by any site.
+            }
+          </p>
+        }
+
+        @if (renderChecks()[version.id]; as check) {
+          <p class="version-usage" [class.version-issue]="!check.renderable">
+            @if (check.renderable) {
+              Renders cleanly.
+            } @else {
+              Will not render: {{ check.issues.join('; ') }}
+            }
+          </p>
+        }
+
+        @if (editingId() === version.id) {
+          <div class="version-editor">
+            @if (isTemplate) {
+              <div class="allowed-blocks">
+                <span class="muted">Block versions this template allows:</span>
+                <div class="allowed-blocks-grid">
+                  @for (option of catalog(); track option.id) {
+                    <button
+                      atlasButton
+                      type="button"
+                      size="sm"
+                      [variant]="isAllowed(option.id) ? 'primary' : 'ghost'"
+                      (click)="toggleAllowed(option.id)"
+                    >
+                      {{ option.key }}&#64;{{ option.version }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+
+            <label>
+              Schema JSON
+              <textarea [(ngModel)]="schemaDraft" rows="14"></textarea>
+            </label>
+            <label>
+              Changelog
+              <input [(ngModel)]="changelogDraft" />
+            </label>
+
+            <div class="version-actions">
+              <button
+                atlasButton
+                type="button"
+                size="sm"
+                [disabled]="busy()"
+                (click)="saveDraft(version)"
+              >
+                Save draft
+              </button>
+              <button atlasButton type="button" variant="ghost" size="sm" (click)="cancelEdit()">
+                Cancel
+              </button>
+            </div>
+          </div>
+        }
+      </li>
+    } @empty {
+      <li class="muted">No versions yet.</li>
+    }
+  </ul>
+
+  <footer class="version-panel-foot">
+    <button appearance="secondary" tuiButton type="button" (click)="close()">Close</button>
+  </footer>
+</section>

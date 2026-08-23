@@ -1,0 +1,203 @@
+<section class="upgrades">
+  <header>
+    <h2>Versions of {{ context.data.siteName }}</h2>
+    <p class="muted">
+      A site keeps the exact versions it was pinned to. Nothing here happens automatically — every
+      move is applied on purpose, and the API refuses one that would leave the site in a state its
+      own editor could not reproduce.
+    </p>
+  </header>
+
+  @if (error(); as message) {
+    <p class="version-error">{{ message }}</p>
+  }
+
+  @if (notice(); as message) {
+    <p class="upgrade-notice">{{ message }}</p>
+  }
+
+  @if (overview(); as data) {
+    @if (data.theme; as theme) {
+      <div class="upgrade-block">
+        <h3>Theme — {{ theme.themeName }}</h3>
+        <p class="muted">Pinned to {{ theme.currentVersion }} ({{ theme.currentStatus }}).</p>
+
+        @if (theme.available.length) {
+          <div class="upgrade-row">
+            <select [ngModel]="chosen('theme')" (ngModelChange)="pick('theme', $event)">
+              <option value="">Choose a version…</option>
+              @for (candidate of theme.available; track candidate.id) {
+                <option [value]="candidate.id">
+                  {{ candidate.version }} · {{ candidate.status }}
+                </option>
+              }
+            </select>
+            <button
+              atlasButton
+              type="button"
+              size="sm"
+              [disabled]="busy() || !chosen('theme')"
+              (click)="applyTheme()"
+            >
+              Repin theme
+            </button>
+          </div>
+        } @else {
+          <p class="muted">No other version of this theme is available.</p>
+        }
+      </div>
+    }
+
+    @if (data.template; as template) {
+      <div class="upgrade-block">
+        <h3>Template — {{ template.templateName }}</h3>
+        <p class="muted">
+          Pinned to {{ template.currentVersion }} ({{ template.currentStatus }}). The template
+          decides which block versions this site may contain.
+        </p>
+
+        @if (template.available.length) {
+          <div class="upgrade-row">
+            <select [ngModel]="chosen('template')" (ngModelChange)="pick('template', $event)">
+              <option value="">Choose a version…</option>
+              @for (candidate of template.available; track candidate.id) {
+                <option [value]="candidate.id">
+                  {{ candidate.version }} · {{ candidate.status }}
+                  @if (candidate.keepsCurrentBlocks === false) {
+                    · drops blocks already on the site
+                  }
+                </option>
+              }
+            </select>
+            <button
+              atlasButton
+              type="button"
+              size="sm"
+              [disabled]="busy() || !chosen('template')"
+              (click)="applyTemplate()"
+            >
+              Repin template
+            </button>
+          </div>
+        } @else {
+          <p class="muted">No other version of this template is available.</p>
+        }
+      </div>
+    }
+
+    <div class="upgrade-block">
+      <h3>Blocks</h3>
+
+      @for (block of data.blocks; track block.blockVersionId) {
+        <div class="upgrade-item">
+          <div class="upgrade-item-head">
+            <strong>{{ block.name }}</strong>
+            <span class="muted">
+              {{ block.key }}&#64;{{ block.version }} · {{ block.instanceCount }} instance(s) on
+              {{ block.pages.join(', ') }}
+            </span>
+          </div>
+
+          @if (block.available.length) {
+            <div class="upgrade-row">
+              <select
+                [ngModel]="chosen(block.blockVersionId)"
+                (ngModelChange)="pick(block.blockVersionId, $event)"
+              >
+                <option value="">Choose a version…</option>
+                @for (candidate of block.available; track candidate.id) {
+                  <option [value]="candidate.id">
+                    {{ candidate.version }} · {{ candidate.status }}
+                    @if (!candidate.allowedByTemplate) {
+                      · not allowed by the template
+                    }
+                  </option>
+                }
+              </select>
+              <button
+                atlasButton
+                type="button"
+                variant="secondary"
+                size="sm"
+                [disabled]="!chosen(block.blockVersionId)"
+                (click)="previewBlock(block)"
+              >
+                Preview
+              </button>
+              <button
+                atlasButton
+                type="button"
+                size="sm"
+                [disabled]="busy() || !chosen(block.blockVersionId) || blockedByTemplate(block)"
+                (click)="applyBlock(block)"
+              >
+                Upgrade
+              </button>
+            </div>
+
+            @if (blockedByTemplate(block)) {
+              <p class="muted">
+                Publish a template version that allows this block version and repin the site first.
+              </p>
+            }
+          } @else {
+            <p class="muted">No newer version of this block is available.</p>
+          }
+
+          @if (previews()[block.blockVersionId]; as preview) {
+            <div class="upgrade-preview">
+              <p>{{ preview.instanceCount }} block(s) would move to {{ preview.to.version }}.</p>
+
+              @if (preview.fieldsLosingContent.length) {
+                <p class="upgrade-warning">
+                  Filled content would be lost: {{ preview.fieldsLosingContent.join(', ') }}
+                </p>
+              }
+
+              @if (preview.removedFields.length) {
+                <p>
+                  Fields dropped:
+                  @for (field of preview.removedFields; track field.key) {
+                    <span class="upgrade-chip">{{ field.key }}</span>
+                  }
+                </p>
+              }
+
+              @if (preview.addedFields.length) {
+                <p>
+                  Fields added:
+                  @for (field of preview.addedFields; track field.key) {
+                    <span class="upgrade-chip">
+                      {{ field.key }}
+                      @if (field.required) {
+                        *
+                      }
+                    </span>
+                  }
+                </p>
+              }
+
+              @if (preview.requiredFieldsWithoutData.length) {
+                <p class="upgrade-warning">
+                  New required fields start empty — fill them after upgrading.
+                </p>
+              }
+
+              @if (!preview.removedFields.length && !preview.addedFields.length) {
+                <p class="muted">The field set is identical.</p>
+              }
+            </div>
+          }
+        </div>
+      } @empty {
+        <p class="muted">This site has no blocks yet.</p>
+      }
+    </div>
+  } @else {
+    <p class="muted">Loading…</p>
+  }
+
+  <footer>
+    <button appearance="secondary" tuiButton type="button" (click)="close()">Close</button>
+  </footer>
+</section>

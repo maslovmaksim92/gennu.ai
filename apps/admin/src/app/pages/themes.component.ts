@@ -9,6 +9,7 @@ import { TuiTabs } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { tablePagination } from '../shared/table-pagination';
 import { InlineAiComponent } from '../shared/inline-ai.component';
+import { VersionPanelComponent } from '../shared/version-panel.component';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { EditThemeDialogComponent } from './edit-theme-dialog.component';
 import { ThemeRow } from './themes.types';
@@ -96,6 +97,16 @@ export class ThemesComponent {
   protected resetImage(): void {
     this.imagePreview.set(null);
     this.imageName.set(null);
+  }
+
+  protected openVersions(theme: ThemeRow): void {
+    this.dialogs
+      .open<void>(new PolymorpheusComponent(VersionPanelComponent), {
+        label: `Versions — ${theme.name}`,
+        size: 'l',
+        data: { kind: 'themes', id: theme.id, title: `${theme.name} versions` },
+      })
+      .subscribe({ complete: () => this.load() });
   }
 
   protected openEdit(theme: ThemeRow): void {

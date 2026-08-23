@@ -7,6 +7,7 @@ import { AtlasButtonDirective, AtlasControlDirective, AtlasFieldComponent } from
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { SiteUpgradesComponent } from './site-upgrades.component';
 import type {
   BlockField,
   BlockInstanceRow,
@@ -224,6 +225,32 @@ export class SiteEditorComponent {
         .delete(`/api/block-instances/${block.id}`)
         .subscribe({ next: () => this.load(), error: (error) => this.fail(error) }),
     );
+  }
+
+  /**
+   * Version moves live in their own dialog.
+   *
+   * Keeping them out of the content columns is the point: nothing an editor
+   * does while writing copy can change what the site is pinned to.
+   */
+  protected openUpgrades(): void {
+    this.dialogs
+      .open<boolean>(new PolymorpheusComponent(SiteUpgradesComponent), {
+        label: 'Versions',
+        size: 'l',
+        data: { siteId: this.siteId, siteName: this.site()?.name ?? '' },
+      })
+      .subscribe((changed) => {
+        if (!changed) {
+          return;
+        }
+
+        this.http.get<PaletteEntry[]>(`/api/sites/${this.siteId}/palette`).subscribe({
+          next: (entries) => this.palette.set(entries),
+          error: () => this.palette.set([]),
+        });
+        this.load(this.selectedBlockId(), this.selectedPageId());
+      });
   }
 
   protected toggleAddPage(): void {

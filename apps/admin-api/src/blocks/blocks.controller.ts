@@ -45,6 +45,34 @@ export class BlocksController {
     }));
   }
 
+  /**
+   * Every block version a template may allow, flattened.
+   *
+   * Deprecated versions are excluded because a template version that allows one
+   * is refused at publish time anyway.
+   */
+  @Get('version-catalog')
+  async versionCatalog() {
+    const versions = await this.prisma.blockVersion.findMany({
+      where: { status: { not: PublishStatus.DEPRECATED } },
+      include: { blockDefinition: true },
+      orderBy: [
+        { blockDefinitionId: 'asc' },
+        { major: 'desc' },
+        { minor: 'desc' },
+        { patch: 'desc' },
+      ],
+    });
+
+    return versions.map((version) => ({
+      id: version.id,
+      version: version.version,
+      status: version.status,
+      key: version.blockDefinition.key,
+      name: version.blockDefinition.name,
+    }));
+  }
+
   @Get(':id/versions')
   versions(@Param('id') id: string) {
     return this.prisma.blockVersion.findMany({
@@ -154,6 +182,39 @@ export class BlocksController {
 
     const issues = validateBlockSchema((version.schema ?? {}) as BlockSchema);
     return { renderable: issues.length === 0, issues };
+  }
+
+  /**
+   * Where this exact block version is placed today.
+   *
+   * Reported per site so the admin can show what a deprecation would freeze and
+   * what an upgrade would touch. Deprecating is still allowed while in use:
+   * pinned instances keep rendering until someone upgrades them.
+   */
+  @Get('versions/:versionId/usage')
+  async usage(@Param('versionId') versionId: string) {
+    const instances = await this.prisma.blockInstance.findMany({
+      where: { blockVersionId: versionId },
+      select: {
+        id: true,
+        page: { select: { id: true, name: true, site: { select: { id: true, name: true } } } },
+      },
+    });
+
+    const sites = new Map<string, { id: string; name: string; instanceCount: number }>();
+
+    for (const instance of instances) {
+      const site = instance.page.site;
+      const entry = sites.get(site.id) ?? { id: site.id, name: site.name, instanceCount: 0 };
+      entry.instanceCount += 1;
+      sites.set(site.id, entry);
+    }
+
+    return {
+      instanceCount: instances.length,
+      siteCount: sites.size,
+      sites: [...sites.values()].sort((a, b) => a.name.localeCompare(b.name)),
+    };
   }
 
   @Post('versions/:versionId/publish')

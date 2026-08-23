@@ -132,8 +132,17 @@
                   <button
                     atlasButton
                     type="button"
-                    data-variant="secondary"
-                    data-size="sm"
+                    variant="secondary"
+                    size="sm"
+                    (click)="openVersions(theme)"
+                  >
+                    Versions
+                  </button>
+                  <button
+                    atlasButton
+                    type="button"
+                    variant="secondary"
+                    size="sm"
                     (click)="openEdit(theme)"
                   >
                     Edit
@@ -141,8 +150,8 @@
                   <button
                     atlasButton
                     type="button"
-                    data-variant="danger"
-                    data-size="sm"
+                    variant="danger"
+                    size="sm"
                     [disabled]="theme.status !== 'DRAFT'"
                     [title]="theme.status === 'DRAFT' ? '' : 'Published history cannot be deleted'"
                     (click)="remove(theme)"

@@ -8,6 +8,7 @@ import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { tablePagination } from '../shared/table-pagination';
 import { InlineAiComponent } from '../shared/inline-ai.component';
+import { VersionPanelComponent } from '../shared/version-panel.component';
 import { BlockRow } from './blocks.types';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { EditBlockDialogComponent } from './edit-block-dialog.component';
@@ -58,6 +59,16 @@ export class BlocksComponent {
         this.name = '';
         this.load();
       });
+  }
+
+  protected openVersions(block: BlockRow): void {
+    this.dialogs
+      .open<void>(new PolymorpheusComponent(VersionPanelComponent), {
+        label: `Versions — ${block.name}`,
+        size: 'l',
+        data: { kind: 'blocks', id: block.id, title: `${block.name} versions` },
+      })
+      .subscribe({ complete: () => this.load() });
   }
 
   protected openEdit(block: BlockRow): void {

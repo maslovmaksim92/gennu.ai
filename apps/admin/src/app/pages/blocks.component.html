@@ -57,8 +57,17 @@
                   <button
                     atlasButton
                     type="button"
-                    data-variant="secondary"
-                    data-size="sm"
+                    variant="secondary"
+                    size="sm"
+                    (click)="openVersions(block)"
+                  >
+                    Versions
+                  </button>
+                  <button
+                    atlasButton
+                    type="button"
+                    variant="secondary"
+                    size="sm"
                     (click)="openEdit(block)"
                   >
                     Edit
@@ -66,8 +75,8 @@
                   <button
                     atlasButton
                     type="button"
-                    data-variant="danger"
-                    data-size="sm"
+                    variant="danger"
+                    size="sm"
                     [disabled]="block.status !== 'DRAFT'"
                     [title]="block.status === 'DRAFT' ? '' : 'Published history cannot be deleted'"
                     (click)="remove(block)"

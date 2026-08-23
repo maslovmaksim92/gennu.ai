@@ -153,6 +153,22 @@ the generator stores version IDs rather than copies.
 | `PATCH /api/block-instances/:id`            | admin | Edit one block's data                      |
 | `DELETE /api/block-instances/:id`           | admin | Remove a block from its page               |
 
+Version lifecycle and upgrades:
+
+| Endpoint                                            | Auth  | Purpose                                   |
+| --------------------------------------------------- | ----- | ----------------------------------------- |
+| `GET /api/{themes,blocks,templates}/:id/versions`   | admin | Version history of one resource           |
+| `POST /api/{themes,blocks,templates}/:id/versions`  | admin | New draft, seeded from the newest version |
+| `PATCH /api/{themes,blocks,templates}/versions/:id` | admin | Edit a draft's schema and changelog       |
+| `POST /api/…/versions/:id/publish`                  | admin | Freeze a draft                            |
+| `POST /api/…/versions/:id/deprecate`                | admin | Retire a published version                |
+| `GET /api/…/versions/:id/usage`                     | admin | Sites (and block instances) pinned to it  |
+| `GET /api/blocks/version-catalog`                   | admin | Every allowable block version, flattened  |
+| `GET /api/sites/:id/upgrades`                       | admin | What this site could move to              |
+| `POST /api/sites/:id/upgrades/blocks/preview`       | admin | Field diff and instance count of a move   |
+| `POST /api/sites/:id/upgrades/blocks`               | admin | Repin every instance of one block version |
+| `POST /api/sites/:id/upgrades/template`             | admin | Repin the site's template version         |
+
 ### Editing a generated site
 
 Admin -> Sites lists generated sites; opening one gives the editor: pages on
@@ -172,6 +188,30 @@ as a repeater with add, remove and reorder. Every mutation re-reads the site
 afterwards, so the screen shows what was stored rather than an optimistic guess.
 
 Preview links expire after ten minutes; the panel's Refresh mints a new one.
+
+### Moving a site to newer versions
+
+Pins never drift, so an upgrade is an explicit act with a fixed order:
+
+1. Publish the new `BlockVersion` (Admin -> Blocks -> Versions).
+2. Create a `TemplateVersion` that lists it in `allowedBlockVersionIds` and
+   publish it. Publishing refuses ids that do not resolve or that are
+   deprecated, so a template cannot approve a block that no longer exists.
+3. Repin the site to that template version. Refused when the new version would
+   not approve a block already on the site — the site would otherwise be in a
+   state its own editor could not reproduce.
+4. Repin the block instances. `POST /api/sites/:id/upgrades/blocks` moves every
+   instance of one version on that site in a single transaction.
+
+Admin -> Sites -> a site -> **Versions** drives the whole chain and shows the
+consequences first: how many instances a move touches, which fields the new
+version drops, which of those fields actually hold content today, and which new
+required fields would start empty. A target the template has not approved is
+listed but cannot be applied, which is what makes step 2 discoverable.
+
+Deprecating stays allowed while a version is in use. Pinned sites keep
+rendering; deprecation only stops new pins and hides the version from palettes.
+"Where used" in the version panel says what a deprecation would freeze.
 
 ### Why preview tokens exist
 

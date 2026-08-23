@@ -5,11 +5,13 @@ import { PrismaService } from '../common/prisma.service';
 import { BlockInstancesController } from './block-instances.controller';
 import { EditorService } from './editor.service';
 import { PagesController } from './pages.controller';
+import { UpgradesController } from './upgrades.controller';
+import { UpgradesService } from './upgrades.service';
 
 @Module({
   imports: [AuthModule],
-  controllers: [PagesController, BlockInstancesController],
-  providers: [EditorService, PrismaService, AdminGuard],
+  controllers: [PagesController, BlockInstancesController, UpgradesController],
+  providers: [EditorService, UpgradesService, PrismaService, AdminGuard],
   exports: [EditorService],
 })
 export class EditorModule {}
