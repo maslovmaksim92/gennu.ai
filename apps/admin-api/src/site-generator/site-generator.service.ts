@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PublishStatus } from '@prisma/client';
+import { Prisma, PublishStatus } from '@prisma/client';
 import { AiService } from '../ai/ai.service';
 import { PrismaService } from '../common/prisma.service';
 
@@ -121,8 +121,8 @@ export class SiteGeneratorService {
             blocks: {
               create: page.blocks.map((block, index) => ({
                 blockVersionId: block.blockVersionId,
-                data: block.data,
-                settings: block.settings ?? {},
+                data: block.data as Prisma.InputJsonValue,
+                settings: (block.settings ?? {}) as Prisma.InputJsonValue,
                 sortOrder: index,
               })),
             },
