@@ -1,0 +1,64 @@
+<section class="page">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">CONTENT</span>
+      <h1>Sites</h1>
+      <p>Generated sites. Open one to edit its pages and blocks.</p>
+    </div>
+  </header>
+
+  <div class="panel table-panel">
+    <div class="table-scroll">
+      <table tuiTable class="data-table" size="s">
+        <thead>
+          <tr tuiThGroup>
+            <th tuiTh>Name</th>
+            <th tuiTh class="col-xs">Pages</th>
+            <th tuiTh>Template</th>
+            <th tuiTh>Theme</th>
+            <th tuiTh class="col-md">Updated</th>
+            <th tuiTh class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody tuiTbody [data]="pagination.visible()">
+          @for (site of pagination.visible(); track site.id) {
+            <tr tuiTr>
+              <td tuiTd>{{ site.name }}</td>
+              <td tuiTd>{{ site.pageCount }}</td>
+              <td tuiTd>
+                {{ site.templateName ? site.templateName + ' · ' + site.templateVersion : '—' }}
+              </td>
+              <td tuiTd>{{ site.themeName ? site.themeName + ' · ' + site.themeVersion : '—' }}</td>
+              <td tuiTd>{{ site.updatedAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td tuiTd>
+                <div class="row-actions">
+                  <a
+                    class="atlas-button"
+                    data-variant="secondary"
+                    data-size="sm"
+                    [routerLink]="['/sites', site.id]"
+                  >
+                    Edit
+                  </a>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr tuiTr>
+              <td tuiTd colspan="6" class="empty-cell">
+                No sites yet — generate one from Site Generator.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <tui-table-pagination
+      [page]="pagination.page()"
+      [size]="pagination.size()"
+      [total]="rows().length"
+      (paginationChange)="pagination.update($event)"
+    />
+  </div>
+</section>

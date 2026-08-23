@@ -5,6 +5,7 @@ import { AuthModule } from '../auth/auth.module';
 import { BlocksModule } from '../blocks/blocks.module';
 import { AuditService } from '../common/audit.service';
 import { PrismaService } from '../common/prisma.service';
+import { EditorModule } from '../editor/editor.module';
 import { HealthController } from '../health/health.controller';
 import { IntegrationsModule } from '../integrations/integrations.module';
 import { RenderModule } from '../render/render.module';
@@ -26,6 +27,7 @@ import { UsersModule } from '../users/users.module';
     AiModule,
     SiteGeneratorModule,
     SitesModule,
+    EditorModule,
     RenderModule,
   ],
   controllers: [HealthController],

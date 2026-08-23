@@ -1,0 +1,289 @@
+@if (site(); as current) {
+  <section class="page">
+    <header class="page-head">
+      <div>
+        <span class="eyebrow">CONTENT</span>
+        <h1>{{ current.name }}</h1>
+        <p>
+          @if (current.templateVersion) {
+            Template {{ current.templateVersion.template.name }} ·
+            {{ current.templateVersion.version }}.
+          }
+          @if (current.themeVersion) {
+            Theme {{ current.themeVersion.theme.name }} · {{ current.themeVersion.version }}.
+          } @else {
+            No theme pinned.
+          }
+        </p>
+      </div>
+      <a class="atlas-button" data-variant="secondary" routerLink="/sites">Back to sites</a>
+    </header>
+
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
+    }
+
+    <div class="editor-layout">
+      <section class="panel column structure">
+        <div class="column-head">
+          <h2>Pages</h2>
+          <button atlasButton variant="secondary" size="sm" (click)="toggleAddPage()">
+            {{ addingPage() ? 'Cancel' : 'Add page' }}
+          </button>
+        </div>
+
+        @if (addingPage()) {
+          <div class="inline-form">
+            <atlas-field label="Name">
+              <input atlasInput [(ngModel)]="newPageName" placeholder="Contacts" />
+            </atlas-field>
+            <atlas-field label="Slug" hint="Must start with /">
+              <input atlasInput [(ngModel)]="newPageSlug" placeholder="/contacts" />
+            </atlas-field>
+            <button atlasButton size="sm" (click)="createPage()">Create</button>
+          </div>
+        }
+
+        <ul class="item-list">
+          @for (item of current.pages; track item.id) {
+            <li [class.active]="item.id === selectedPageId()">
+              <button type="button" class="item-main" (click)="selectPage(item.id)">
+                <strong>{{ item.name }}</strong>
+                <small>{{ item.slug }} · {{ item.blocks.length }} blocks</small>
+              </button>
+              <button
+                type="button"
+                class="item-action"
+                title="Delete page"
+                (click)="removePage(item)"
+              >
+                ✕
+              </button>
+            </li>
+          }
+        </ul>
+
+        @if (page(); as activePage) {
+          <div class="column-head compact">
+            <h2>Blocks</h2>
+          </div>
+
+          <ul class="item-list">
+            @for (item of activePage.blocks; track item.id; let i = $index) {
+              <li [class.active]="item.id === selectedBlockId()">
+                <button type="button" class="item-main" (click)="selectBlock(item.id)">
+                  <strong>{{ item.blockVersion.blockDefinition.name }}</strong>
+                  <small
+                    >{{ item.blockVersion.blockDefinition.key }} ·
+                    {{ item.blockVersion.version }}</small
+                  >
+                </button>
+                <button
+                  type="button"
+                  class="item-action"
+                  title="Move up"
+                  [disabled]="i === 0"
+                  (click)="moveBlock(i, -1)"
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  class="item-action"
+                  title="Move down"
+                  [disabled]="i === activePage.blocks.length - 1"
+                  (click)="moveBlock(i, 1)"
+                >
+                  ↓
+                </button>
+                <button
+                  type="button"
+                  class="item-action"
+                  title="Remove block"
+                  (click)="removeBlock(item)"
+                >
+                  ✕
+                </button>
+              </li>
+            } @empty {
+              <li class="empty-row">This page has no blocks yet.</li>
+            }
+          </ul>
+
+          <div class="column-head compact">
+            <h2>Add block</h2>
+          </div>
+
+          <div class="palette">
+            @for (entry of palette(); track entry.blockVersionId) {
+              <button type="button" class="palette-item" (click)="addBlock(entry)">
+                <strong>{{ entry.name }}</strong>
+                <small>{{ entry.version }}</small>
+              </button>
+            } @empty {
+              <p class="empty-row">The site's template approves no usable block versions.</p>
+            }
+          </div>
+        }
+      </section>
+
+      <section class="panel column form">
+        @if (block(); as activeBlock) {
+          <div class="column-head">
+            <h2>{{ activeBlock.blockVersion.blockDefinition.name }}</h2>
+            <button atlasButton size="sm" [disabled]="!dirty() || saving()" (click)="saveBlock()">
+              {{ saving() ? 'Saving…' : dirty() ? 'Save block' : 'Saved' }}
+            </button>
+          </div>
+
+          @for (field of fields(); track field.key) {
+            @switch (field.type) {
+              @case ('list') {
+                <div class="list-field">
+                  <div class="column-head compact">
+                    <h3>{{ field.label || field.key }}</h3>
+                    <button atlasButton variant="secondary" size="sm" (click)="addItem(field)">
+                      Add item
+                    </button>
+                  </div>
+
+                  @for (item of items(field.key); track $index; let i = $index) {
+                    <div class="list-item">
+                      <div class="list-item-head">
+                        <span>#{{ i + 1 }}</span>
+                        <button
+                          type="button"
+                          class="item-action"
+                          [disabled]="i === 0"
+                          (click)="moveItem(field.key, i, -1)"
+                        >
+                          ↑
+                        </button>
+                        <button
+                          type="button"
+                          class="item-action"
+                          [disabled]="i === items(field.key).length - 1"
+                          (click)="moveItem(field.key, i, 1)"
+                        >
+                          ↓
+                        </button>
+                        <button
+                          type="button"
+                          class="item-action"
+                          (click)="removeItem(field.key, i)"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      @for (sub of field.fields || []; track sub.key) {
+                        <atlas-field [label]="sub.label || sub.key">
+                          @if (sub.type === 'richtext') {
+                            <textarea
+                              atlasInput
+                              rows="3"
+                              [value]="itemValue(field.key, i, sub.key)"
+                              (input)="
+                                setItemValue(field.key, i, sub.key, $any($event.target).value)
+                              "
+                            ></textarea>
+                          } @else {
+                            <input
+                              atlasInput
+                              [type]="sub.type === 'number' ? 'number' : 'text'"
+                              [value]="itemValue(field.key, i, sub.key)"
+                              (input)="
+                                setItemValue(field.key, i, sub.key, $any($event.target).value)
+                              "
+                            />
+                          }
+                        </atlas-field>
+                      }
+                    </div>
+                  } @empty {
+                    <p class="empty-row">No items yet.</p>
+                  }
+                </div>
+              }
+              @case ('boolean') {
+                <label class="checkbox-field">
+                  <input
+                    type="checkbox"
+                    [checked]="!!value(field.key)"
+                    (change)="setValue(field.key, $any($event.target).checked)"
+                  />
+                  <span>{{ field.label || field.key }}</span>
+                </label>
+              }
+              @case ('richtext') {
+                <atlas-field [label]="field.label || field.key">
+                  <textarea
+                    atlasInput
+                    rows="5"
+                    [value]="value(field.key)"
+                    (input)="setValue(field.key, $any($event.target).value)"
+                  ></textarea>
+                </atlas-field>
+              }
+              @default {
+                <atlas-field
+                  [label]="field.label || field.key"
+                  [hint]="field.required ? 'Required' : ''"
+                >
+                  <input
+                    atlasInput
+                    [type]="field.type === 'number' ? 'number' : 'text'"
+                    [value]="value(field.key)"
+                    (input)="setValue(field.key, $any($event.target).value)"
+                  />
+                </atlas-field>
+              }
+            }
+          } @empty {
+            <p class="empty-row">
+              This block version declares no fields, so there is nothing to fill in.
+            </p>
+          }
+        } @else {
+          <div class="empty-state">
+            <strong>No block selected</strong>
+            <p>Pick a block on the left, or add one from the palette.</p>
+          </div>
+        }
+      </section>
+
+      <section class="panel column preview">
+        <div class="column-head">
+          <h2>Preview</h2>
+          <button atlasButton variant="secondary" size="sm" (click)="refreshPreview()">
+            Refresh
+          </button>
+        </div>
+
+        @if (frameUrl(); as url) {
+          <iframe
+            class="preview-frame"
+            [src]="url"
+            title="Page preview"
+            sandbox=""
+            referrerpolicy="no-referrer"
+          ></iframe>
+        } @else {
+          <div class="empty-state">
+            <strong>Preview unavailable</strong>
+            <p>Select a page, or refresh to mint a new preview link.</p>
+          </div>
+        }
+      </section>
+    </div>
+  </section>
+} @else {
+  <section class="page">
+    <div class="panel empty-state">
+      <strong>Loading site…</strong>
+      @if (error()) {
+        <p>{{ error() }}</p>
+      }
+    </div>
+  </section>
+}

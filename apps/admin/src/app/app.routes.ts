@@ -39,6 +39,15 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/blocks.component').then((m) => m.BlocksComponent),
       },
       {
+        path: 'sites',
+        loadComponent: () => import('./pages/sites.component').then((m) => m.SitesComponent),
+      },
+      {
+        path: 'sites/:id',
+        loadComponent: () =>
+          import('./pages/site-editor.component').then((m) => m.SiteEditorComponent),
+      },
+      {
         path: 'site-generator',
         loadComponent: () =>
           import('./pages/site-generator.component').then((m) => m.SiteGeneratorComponent),

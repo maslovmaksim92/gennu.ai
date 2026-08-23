@@ -15,6 +15,7 @@ First implementation slice of Proto.ai. This stage intentionally includes only t
 - AI Site Generator that creates Site/Page/BlockInstance drafts from pinned template versions
 - Portable render engine that turns a generated site into HTML from its pinned versions
 - Sandboxed site preview inside Admin
+- Page editor for generated sites: pages, block order and block content
 - Taiga UI tables
 - Tailwind CSS
 - Taiga UI

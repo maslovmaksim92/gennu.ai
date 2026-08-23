@@ -143,6 +143,35 @@ the generator stores version IDs rather than copies.
 | `POST /api/render/sites/:id/preview-token`  | admin | Mints a preview link                       |
 | `GET /api/render/preview/:token`            | token | The rendered page                          |
 | `GET /api/blocks/versions/:id/render-check` | admin | Whether a block version can render         |
+| `PATCH /api/sites/:id`                      | admin | Rename a site or repin its theme           |
+| `GET /api/sites/:id/palette`                | admin | Block versions the template approves       |
+| `POST /api/sites/:id/pages`                 | admin | Add a page                                 |
+| `PATCH /api/pages/:id`                      | admin | Rename a page or change its slug           |
+| `DELETE /api/pages/:id`                     | admin | Delete a page                              |
+| `POST /api/pages/:id/blocks`                | admin | Append a block instance                    |
+| `POST /api/pages/:id/blocks/reorder`        | admin | Reorder the page's blocks                  |
+| `PATCH /api/block-instances/:id`            | admin | Edit one block's data                      |
+| `DELETE /api/block-instances/:id`           | admin | Remove a block from its page               |
+
+### Editing a generated site
+
+Admin -> Sites lists generated sites; opening one gives the editor: pages on
+the left with their blocks, the selected block's fields in the middle, and the
+rendered page on the right.
+
+The editor may rearrange and refill a site. It may not widen what the site is
+allowed to contain — the API refuses a block the site's pinned `TemplateVersion`
+does not list in `allowedBlockVersionIds`, and refuses a deprecated one. Nothing
+in the editor repins a version implicitly; `PATCH /api/sites/:id` changes the
+pinned `ThemeVersion` only when a person asks for it, which is the user-driven
+upgrade [versioning.md](versioning.md) describes.
+
+The form is generated from the block version's `fields`, so a block becomes
+editable by declaring its fields — no admin code changes. `list` fields render
+as a repeater with add, remove and reorder. Every mutation re-reads the site
+afterwards, so the screen shows what was stored rather than an optimistic guess.
+
+Preview links expire after ten minutes; the panel's Refresh mints a new one.
 
 ### Why preview tokens exist
 
