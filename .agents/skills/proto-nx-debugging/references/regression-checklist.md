@@ -17,7 +17,7 @@ Correct project pattern:
   "compilerOptions": {
     "paths": {
       "@atlas/contracts": ["./libs/contracts/src/index.ts"],
-      "@atlas/ui-ag-grid": ["./libs/ui/ag-grid/src/index.ts"]
+      "@atlas/render": ["./libs/engine/render/src/index.ts"]
     }
   }
 }

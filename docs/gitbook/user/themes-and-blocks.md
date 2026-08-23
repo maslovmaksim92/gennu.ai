@@ -4,7 +4,7 @@
 
 Тема определяет визуальные design tokens сайта: цвета, типографику, spacing, radius, shadows, icon style и другие параметры Theme Engine.
 
-Пользовательский Theme/Block Engine не должен зависеть от Taiga UI, Tailwind или AG Grid. Эти библиотеки относятся к интерфейсу Admin/Studio.
+Пользовательский Theme/Block Engine не должен зависеть от Taiga UI или Tailwind. Эти библиотеки относятся к интерфейсу Admin/Studio.
 
 ## Блок
 

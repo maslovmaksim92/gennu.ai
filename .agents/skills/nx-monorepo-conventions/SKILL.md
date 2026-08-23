@@ -1,6 +1,6 @@
 ---
 name: nx-monorepo-conventions
-description: Apply Proto.ai Nx monorepo conventions for Angular and NestJS work. Use when creating, updating, refactoring, reviewing, or scaffolding Admin, Studio, Landing, API, or shared libraries in this repository, including Tailwind, Taiga UI, AG Grid Enterprise, Prettier, Angular templates, and shared application structure.
+description: Apply Proto.ai Nx monorepo conventions for Angular and NestJS work. Use when creating, updating, refactoring, reviewing, or scaffolding Admin, Studio, Landing, API, or shared libraries in this repository, including Tailwind, Taiga UI, Prettier, Angular templates, and shared application structure.
 ---
 
 # Nx Monorepo Conventions
@@ -21,7 +21,7 @@ Follow [references/conventions.md](references/conventions.md) as the authoritati
 
 - Tailwind: layout, spacing, responsive utilities.
 - Taiga UI: Angular controls/forms/dialogs/dropdowns/tabs/notifications.
-- AG Grid Enterprise: data-heavy tables; register Enterprise modules once in shared bootstrap code.
+- Taiga UI tables (`@taiga-ui/addon-table`): all data tables. AG Grid was removed on 2026-08-23.
 
 ## Repository writes
 

@@ -16,7 +16,6 @@ those docs — treat them as the source of truth over memory.
 | --------------- | --------- | -------------------------------------------------------- |
 | `@taiga-ui/*`   | `^5.7.0`  | v5 — standalone components/directives only, no NgModules |
 | `@angular/core` | `^22.1.0` | standalone + signals                                     |
-| `ag-grid-*`     | `^36.0.2` | separate concern, see boundary below                     |
 
 Installed packages: `cdk`, `core`, `kit`, `layout`, `icons`, `styles`, `i18n`,
 `event-plugins`, `polymorpheus`, `addon-table`, `addon-mobile`, `experimental`.
@@ -70,13 +69,15 @@ Per-screen overrides use the same `tui*OptionsProvider` functions in the compone
 - **Never copy `@demo/emulate/*` imports** from documentation examples — they are
   demo-site internals.
 
-## Boundary with AG Grid
+## Tables
 
-`TuiTable` (`@taiga-ui/addon-table`) is for small, static, presentational tables only.
-Every data-heavy table — anything with server-side sorting, filtering, pagination, row
-grouping or the tool panel — uses AG Grid Enterprise via `@atlas/ui-ag-grid`
-(`AgGridImports`, `configureAgGrid()`). See the `ag-dev` skill for that side. Do not mix
-the two in one table.
+`TuiTable` (`@taiga-ui/addon-table`) is the table for this repository. AG Grid was removed
+on 2026-08-23; there is no `@atlas/ui-ag-grid` library and no `ag-grid-*` dependency any
+more. Do not reintroduce either without an explicit decision from the maintainer.
+
+Sorting, filtering and server-side paging are not wired up today. If a table needs them,
+build them on top of `TuiTable` (`tuiSortable`, `tuiTableSort`, `TuiTableFilters`) rather
+than adding another grid library.
 
 ## Boundary with the Theme/Block Engine
 

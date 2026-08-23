@@ -7,12 +7,67 @@
     </div>
   </header>
 
-  <div class="panel grid-panel">
-    <ag-grid-angular
-      [rowData]="rows()"
-      [columnDefs]="cols"
-      [pagination]="true"
-      [paginationPageSize]="25"
+  <div class="panel table-panel">
+    <div class="table-scroll">
+      <table tuiTable class="data-table" size="s">
+        <thead>
+          <tr tuiThGroup>
+            <th tuiTh>Email</th>
+            <th tuiTh class="col-xs">Role</th>
+            <th tuiTh class="col-sm">Status</th>
+            <th tuiTh class="col-xs">Verified</th>
+            <th tuiTh class="col-md">Last login</th>
+            <th tuiTh class="col-md">Created</th>
+            <th tuiTh class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody tuiTbody [data]="pagination.visible()">
+          @for (user of pagination.visible(); track user.id) {
+            <tr tuiTr>
+              <td tuiTd>{{ user.email }}</td>
+              <td tuiTd>{{ user.role }}</td>
+              <td tuiTd>{{ user.status }}</td>
+              <td tuiTd>{{ user.emailVerified ? 'Yes' : 'No' }}</td>
+              <td tuiTd>{{ (user.lastLoginAt | date: 'dd.MM.yyyy HH:mm') || '—' }}</td>
+              <td tuiTd>{{ user.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td tuiTd>
+                <div class="row-actions">
+                  <button
+                    atlasButton
+                    type="button"
+                    data-variant="secondary"
+                    data-size="sm"
+                    (click)="openEdit(user)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    atlasButton
+                    type="button"
+                    data-variant="danger"
+                    data-size="sm"
+                    [disabled]="user.role === 'ADMIN'"
+                    (click)="remove(user)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr tuiTr>
+              <td tuiTd colspan="7" class="empty-cell">No users yet</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <tui-table-pagination
+      [page]="pagination.page()"
+      [size]="pagination.size()"
+      [total]="rows().length"
+      (paginationChange)="pagination.update($event)"
     />
   </div>
 </section>

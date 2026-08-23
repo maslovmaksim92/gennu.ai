@@ -2,7 +2,7 @@
 
 The render engine turns a stored `Site` into HTML. It lives in
 `libs/engine/render` and has no dependencies — not Angular, not NestJS, not
-Tailwind, Taiga UI or AG Grid. Anything that can read the database can render a
+Tailwind and not Taiga UI. Anything that can read the database can render a
 site, which is what keeps cross-framework renderers possible later.
 
 ## Why a declarative layout instead of HTML

@@ -1,17 +1,26 @@
+import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AgGridImports } from '@atlas/ui-ag-grid';
+import { AtlasButtonDirective } from '@atlas/ui';
+import { TuiTable, TuiTablePagination } from '@taiga-ui/addon-table';
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { ColDef, ICellRendererParams } from 'ag-grid-community';
+import { tablePagination } from '../shared/table-pagination';
 import { InlineAiComponent } from '../shared/inline-ai.component';
 import { BlockRow } from './blocks.types';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { EditBlockDialogComponent } from './edit-block-dialog.component';
 
 @Component({
-  imports: [FormsModule, AgGridImports, InlineAiComponent],
+  imports: [
+    AtlasButtonDirective,
+    DatePipe,
+    FormsModule,
+    InlineAiComponent,
+    TuiTable,
+    TuiTablePagination,
+  ],
   templateUrl: './blocks.component.html',
 })
 export class BlocksComponent {
@@ -19,26 +28,12 @@ export class BlocksComponent {
   private readonly dialogs = inject(TuiDialogService);
 
   protected readonly rows = signal<BlockRow[]>([]);
+  protected readonly pagination = tablePagination(this.rows, 25);
   protected readonly creating = signal(false);
   protected key = '';
   protected name = '';
   protected schema =
     '{"type":"object","properties":{"data":{"type":"object"},"settings":{"type":"object"}}}';
-  protected readonly cols: ColDef<BlockRow>[] = [
-    { field: 'name', flex: 1 },
-    { field: 'key', flex: 1 },
-    { field: 'version', width: 100 },
-    { field: 'status', width: 140 },
-    { field: 'updatedAt', headerName: 'Updated', flex: 1 },
-    {
-      headerName: '',
-      width: 180,
-      sortable: false,
-      filter: false,
-      cellRenderer: (params: ICellRendererParams<BlockRow>) => this.createActions(params.data),
-    },
-  ];
-
   public constructor() {
     this.load();
   }
@@ -65,43 +60,7 @@ export class BlocksComponent {
       });
   }
 
-  private createActions(block: BlockRow | undefined): HTMLElement {
-    const container = document.createElement('div');
-    container.style.display = 'flex';
-    container.style.gap = '6px';
-
-    const editButton = document.createElement('button');
-    editButton.type = 'button';
-    editButton.className = 'atlas-button';
-    editButton.dataset.variant = 'secondary';
-    editButton.dataset.size = 'sm';
-    editButton.textContent = 'Edit';
-    editButton.disabled = !block;
-    editButton.addEventListener('click', () => {
-      if (block) {
-        this.openEdit(block);
-      }
-    });
-
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.className = 'atlas-button';
-    deleteButton.dataset.variant = 'danger';
-    deleteButton.dataset.size = 'sm';
-    deleteButton.textContent = 'Delete';
-    deleteButton.disabled = !block || block.status !== 'DRAFT';
-    deleteButton.title = block?.status === 'DRAFT' ? '' : 'Published history cannot be deleted';
-    deleteButton.addEventListener('click', () => {
-      if (block?.status === 'DRAFT') {
-        this.remove(block);
-      }
-    });
-
-    container.append(editButton, deleteButton);
-    return container;
-  }
-
-  private openEdit(block: BlockRow): void {
+  protected openEdit(block: BlockRow): void {
     this.dialogs
       .open<BlockRow>(new PolymorpheusComponent(EditBlockDialogComponent), {
         label: 'Edit block',
@@ -111,7 +70,7 @@ export class BlocksComponent {
       .subscribe(() => this.load());
   }
 
-  private remove(block: BlockRow): void {
+  protected remove(block: BlockRow): void {
     this.dialogs
       .open<boolean>(new PolymorpheusComponent(ConfirmDialogComponent), {
         label: 'Delete block',

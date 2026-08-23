@@ -1,18 +1,28 @@
+import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AgGridImports } from '@atlas/ui-ag-grid';
+import { AtlasButtonDirective } from '@atlas/ui';
+import { TuiTable, TuiTablePagination } from '@taiga-ui/addon-table';
 import { TuiDialogService } from '@taiga-ui/core';
 import { TuiTabs } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { ColDef, ICellRendererParams } from 'ag-grid-community';
+import { tablePagination } from '../shared/table-pagination';
 import { InlineAiComponent } from '../shared/inline-ai.component';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { EditThemeDialogComponent } from './edit-theme-dialog.component';
 import { ThemeRow } from './themes.types';
 
 @Component({
-  imports: [FormsModule, AgGridImports, InlineAiComponent, TuiTabs],
+  imports: [
+    AtlasButtonDirective,
+    DatePipe,
+    FormsModule,
+    InlineAiComponent,
+    TuiTable,
+    TuiTablePagination,
+    TuiTabs,
+  ],
   templateUrl: './themes.component.html',
   styleUrl: './themes.component.scss',
 })
@@ -21,6 +31,7 @@ export class ThemesComponent {
   private readonly dialogs = inject(TuiDialogService);
 
   protected readonly rows = signal<ThemeRow[]>([]);
+  protected readonly pagination = tablePagination(this.rows, 25);
   protected readonly creating = signal(false);
   protected readonly createTabIndex = signal(0);
   protected readonly imagePreview = signal<string | null>(null);
@@ -28,21 +39,6 @@ export class ThemesComponent {
   protected key = '';
   protected name = '';
   protected schema = '{"colors":{},"typography":{},"spacing":{},"radius":{}}';
-  protected readonly cols: ColDef<ThemeRow>[] = [
-    { field: 'name', flex: 1 },
-    { field: 'key', flex: 1 },
-    { field: 'version', width: 100 },
-    { field: 'status', width: 140 },
-    { field: 'updatedAt', headerName: 'Updated', flex: 1 },
-    {
-      headerName: '',
-      width: 180,
-      sortable: false,
-      filter: false,
-      cellRenderer: (params: ICellRendererParams<ThemeRow>) => this.createActions(params.data),
-    },
-  ];
-
   public constructor() {
     this.load();
   }
@@ -102,43 +98,7 @@ export class ThemesComponent {
     this.imageName.set(null);
   }
 
-  private createActions(theme: ThemeRow | undefined): HTMLElement {
-    const container = document.createElement('div');
-    container.style.display = 'flex';
-    container.style.gap = '6px';
-
-    const editButton = document.createElement('button');
-    editButton.type = 'button';
-    editButton.className = 'atlas-button';
-    editButton.dataset.variant = 'secondary';
-    editButton.dataset.size = 'sm';
-    editButton.textContent = 'Edit';
-    editButton.disabled = !theme;
-    editButton.addEventListener('click', () => {
-      if (theme) {
-        this.openEdit(theme);
-      }
-    });
-
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.className = 'atlas-button';
-    deleteButton.dataset.variant = 'danger';
-    deleteButton.dataset.size = 'sm';
-    deleteButton.textContent = 'Delete';
-    deleteButton.disabled = !theme || theme.status !== 'DRAFT';
-    deleteButton.title = theme?.status === 'DRAFT' ? '' : 'Published history cannot be deleted';
-    deleteButton.addEventListener('click', () => {
-      if (theme?.status === 'DRAFT') {
-        this.remove(theme);
-      }
-    });
-
-    container.append(editButton, deleteButton);
-    return container;
-  }
-
-  private openEdit(theme: ThemeRow): void {
+  protected openEdit(theme: ThemeRow): void {
     this.dialogs
       .open<ThemeRow>(new PolymorpheusComponent(EditThemeDialogComponent), {
         label: 'Edit theme',
@@ -148,7 +108,7 @@ export class ThemesComponent {
       .subscribe(() => this.load());
   }
 
-  private remove(theme: ThemeRow): void {
+  protected remove(theme: ThemeRow): void {
     this.dialogs
       .open<boolean>(new PolymorpheusComponent(ConfirmDialogComponent), {
         label: 'Delete theme',

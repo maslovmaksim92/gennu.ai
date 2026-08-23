@@ -106,7 +106,66 @@
     }
   }
 
-  <div class="panel grid-panel">
-    <ag-grid-angular [rowData]="rows()" [columnDefs]="cols" />
+  <div class="panel table-panel">
+    <div class="table-scroll">
+      <table tuiTable class="data-table" size="s">
+        <thead>
+          <tr tuiThGroup>
+            <th tuiTh>Name</th>
+            <th tuiTh>Key</th>
+            <th tuiTh class="col-xs">Version</th>
+            <th tuiTh class="col-sm">Status</th>
+            <th tuiTh class="col-md">Updated</th>
+            <th tuiTh class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody tuiTbody [data]="pagination.visible()">
+          @for (theme of pagination.visible(); track theme.id) {
+            <tr tuiTr>
+              <td tuiTd>{{ theme.name }}</td>
+              <td tuiTd>{{ theme.key }}</td>
+              <td tuiTd>{{ theme.version || '—' }}</td>
+              <td tuiTd>{{ theme.status || '—' }}</td>
+              <td tuiTd>{{ theme.updatedAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td tuiTd>
+                <div class="row-actions">
+                  <button
+                    atlasButton
+                    type="button"
+                    data-variant="secondary"
+                    data-size="sm"
+                    (click)="openEdit(theme)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    atlasButton
+                    type="button"
+                    data-variant="danger"
+                    data-size="sm"
+                    [disabled]="theme.status !== 'DRAFT'"
+                    [title]="theme.status === 'DRAFT' ? '' : 'Published history cannot be deleted'"
+                    (click)="remove(theme)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr tuiTr>
+              <td tuiTd colspan="6" class="empty-cell">No themes yet</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <tui-table-pagination
+      [page]="pagination.page()"
+      [size]="pagination.size()"
+      [total]="rows().length"
+      (paginationChange)="pagination.update($event)"
+    />
   </div>
 </section>

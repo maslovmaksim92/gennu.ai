@@ -2,7 +2,7 @@
 
 ## UI stack
 
-Admin использует Angular, Tailwind CSS, Taiga UI и AG Grid Enterprise. Табличные Enterprise-модули регистрируются централизованно, а license key не хранится в исходниках.
+Admin использует Angular, Tailwind CSS и Taiga UI. Таблицы построены на `@taiga-ui/addon-table`; сторонних табличных библиотек и лицензионных ключей в проекте нет.
 
 ## Backend
 

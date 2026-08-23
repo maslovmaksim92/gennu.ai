@@ -13,7 +13,6 @@ apps/
 libs/
   ui/
     atlas/
-    ag-grid/
   contracts/
   theme-engine/
   block-engine/
@@ -75,9 +74,11 @@ Install Tailwind once at workspace root. Use one shared stylesheet such as `styl
 
 Install compatible Taiga UI packages at root. Use Taiga UI for reusable application controls. Do not make generated user blocks depend on Taiga UI.
 
-## AG Grid Enterprise
+## Tables
 
-Keep `ag-grid-angular`, `ag-grid-community`, and `ag-grid-enterprise` versions aligned. Register `AllEnterpriseModule` once in `libs/ui/ag-grid` and call the shared setup from Admin/Studio bootstrap. Do not register modules independently inside table components. Do not add AG Charts Enterprise unless charts/sparklines are actually required.
+All data tables use Taiga UI `@taiga-ui/addon-table`. AG Grid Enterprise and the
+`libs/ui/ag-grid` library were removed on 2026-08-23; do not reintroduce them without an
+explicit decision from the maintainer.
 
 ## Prettier
 
@@ -104,7 +105,6 @@ pnpm check:templates
 Angular Admin / Studio
   Tailwind
   Taiga UI
-  AG Grid Enterprise
 
 Theme Engine / Block Engine
   Design Tokens

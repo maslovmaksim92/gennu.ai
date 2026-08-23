@@ -98,6 +98,11 @@ Use Tailwind CSS for:
 - spacing
 - simple presentation utilities
 
-Use AG Grid for data-heavy tables.
+Tables use `@taiga-ui/addon-table`: `table[tuiTable]`, `tr[tuiThGroup]`, `th[tuiTh]`,
+`tbody[tuiTbody]`, `tr[tuiTr]`, `td[tuiTd]`, with `<tui-table-pagination>` underneath.
+Rows are plain Angular templates, so row actions are ordinary buttons and directives.
+
+Client-side paging comes from `apps/admin/src/app/shared/table-pagination.ts`. Wrap wide
+tables in `.table-scroll` so they scroll inside the panel instead of stretching the page.
 
 Do not use Taiga UI inside generated customer websites or portable block renderers.

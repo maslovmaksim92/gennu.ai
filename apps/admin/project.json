@@ -31,7 +31,6 @@
           "styles/tailwind.css",
           "libs/ui/atlas/src/styles.scss",
           "apps/admin/src/styles.scss",
-          "styles/ag-grid-theme.scss",
           "styles/taiga-ui-theme.scss"
         ],
         "outputPath": "dist/apps/admin"

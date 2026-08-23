@@ -1,7 +1,7 @@
 /**
  * Portable rendering contract for the Theme/Block engine.
  *
- * This module must stay free of Tailwind, Taiga UI, AG Grid, Angular and NestJS
+ * This module must stay free of Tailwind, Taiga UI, Angular and NestJS
  * imports. It describes what a theme and a block look like, not how any
  * particular framework draws them.
  */

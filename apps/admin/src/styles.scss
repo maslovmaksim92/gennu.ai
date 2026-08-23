@@ -323,9 +323,51 @@ button {
   padding: 18px;
 }
 
-.grid-panel {
-  padding: 0px;
+.table-panel {
+  display: grid;
+  gap: 0;
+  padding: 0;
   overflow: hidden;
+}
+
+/* Wide tables scroll inside the panel instead of stretching the page. */
+.table-scroll {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  min-width: 640px;
+}
+
+.data-table .col-xs {
+  width: 110px;
+}
+
+.data-table .col-sm {
+  width: 140px;
+}
+
+.data-table .col-md {
+  width: 170px;
+}
+
+.data-table .col-actions {
+  width: 170px;
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.empty-cell {
+  color: var(--muted-foreground);
+  text-align: center;
+}
+
+tui-table-pagination {
+  border-top: 1px solid var(--border);
 }
 
 .stats {

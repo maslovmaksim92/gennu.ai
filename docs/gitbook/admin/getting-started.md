@@ -10,4 +10,4 @@ Admin — отдельное Angular-приложение с NestJS Admin API. �
 
 Для локальной разработки инфраструктура PostgreSQL/Redis/MinIO поднимается Docker Compose, а Angular и NestJS работают в watch/HMR режиме. Production-конфигурация предусматривает самостоятельный Admin runtime и отдельную базу данных как инфраструктурный контейнер/сервис.
 
-Не храните реальные API keys, AG Grid license key и другие секреты в Git.
+Не храните реальные API keys и другие секреты в Git.

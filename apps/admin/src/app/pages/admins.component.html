@@ -15,12 +15,64 @@
     </div>
   }
 
-  <div class="panel grid-panel">
-    <ag-grid-angular
-      [rowData]="rows()"
-      [columnDefs]="cols"
-      [pagination]="true"
-      [paginationPageSize]="20"
+  <div class="panel table-panel">
+    <div class="table-scroll">
+      <table tuiTable class="data-table" size="s">
+        <thead>
+          <tr tuiThGroup>
+            <th tuiTh>Email</th>
+            <th tuiTh class="col-sm">Status</th>
+            <th tuiTh class="col-md">Last login</th>
+            <th tuiTh class="col-md">Created</th>
+            <th tuiTh class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody tuiTbody [data]="pagination.visible()">
+          @for (admin of pagination.visible(); track admin.id) {
+            <tr tuiTr>
+              <td tuiTd>{{ admin.email }}</td>
+              <td tuiTd>{{ admin.status }}</td>
+              <td tuiTd>{{ (admin.lastLoginAt | date: 'dd.MM.yyyy HH:mm') || '—' }}</td>
+              <td tuiTd>{{ admin.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td tuiTd>
+                <div class="row-actions">
+                  <button
+                    atlasButton
+                    type="button"
+                    data-variant="secondary"
+                    data-size="sm"
+                    (click)="openEdit(admin)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    atlasButton
+                    type="button"
+                    data-variant="danger"
+                    data-size="sm"
+                    [disabled]="false"
+                    [title]="''"
+                    (click)="remove(admin)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr tuiTr>
+              <td tuiTd colspan="5" class="empty-cell">No administrators yet</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <tui-table-pagination
+      [page]="pagination.page()"
+      [size]="pagination.size()"
+      [total]="rows().length"
+      (paginationChange)="pagination.update($event)"
     />
   </div>
 </section>

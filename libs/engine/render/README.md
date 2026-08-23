@@ -1,7 +1,7 @@
 # @atlas/render
 
 The portable theme/block render engine. It turns a stored `Site` into HTML and
-has no dependencies — not Angular, not NestJS, not Tailwind, Taiga UI or AG Grid.
+has no dependencies — not Angular, not NestJS, not Tailwind and not Taiga UI.
 
 The contract it implements is documented in [`docs/rendering.md`](../../../docs/rendering.md).
 
