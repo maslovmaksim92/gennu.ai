@@ -102,5 +102,18 @@
   },
   "prisma": {
     "seed": "node --env-file=.env --import=tsx prisma/seed.ts"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "lmdb",
+      "msgpackr-extract",
+      "nx",
+      "prisma",
+      "unrs-resolver"
+    ]
   }
 }
