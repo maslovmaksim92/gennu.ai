@@ -104,6 +104,19 @@ h1 {
 } /* .blk-hero h1 { … } */
 ```
 
+## How admin-api imports the engine
+
+`tsconfig.base.json` maps `@atlas/render` to the engine sources, and the Angular
+admin and the tests resolve it through that alias. `admin-api` imports the
+engine by relative path instead, because it is compiled with plain `tsc`
+(`@nx/js:tsc`), which does not rewrite path aliases into the emitted JavaScript:
+the alias compiles but throws `MODULE_NOT_FOUND` at runtime.
+
+For the same reason the `admin-api` build sets `rootDir` to the workspace root,
+so the engine sources are allowed to be part of the compilation. That moves the
+entry point to `dist/apps/admin-api/apps/admin-api/src/main.js`, which is what
+`docker/admin.Dockerfile` runs.
+
 ## Versioning
 
 Rendering reads the exact `BlockVersion` each `BlockInstance` pins and the

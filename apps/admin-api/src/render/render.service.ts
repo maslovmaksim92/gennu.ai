@@ -6,7 +6,7 @@ import {
   type RenderResult,
   type RenderSiteInput,
   type ThemeSchema,
-} from '@atlas/render';
+} from '../../../../libs/engine/render/src';
 import { PrismaService } from '../common/prisma.service';
 
 const SITE_INCLUDE = {

@@ -12,7 +12,8 @@
         "main": "apps/admin-api/src/main.ts",
         "tsConfig": "apps/admin-api/tsconfig.json",
         "assets": [],
-        "clean": true
+        "clean": true,
+        "rootDir": "."
       }
     },
     "serve": {
