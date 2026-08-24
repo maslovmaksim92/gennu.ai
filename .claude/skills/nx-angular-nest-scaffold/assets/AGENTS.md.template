@@ -1,0 +1,22 @@
+# {{PROJECT_NAME}} Agent Instructions
+
+Project-specific reusable instructions live under `.agents/skills/`.
+Vendored third-party library skills live under `.claude/skills/` and are tracked in
+`skills-lock.json` (managed by `npx skills`). Both directories are part of the repository
+and apply to every agent working here.
+
+Library skills — read the relevant one before writing code against that library, and
+prefer it over recalled APIs:
+
+| Skill                                       | Read it before                                                                                       |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `.claude/skills/angular-developer/SKILL.md` | Angular work: components, signals, `resource`/`httpResource`, forms, DI, routing, SSR, ARIA, testing |
+| `.claude/skills/taiga-ui/SKILL.md`          | Any Taiga UI work — components, textfields, dialogs, icons, theming, provider setup                  |
+
+Key project requirements:
+
+- Angular + NestJS in one Nx monorepo.
+- TypeScript 6.
+- Prettier is mandatory for changed `.ts` files.
+- Angular inline templates longer than 100 normalized characters must use `templateUrl`.
+- Do not claim build/runtime success unless the relevant command actually ran successfully.

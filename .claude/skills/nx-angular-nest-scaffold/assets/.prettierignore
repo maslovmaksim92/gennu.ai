@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+.nx
+.tmp
+tmp
+*.min.js
+*.min.css
+pnpm-lock.yaml

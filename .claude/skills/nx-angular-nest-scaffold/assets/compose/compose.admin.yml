@@ -1,0 +1,32 @@
+services:
+  {{API_APP}}:
+    build:
+      context: ..
+      dockerfile: docker/{{API_APP}}.Dockerfile
+    environment:
+      NODE_ENV: production
+      ADMIN_PORT: 3001
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+    ports:
+      - '3001:3001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-{{PROJECT_NAME}}}
+      POSTGRES_USER: ${POSTGRES_USER:-{{PROJECT_NAME}}}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - {{PROJECT_NAME}}-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-{{PROJECT_NAME}}} -d ${POSTGRES_DB:-{{PROJECT_NAME}}}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  {{PROJECT_NAME}}-postgres:
