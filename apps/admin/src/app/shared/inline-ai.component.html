@@ -2,7 +2,7 @@
   <div class="inline-ai-head">
     <div>
       <span class="eyebrow">AI COPILOT</span>
-      <h3>{{ title }}</h3>
+      <h3>{{ title() }}</h3>
     </div>
     <span class="status">Chat</span>
   </div>
@@ -20,7 +20,7 @@
     }
   </div>
   <form (ngSubmit)="send()" class="inline-ai-compose">
-    <textarea name="prompt" [(ngModel)]="prompt" rows="4" [placeholder]="placeholder"> </textarea>
+    <textarea name="prompt" [(ngModel)]="prompt" rows="4" [placeholder]="placeholder()"> </textarea>
     <button class="primary" [disabled]="loading()">{{ loading() ? 'Thinking…' : 'Ask AI' }}</button>
   </form>
 </aside>

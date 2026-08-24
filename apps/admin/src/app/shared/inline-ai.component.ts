@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, inject, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'proto-inline-ai',
@@ -7,12 +7,9 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './inline-ai.component.html',
 })
 export class InlineAiComponent {
-  @Input()
-  title = 'Assistant';
-  @Input()
-  context = '';
-  @Input()
-  placeholder = 'Describe what you want to create…';
+  title = input('Assistant');
+  context = input('');
+  placeholder = input('Describe what you want to create…');
   private http = inject(HttpClient);
   prompt = '';
   sessionId?: string;
@@ -35,7 +32,8 @@ export class InlineAiComponent {
     ]);
     this.prompt = '';
     this.loading.set(true);
-    const message = this.context ? `${this.context}\n\nAdmin request: ${text}` : text;
+    const context = this.context();
+    const message = context ? `${context}\n\nAdmin request: ${text}` : text;
     this.http
       .post<any>('/api/ai/chat', {
         message,
